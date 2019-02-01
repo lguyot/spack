@@ -43,6 +43,7 @@ class Neuron(Package):
     variant('coreneuron',    default=True,  description="Patch hh.mod for CoreNEURON compatibility")
     variant('cross-compile', default=False, description='Build for cross-compile environment')
     variant('debug',         default=False, description='Build debug with O0')
+    variant('interviews',    default=False, description="Build with Interviews for GUI")
     variant('mpi',           default=True,  description='Enable MPI parallelism')
     variant('multisend',     default=True,  description="Enable multi-send spike exchange")
     variant('profile',       default=False, description="Enable Tau profiling")
@@ -66,7 +67,8 @@ class Neuron(Package):
 
     # Transient dependency
     depends_on('gettext')
-
+    
+    depends_on('interviews',  when='+interviews')
     depends_on('mpi',         when='+mpi')
     depends_on('ncurses',     when='~cross-compile')
     depends_on('python@2.6:', when='+python', type=('build', 'link', 'run'))
@@ -78,8 +80,6 @@ class Neuron(Package):
     conflicts('+pysetup', when='~python')
     conflicts('+rx3d',    when='~pysetup')
 
-    _default_options = ['--without-iv',
-                        '--without-x']
     _specs_to_options = {
         '+cross-compile': ['cross_compiling=yes',
                            '--without-readline',
@@ -216,10 +216,15 @@ class Neuron(Package):
         make('install')
 
     def install(self, spec, prefix):
-        options = ['--prefix=%s' % prefix] + self._default_options
+        options = ['--prefix=%s' % prefix]
         for specname, spec_opts in self._specs_to_options.items():
             if spec.satisfies(specname):
                 options.extend(spec_opts)
+
+        if '+interviews' in spec:
+            options.append('--with-iv=%s' % spec['interviews'].prefix)
+        else:
+            options.extend(['--without-iv', '--without-x'])
 
         options.extend(self.get_arch_options(spec))
         options.extend(self.get_python_options(spec))
