@@ -15,6 +15,7 @@ class Archngv(PythonPackage):
     version('develop', branch='master')
     version('0.0.0', tag='archngv-v0.0.0', preferred=True)
 
+    depends_on('python@3.6:', type=('build', 'run'))
     depends_on('py-setuptools', type=('build', 'run'))
 
     depends_on('py-cached-property@1.3:', type='run')
