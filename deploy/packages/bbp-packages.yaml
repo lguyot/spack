@@ -93,7 +93,28 @@ packages:
       - py-bluepymm@0.6.38 ^neuron%intel
       - py-bluepyopt@1.6.56 ^neuron%intel
       - py-efel@3.0.22
-      - py-bglibpy ^neuron%intel
+
+  gnu-stable-lapack-python2-hotfix:
+    target_matrix:
+      - gnu-stable-py2
+    requires:
+      - architecture
+      - compiler
+      # - lapack
+      - python
+    specs:
+      - py-bglibpy ^neuron%intel ^python/t6a2kt2
+
+gnu-stable-lapack-python3-hotfix:
+    target_matrix:
+      - gnu-stable
+    requires:
+      - architecture
+      - compiler
+      # - lapack
+      - python
+    specs:
+      - py-bglibpy ^neuron%intel ^python/lu6ticp
 
 
   #### cellular ####
