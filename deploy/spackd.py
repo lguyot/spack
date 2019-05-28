@@ -227,7 +227,9 @@ def packages(ctx, target, output, only):
     for item in filter(lambda x: x.architecture == target, penv.items()):
         # compiler spec should come before all dependencies
         if '^' in item.spec:
-            spec = item.spec.replace(' ^', ' %%%s ^' % item.compiler, 1)
+            spec = item.spec.replace(' ^',
+                                     ' %{0} target={1} ^'.format(item.compiler, item.architecture),
+                                     1)
         else:
-            spec = item.spec + ' %' + item.compiler
-        output.write(spec + ' target=' + item.architecture + '\n')
+            spec = item.spec + ' %{0} target={1}'.format(item.compiler, item.architecture)
+        output.write(spec + '\n')
