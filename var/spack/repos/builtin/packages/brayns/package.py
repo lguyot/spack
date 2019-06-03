@@ -44,15 +44,20 @@ class Brayns(CMakePackage):
 
     def cmake_args(self):
         args = ['-DDISABLE_SUBPROJECTS=ON']
+        args.append(
+            '-DBRAYNS_ASSIMP_ENABLED={}'.format('ON' if '+assimp' in self.spec else 'OFF'))
+        args.append(
+            '-DBRAYNS_OSPRAY_ENABLED={}'.format('ON' if '+ospray' in self.spec else 'OFF'))
+        args.append(
+            '-DBRAYNS_CIRCUITVIEWER_ENABLED={}'.format('ON' if '+brion' in self.spec else 'OFF'))
+        args.append(
+            '-DBRAYNS_NETWORKING_ENABLED={}'.format('ON' if '+net' in self.spec else 'OFF'))
+        args.append(
+            '-DBRAYNS_DEFLECT_ENABLED={}'.format('ON' if '+deflect' in self.spec else 'OFF'))
+
         if '+opendeck' in self.spec:
             args.append('-DBRAYNS_OPENDECK_ENABLED=ON')
             args.append('-DBRAYNS_VRPN_ENABLED=ON')
-        if '+brion' in self.spec:
-            args.append('-DBRAYNS_CIRCUITVIEWER_ENABLED=ON')
-        if '+net' in self.spec:
-            args.append('-DBRAYNS_NETWORKING_ENABLED=ON')
-        if '+deflect' in self.spec:
-            args.append('-DBRAYNS_DEFLECT_ENABLED=ON')
         if '+optix' in self.spec:
             args.append('-DBRAYNS_OPTIX_ENABLED=ON')
             args.append('-DBRAYNS_OPTIX_TESTS_ENABLED=ON')
