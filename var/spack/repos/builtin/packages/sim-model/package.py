@@ -120,14 +120,14 @@ class SimModel(Package):
 
         if self.spec.satisfies('^neuron~binary'):
             # Install libnrnmech - might have several links.
-        	for f in find(arch + "/.libs", 'libnrnmech*.so*', recursive=False):
+            for f in find(arch + "/.libs", 'libnrnmech*.so*', recursive=False):
             	if not os.path.islink(f):
-                	bname = os.path.basename(f)
-	                lib_dst = prefix.lib.join(bname[:bname.find(".")] + lib_suffix + ".so")
+                    bname = os.path.basename(f)
+                    lib_dst = prefix.lib.join(bname[:bname.find(".")] + lib_suffix + ".so")
     	            shutil.move(f, lib_dst)
-        	        break
-	        else:
-    	        raise Exception("No libnrnmech found")
+                    break
+                else:
+                    raise Exception("No libnrnmech found")
 
         	# Patch special for the new libname
         	which('sed')('-i.bak',
