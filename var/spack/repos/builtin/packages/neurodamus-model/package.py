@@ -24,11 +24,15 @@ class NeurodamusModel(SimModel):
     depends_on('neurodamus-core+python', when='+python')
 
     depends_on("mpi")
-    depends_on("hdf5+mpi")
+    depends_on("hdf5+mpi", when='~profile')
+    depends_on("hdf5~mpi", when='+profile')
     depends_on('reportinglib')
-    depends_on('reportinglib+profile', when='+profile')
-    depends_on('synapsetool+mpi', when='+synapsetool~sonata')
-    depends_on('synapsetool+mpi+sonata', when='+synapsetool+sonata')
+    #depends_on('reportinglib+profile', when='+profile')
+    depends_on('synapsetool+mpi', when='+synapsetool~sonata~profile')
+    depends_on('synapsetool+mpi+sonata', when='+synapsetool+sonata~profile')
+    depends_on('synapsetool~mpi', when='+synapsetool~sonata+profile')
+    depends_on('synapsetool~mpi+sonata', when='+synapsetool+sonata+profile')
+    
     # NOTE: With Spack chain we no longer require support for external libs.
     # However, in some setups (notably tests) some libraries might still be
     # specificed as external and, if static, and we must bring their dependencies.

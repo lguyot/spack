@@ -266,6 +266,7 @@ class Neuron(Package):
 @contextmanager
 def profiling_wrapper_on():
     os.environ["USE_PROFILER_WRAPPER"] = "1"
+    os.environ["TAU_OPTIONS"] = "-optLinkOnly -optRevert -optVerbose"
     yield
     del os.environ["USE_PROFILER_WRAPPER"]
 
