@@ -30,6 +30,7 @@ class Lcov(MakefilePackage):
     homepage = "https://github.com/linux-test-project/lcov"
     url      = "https://github.com/linux-test-project/lcov/archive/v1.13.tar.gz"
 
+    version('1.14', sha256='f19eff1dcf5f40f4a57d959584acd318155873c43d723e25dd1b91636f94ca41')
     version('1.13', sha256='3650ad22773c56aaf8c5288e068dd35bd03f57659b6455dc6f8e21451c83b5e8')
 
     depends_on('perl')

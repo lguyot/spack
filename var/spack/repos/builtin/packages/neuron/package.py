@@ -21,8 +21,11 @@ class Neuron(Package):
     homepage = "https://www.neuron.yale.edu/"
     url      = "http://www.neuron.yale.edu/ftp/neuron/versions/v7.5/nrn-7.5.tar.gz"
     git      = "https://github.com/nrnhines/nrn.git"
+    git      = "git@github.com:pramodk/nrn.git"
 
     version('develop', branch='master')
+    version('gcov',    branch='gcov')
+
     version('7.6.6',   tag='7.6.6', preferred=True)
     version('2018-10', commit='b3097b7')
     # versions from url, with checksum
@@ -42,6 +45,7 @@ class Neuron(Package):
     variant('shared',        default=True,  description='Build shared libraries')
     variant('pysetup',       default=True,  description="Build Python module with setup.py")
     variant('rx3d',          default=False, description="Enable cython translated 3-d rxd. Depends on pysetup")
+    variant('gprof',         default=True,  description="Enable gprof")
 
     depends_on('autoconf',   type='build')
     depends_on('automake',   type='build')
@@ -49,6 +53,7 @@ class Neuron(Package):
     depends_on('flex',       type='build')
     depends_on('libtool',    type='build')
     depends_on('pkgconfig',  type='build')
+    depends_on('lcov',       type='build', when='+gprof')
 
     depends_on('mpi',         when='+mpi')
     depends_on('ncurses',     when='~cross-compile')
@@ -60,7 +65,8 @@ class Neuron(Package):
     conflicts('+rx3d',    when='~pysetup')
 
     _default_options = ['--without-iv',
-                        '--without-x']
+                        '--without-x',
+                        '--enable-gcov']
     _specs_to_options = {
         '+cross-compile': ['cross_compiling=yes',
                            '--without-readline',
@@ -154,7 +160,10 @@ class Neuron(Package):
             flags = '-O3 -qtune=qp -qarch=qp -q64 -qstrict -qnohot -g'
 
         if spec.satisfies('+debug'):
-            flags = '-g -O0'
+            flags = '-g -O0 -pg'
+
+        if spec.satisfies('+gprof'):
+            flags = '-g -pg --coverage'
 
         if self.spec.satisfies('%pgi'):
             flags += ' ' + self.compiler.pic_flag
