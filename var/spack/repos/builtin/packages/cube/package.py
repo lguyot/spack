@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 from spack import *
+import sys
 
 
 class Cube(AutotoolsPackage):
@@ -17,6 +18,7 @@ class Cube(AutotoolsPackage):
     homepage = "http://www.scalasca.org/software/cube-4.x/download.html"
     url      = "http://apps.fz-juelich.de/scalasca/releases/cube/4.4/dist/cubegui-4.4.2.tar.gz"
 
+    version('4.4.3', 'bf4b0f2ff68507ff82ba24eb4895aed961710dae16d783c222a12f152440cf36')
     version('4.4.2', '29b6479616a524f8325f5031a883963bf965fb92569de33271a020f08650ec7b')
     version('4.4',   '0620bae3ac357d0486ce7f5f97e448eeb2494c9a31865b679380ee08c6750e70')
     version('4.3.5', 'e5dce986e3c6381ea3a5fcb66c553adc')
@@ -54,6 +56,8 @@ class Cube(AutotoolsPackage):
 
         if '+gui' not in spec:
             configure_args.append('--without-gui')
+        else:
+            configure_args.append('--with-qt=%s' % spec['qt'].prefix)
 
         if spec.satisfies('%intel'):
             configure_args.append('--with-nocross-compiler-suite=intel')
@@ -61,6 +65,8 @@ class Cube(AutotoolsPackage):
             configure_args.append('--with-nocross-compiler-suite=pgi')
         elif spec.satisfies('%clang'):
             configure_args.append('--with-nocross-compiler-suite=clang')
+            if sys.platform == "darwin":
+                configure_args.append('--with-qt-specs=macx-clang')
 
         return configure_args
 

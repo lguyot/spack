@@ -13,7 +13,7 @@ class Otf2(AutotoolsPackage):
     """
 
     homepage = "http://www.vi-hps.org/projects/score-p"
-    url      = "http://www.vi-hps.org/upload/packages/otf2/otf2-1.4.tar.gz"
+    url      = "https://www.vi-hps.org/cms/upload/packages/otf2/otf2-2.1.1.tar.gz"
 
     version('2.1.1', 'e51ad0d8ca374d25f47426746ca629e7')
     version('2.1',   'e2994e53d9b7c2cbd0c4f564d638751e')
@@ -22,6 +22,8 @@ class Otf2(AutotoolsPackage):
     version('1.4',   'a23c42e936eb9209c4e08b61c3cf5092')
     version('1.3.1', 'd0ffc4e858455ace4f596f910e68c9f2')
     version('1.2.1', '8fb3e11fb7489896596ae2c7c83d7fc8')
+
+    depends_on('python@:2.99')
 
     def configure_args(self):
         return [
