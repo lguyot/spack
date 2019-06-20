@@ -214,6 +214,14 @@ class Python(AutotoolsPackage):
         if '+pic' in spec:
             config_args.append('CFLAGS={0}'.format(self.compiler.pic_flag))
 
+        if '+tk' in spec:
+            config_args.extend([
+                '--with-tcltk-includes=-I{0} -I{1}'.format(
+                    spec['tcl'].prefix.include, spec['tk'].prefix.include),
+                '--with-tcltk-libs={0} {1}'.format(
+                    spec['tcl'].libs.ld_flags, spec['tk'].libs.ld_flags)
+            ])
+
         return config_args
 
     @run_after('install')

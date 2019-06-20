@@ -110,6 +110,7 @@ packages:
             pkg-config@0.27.1: /usr
         version: [0.27.1]
     python:
+        variants: +tk
         version: [3.6.5]
     slurm:
         paths:
@@ -122,10 +123,6 @@ packages:
         paths:
             tar@1.26: /usr
         version: [1.26]
-    tk:
-        paths:
-            tk@8.5.13: /usr
-        version: [8.5.13]
     trilinos:
         variants: +kokkos+teuchos+openmp~amesos~hypre~superlu-dist~mumps~metis~suite-sparse
         version: [xsdk-0.4.0-rc1]
