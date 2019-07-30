@@ -23,14 +23,14 @@ packages:
       - bzip2@1.0.6
       - cuda@9.0.176
       - cuda@9.2.88
-      - cudnn@7.3
+      - cudnn@7.3.0
       - freeimage@3.18.0
       - glew
       - gmsh+oce~mpi@3.0.6
       - hdf5~mpi@1.10.4
       - highfive~mpi@2.0
       - intel-mkl@2018.1.163
-      - jdk@1.8.0_191-b12
+      - jdk@1.8.0_131-b11
       - julia
       - libjpeg@1.2.90
       - libjpeg-turbo@1.5.90
@@ -48,7 +48,7 @@ packages:
       - readline@7.0
       - snakemake
       - spark@2.4.0+hadoop
-      - sqlite@3.23.1
+      - sqlite@3.28.0
       - symengine@0.3.0
       - vrpn
       - zeromq@4.2.5

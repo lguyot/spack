@@ -18,7 +18,7 @@ packages:
       - architecture
       - compiler
     specs:
-      - allinea-forge@19.0.5
+      # - arm-forge@19.0.4-linux-rhel7-x86_64
       - binutils@2.31.1
       - bison@3.0.5
       - cmake@3.13.0
@@ -50,16 +50,3 @@ packages:
       - tk@8.6.8
       - util-macros@1.19.1
       - valgrind~mpi@3.13.0
-
-  #gnu-stable-python-serial:
-  #  target_matrix:
-  #    - gnu-stable
-  #  requires:
-  #    - architecture
-  #    - compiler
-  #    - python
-  #  specs:
-  #    - gdb@8.2
-  #    - ninja@1.8.2
-  #    - py-lit@0.5.0
-  #    - py-setuptools@40.2.0

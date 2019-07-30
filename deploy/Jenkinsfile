@@ -24,7 +24,7 @@ def build_and_deploy_docker() {
 def deployment_directory(parent) {
     def pull = env.ghprbPullId
     if (parent || pull == null) {
-        return "/gpfs/bbp.cscs.ch/apps/hpc/jenkins/"
+        return "/gpfs/bbp.cscs.ch/apps/hpc/jenkins/i_would_like_to_be_deleted—merge-2019-10"
     } else {
         return "/gpfs/bbp.cscs.ch/apps/hpc/jenkins/pulls/${pull}"
     }
@@ -101,7 +101,7 @@ pipeline {
     }
 
     environment {
-        DEPLOYMENT_UPSTREAM = deployment_directory(true)
+        DEPLOYMENT_UPSTREAM = deployment_directory(false)
         DEPLOYMENT_ROOT = deployment_directory(false)
         BASEDIR = "${DEPLOYMENT_ROOT}/spack/deploy"
         DOCKERDIR = "${DEPLOYMENT_ROOT}/spack/docker"

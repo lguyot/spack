@@ -279,10 +279,10 @@ configure_compilers() {
         fi
 
         if [[ ${line} = *"intel"* ]]; then
-            GCC_DIR=$(spack location --install-dir gcc@6.4.0)
+            GCC_DIR=$(spack location --latest --install-dir gcc@6.4.0)
 
             # update intel modules to use gcc@6.4.0 in .cfg files
-            install_dir=$(spack location --install-dir ${line})
+            install_dir=$(spack location --latest --install-dir ${line})
             for f in $(find ${install_dir} -name "icc.cfg" -o -name "icpc.cfg" -o -name "ifort.cfg"); do
                 if ! grep -q "${GCC_DIR}" $f; then
                     echo "-gcc-name=${GCC_DIR}/bin/gcc" >> ${f}
@@ -413,7 +413,7 @@ populate_mirror() {
 
     log "found the following specs"
     echo "${spec_list}"
-    spack mirror create -D -d ${SPACK_SOURCE_MIRROR_DIR} ${spec_list}
+    spack -d mirror create -D -d ${SPACK_SOURCE_MIRROR_DIR} ${spec_list}
 }
 
 check_specs() {
@@ -647,7 +647,7 @@ EOF
     . ${DEPLOYMENT_ROOT}/spack/share/spack/setup-env.sh
     if [[ "${export_packages[${what}]}" = "yes" ]]; then
         log "augmenting packages.yaml"
-        spack export --scope=user --module tcl --explicit --exclude 'py-.*|neuron|hdf5|intel-parallel-studio|pgi' > "${HOME}/packages.yaml"
+        spack export --scope=user --module tcl --explicit --exclude 'allinea|py-.*|neuron|hdf5|intel-parallel-studio|pgi' > "${HOME}/packages.yaml"
     else
         log "copying packages.yaml"
         cp "${HOME}/.spack/packages.yaml" "${HOME}"

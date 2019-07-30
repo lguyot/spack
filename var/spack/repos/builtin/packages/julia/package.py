@@ -41,7 +41,7 @@ class Julia(MakefilePackage):
     depends_on("openssl")
 
     # 1.2 and higher can be built with an external LLVM installation
-    depends_on("llvm@7: +link_dylib", when="+external_llvm")
+    depends_on("llvm@7:7.999 +link_dylib", when="+external_llvm")
     # Python needed to build heavily patched included LLVM
     depends_on("python@2.7:2.8", when="@:1.2~external_llvm")
 
