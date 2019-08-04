@@ -7,13 +7,12 @@ from spack import *
 
 
 class Nmodl(CMakePackage):
-    """NMODL"""
+    """Code Generation Framework For NEURON MODeling Language """
 
-    homepage = "git@github.com:BlueBrain/nmodl"
-    url      = "git@github.com:BlueBrain/nmodl.git"
-    #url      = "file:///Users/kumbhar/workarena/repos/bbp/incubator/nocmodl"
+    homepage = "https://github.com/BlueBrain/nmodl.git"
+    url      = "https://github.com/BlueBrain/nmodl.git"
 
-    version('develop', branch='pr/traub-codegen-improvement', git=url, submodules=True, preferred=True)
+    version('develop', branch='master', git=url, submodules=True, clean=False)
 
     depends_on('bison@3.0:', type='build')
     depends_on('cmake@3.3.0:', type='build')
@@ -23,11 +22,6 @@ class Nmodl(CMakePackage):
     depends_on('py-pytest@3.0:')
     depends_on('py-sympy@1.2:')
     depends_on('py-pyyaml@3.13:')
-
-    def cmake_args(self):
-        spec = self.spec
-        options = []
-        return options
 
     def setup_environment(self, spack_env, run_env):
         run_env.prepend_path('PYTHONPATH', self.prefix.lib.python)

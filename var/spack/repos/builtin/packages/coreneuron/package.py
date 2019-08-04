@@ -36,8 +36,8 @@ class Coreneuron(CMakePackage):
     homepage = "https://github.com/BlueBrain/CoreNeuron"
     url      = "https://github.com/BlueBrain/CoreNeuron"
 
-    version('develop', git=url, submodules=True, preferred=True)
-    version('0.14', git=url, submodules=True)
+    version('develop', git=url, submodules=True)
+    version('0.14', git=url, submodules=True, preferred=True)
 
     variant('debug', default=False, description='Build debug with O0')
     variant('gpu', default=False, description="Enable GPU build")
@@ -48,12 +48,12 @@ class Coreneuron(CMakePackage):
     variant('report', default=True, description="Enable reports using ReportingLib")
     variant('shared', default=True, description="Build shared library")
     variant('tests', default=False, description="Enable building tests")
-    variant('nmodl', default=True, description="Use NMODL")
-    variant('sympy', default=True, description="Use NMODL with SymPy")
-    variant('sympyopt', default=False, description="Use NMODL with SymPy Opt")
-    variant('caliper', default=True, description="Enable Caliper instrumentation")
+
+    # nmodl specific options
+    variant('nmodl', default=False, description="Use NMODL instead of MOD2C")
+    variant('sympy', default=False, description="Use NMODL with SymPy to solve ODEs")
+    variant('sympyopt', default=False, description="Use NMODL with SymPy Optimizations")
     variant('ispc', default=False, description="Enable ISPC backend")
-    variant('derivimplicit', default=False, description="Enable derivimplicit for glusynapse")
 
     depends_on('boost', when='+tests')
     depends_on('cmake@3:', type='build')
@@ -62,9 +62,10 @@ class Coreneuron(CMakePackage):
     depends_on('reportinglib', when='+report')
     depends_on('reportinglib+profile', when='+report+profile')
     depends_on('tau', when='+profile')
+
+    # nmodl specific dependency
     depends_on('nmodl', when='+nmodl')
     depends_on('eigen@3.4:~metis~scotch~fftw~suitesparse~mpfr', when='+nmodl')
-    depends_on('caliper', when='+caliper')
     depends_on('ispc', when='+ispc')
 
     # Old versions. Required by previous neurodamus package.
@@ -75,8 +76,12 @@ class Coreneuron(CMakePackage):
     depends_on('neurodamus-base@master', when='@master')
     depends_on('neurodamus-base@mousify', when='@mousify')
     depends_on('neurodamus-base@plasticity', when='@plasticity')
-    depends_on('neurodamus-base@plasticity+derivimplicit', when='@plasticity+derivimplicit')
     depends_on('neurodamus-base@hippocampus', when='@hippocampus')
+
+   # sympy and ispc options are only usable with nmodl
+    conflicts('+sympyopt', when='~sympy')
+    conflicts('+sympy', when='~nmodl')
+    conflicts('+ispc', when='~nmodl')
 
     @run_before('build')
     def profiling_wrapper_on(self):
@@ -131,24 +136,20 @@ class Coreneuron(CMakePackage):
         elif 'bgq' in spec.architecture and spec.satisfies('+mpi'):
             env['CC']  = spec['mpi'].mpicc
             env['CXX'] = spec['mpi'].mpicxx
-        elif spec.satisfies('+mpi'):
-            options.append('-DCMAKE_C_COMPILER=%s' % spec['mpi'].mpicc)
-            options.append('-DCMAKE_CXX_COMPILER=%s' % spec['mpi'].mpicxx)
 
         if spec.satisfies('+nmodl'):
             options.append('-DENABLE_NMODL=ON')
             options.append('-DNMODL_ROOT=%s' % spec['nmodl'].prefix)
             flags += ' -I%s -I%s' % (spec['nmodl'].prefix.include, spec['eigen'].prefix.include.eigen3)
 
-        if spec.satisfies('+caliper'):
-            options.append('-DENABLE_CALIPER=ON')
-            options.append('-Dcaliper_DIR=%s' % spec['caliper'].prefix.share.cmake.caliper)
-
-        nmodl_options = 'passes --verbatim-rename --inline'
+        nmodl_options = 'codegen --force passes --verbatim-rename --inline'
 
         if spec.satisfies('+ispc'):
             options.append('-DENABLE_ISPC_TARGET=ON')
-            options.append('-DCMAKE_ISPC_FLAGS=-O2 -g --pic --target=avx2-i32x8')
+            if '+knl' in spec:
+                options.append('-DCMAKE_ISPC_FLAGS=-O2 -g --pic --target=avx512knl-i32x16')
+            else:
+                options.append('-DCMAKE_ISPC_FLAGS=-O2 -g --pic --target=host')
 
         if spec.satisfies('+sympy'):
             nmodl_options += ' sympy --analytic'
