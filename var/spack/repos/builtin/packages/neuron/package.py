@@ -21,10 +21,11 @@ class Neuron(Package):
 
     homepage = "https://www.neuron.yale.edu/"
     url      = "http://www.neuron.yale.edu/ftp/neuron/versions/v7.5/nrn-7.5.tar.gz"
-    git      = "https://github.com/nrnhines/nrn.git"
+    git      = "https://github.com/jorblancoa/nrn.git"
 
     version('develop', branch='master')
-    version('7.6.6',   tag='7.6.6', preferred=True)
+    version('7.7.3', branch='load_mpi', preferred=True)
+    version('7.6.6', tag='7.6.6')
     version('2018-10', commit='b3097b7')
     # versions from url, with checksum
     version('7.5', 'fb72c841374dfacbb6c2168ff57bfae9')
@@ -57,7 +58,7 @@ class Neuron(Package):
     # HOWEVER, with the internal version there is a bug which makes Vector.as_numpy() not work!
     depends_on('readline', when=sys.platform != 'darwin')
 
-    depends_on('mpi',         when='+mpi')
+    depends_on('mpi',         when='+mpi', type=('build', 'run'))
     depends_on('ncurses',     when='~cross-compile')
     depends_on('python@2.6:', when='+python', type=('build', 'link', 'run'))
     # Numpy is required for Vector.as_numpy()
@@ -80,7 +81,7 @@ class Neuron(Package):
         '+mpi+multisend': ['--with-multisend'],
         '~rx3d':      ['--disable-rx3d'],
         '~mpi':       ['--without-paranrn'],
-        '+mpi':       ['--with-paranrn'],
+        '+mpi':       ['--with-paranrn=dynamic'],
         '~shared':    ['--disable-shared'],
         '+binary':    ['linux_nrnmech=no'],
     }
@@ -228,6 +229,9 @@ class Neuron(Package):
                             'CURSES_CFLAGS={}'.format(spec['ncurses'].prefix.include)])
             ld_flags += ' -L{0.prefix.lib} {0.libs.rpath_flags}'.format(spec['ncurses'])
 
+        if spec.satisfies('+mpi'):
+            ld_flags +=  ' -Wl,-rpath,' + self.spec['mpi'].prefix.lib
+
         options.append(ld_flags)
 
         build = Executable('./build.sh')
@@ -248,16 +252,31 @@ class Neuron(Package):
         """run after install to avoid spack compiler wrappers
         getting embded into nrnivmodl script"""
 
+        cc_compiler = self.compiler.cc
+        cxx_compiler = self.compiler.cxx
+        if self.spec.satisfies('+mpi'):
+            cc_compiler = self.spec['mpi'].mpicc
+            cxx_compiler = self.spec['mpi'].mpicxx
+
         arch = self.get_neuron_archdir()
-        nrnmakefile = join_path(self.prefix, arch, '../share/nrn/libtool')
+        libtool_makefile = join_path(self.prefix, arch, '../share/nrn/libtool')
+        nrniv_makefile = join_path(self.prefix, arch, './bin/nrniv_makefile')
+        nrnmech_makefile = join_path(self.prefix, arch, './bin/nrnmech_makefile')
 
         kwargs = {
             'backup': False,
             'string': True
         }
 
-        filter_file(env['CC'],  self.compiler.cc, nrnmakefile, **kwargs)
-        filter_file(env['CXX'], self.compiler.cxx, nrnmakefile, **kwargs)
+        # hpe-mpi requires linking to libmpi++ and hence needs to use cxx wrapper
+        filter_file(env['CC'],  cxx_compiler, libtool_makefile, **kwargs)
+        filter_file(env['CXX'], cxx_compiler, libtool_makefile, **kwargs)
+
+        filter_file(env['CC'],  cc_compiler, nrnmech_makefile, **kwargs)
+        filter_file(env['CXX'], cxx_compiler, nrnmech_makefile, **kwargs)
+        
+        filter_file(env['CC'],  cc_compiler, nrniv_makefile, **kwargs)
+        filter_file(env['CXX'], cxx_compiler, nrniv_makefile, **kwargs)
 
     def setup_environment(self, spack_env, run_env):
         neuron_archdir = self.get_neuron_archdir()

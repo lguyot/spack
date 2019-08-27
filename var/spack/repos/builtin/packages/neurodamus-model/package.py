@@ -87,6 +87,8 @@ class NeurodamusModel(SimModel):
         for dep in dep_libs:
             link_flag += ' ' + self._get_link_flags(dep)
 
+        link_flag +=  ' -Wl,-rpath,' + self.spec['mpi'].prefix.lib
+
         # If synapsetool is static we have to bring dependencies
         if spec.satisfies('+synapsetool') and spec['synapsetool'].satisfies('~shared'):
             link_flag += ' ' + spec['synapsetool'].package.dependency_libs(spec).joined()
