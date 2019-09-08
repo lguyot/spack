@@ -6,7 +6,6 @@
 import collections
 import errno
 import hashlib
-import fileinput
 import glob
 import grp
 import itertools
@@ -160,22 +159,22 @@ def filter_file(regex, repl, *filenames, **kwargs):
         if not os.path.exists(backup_filename):
             shutil.copy(filename, backup_filename)
 
-        fileno, tmp_filename = tempfile.mkstemp(text=True)
         try:
-            with os.fdopen(fileno, mode='w', errors='surrogateescape') as tmp:
-                with open(filename, errors='surrogateescape') as fd:
-                    for line in fd:
-                        tmp.write(re.sub(regex, repl, line))
-            permissions = os.stat(filename).st_mode
-            shutil.move(tmp_filename, filename)
-            os.chmod(filename, permissions)
+            extra_kwargs = {}
+            if sys.version_info > (3, 0):
+                extra_kwargs = {'errors': 'surrogateescape'}
+
+            with open(backup_filename, mode='r', **extra_kwargs) as input_file:
+                with open(filename, mode='w', **extra_kwargs) as output_file:
+                    for line in input_file:
+                        filtered_line = re.sub(regex, repl, line)
+                        output_file.write(filtered_line)
+
         except BaseException:
             # clean up the original file on failure.
             shutil.move(backup_filename, filename)
             raise
         finally:
-            if os.path.exists(tmp_filename):
-                os.remove(tmp_filename)
             if not backup and os.path.exists(backup_filename):
                 os.remove(backup_filename)
 
