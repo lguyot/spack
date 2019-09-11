@@ -28,12 +28,6 @@ class SimModel(Package):
     variant('coreneuron',  default=False, description="Enable CoreNEURON Support")
     variant('profile',     default=False, description="Enable profiling using Tau")
 
-    # NEURODAMUS-CORE 2.5.0
-    depends_on('neuron+mpi@7.6.6', type=('build', 'link', 'run'), when='^neurodamus-core@2.5.0')
-    depends_on('coreneuron@0.15', when='+coreneuron ^neurodamus-core@2.5.0', type=('build', 'link', 'run'))
-    depends_on('coreneuron+profile@0.15', when='+coreneuron+profile ^neurodamus-core@2.5.0')
-    depends_on('neuron+profile@7.6.6', when='+profile ^neurodamus-core@2.5.0')
-
     depends_on('neuron+mpi', type=('build', 'link', 'run'))
     depends_on('coreneuron', when='+coreneuron', type=('build', 'link', 'run'))
     depends_on('coreneuron+profile', when='+coreneuron+profile')

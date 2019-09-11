@@ -18,10 +18,6 @@ class NeurodamusNeocortex(NeurodamusModel):
     variant('v5', default=True, description='Enable support for previous v5 circuits')
     variant('plasticity', default=False, description="Use optimized ProbAMPANMDA_EMS and ProbGABAAB_EMS")
 
-    # NEURODAMUS-NEOCORTEX <=0.2
-    depends_on('neurodamus-core@2.5.0', when='@:0.2')
-    depends_on('neurodamus-core+python@2.5.0', when='+python@:0.2')
-
     mech_name = "neocortex"
 
     @run_before('build_model')

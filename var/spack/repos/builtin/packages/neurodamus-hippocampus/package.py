@@ -15,7 +15,3 @@ class NeurodamusHippocampus(NeurodamusModel):
     version('0.3', git=git, tag='0.3', submodules=True, clean=False)
     version('0.2', git=git, tag='0.2', submodules=True, clean=False)
     version('0.1', git=git, tag='0.1', submodules=True, clean=False)
-
-    # NEURODAMUS-HIPPOCAMPUS <=0.3
-    depends_on('neurodamus-core@2.5.0', when='@:0.3')
-    depends_on('neurodamus-core+python@2.5.0', when='+python@:0.3')
