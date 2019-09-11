@@ -27,6 +27,7 @@ class Libsonata(CMakePackage):
 
     depends_on('cmake@3.3:', type='build')
     depends_on('py-setuptools-scm', type='build', when='@0.1:')
+    depends_on('python@3.5:', type='build')
     depends_on('fmt@4.0:')
     depends_on('highfive+mpi', when='+mpi')
     depends_on('highfive~mpi', when='~mpi')
@@ -35,6 +36,7 @@ class Libsonata(CMakePackage):
     def cmake_args(self):
         result = [
             '-DEXTLIB_FROM_SUBMODULES=OFF',
+            '-DPYTHON_EXECUTABLE={}'.format(self.spec['python'].command.path),
         ]
         if self.spec.satisfies('+mpi'):
             result.extend([
