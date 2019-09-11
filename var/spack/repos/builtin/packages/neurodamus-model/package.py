@@ -22,9 +22,11 @@ class NeurodamusModel(SimModel):
     variant('python',      default=False, description="Install neurodamus-python alongside")
     variant('common_mods', default='',    description="Source of common mods. '': no change,"
                                                       " other string: alternate path")
-
-    depends_on('neurodamus-core')
-    depends_on('neurodamus-core+python', when='+python')
+    # NEURODAMUS-CORE 2.5.0
+    depends_on('reportinglib@2.5.1', when='^neurodamus-core@2.5.0')
+    depends_on('reportinglib+profile@2.5.1', when='+profile ^neurodamus-core@2.5.0')
+    depends_on('synapsetool+mpi@0.5.1', when='+synapsetool~sonata ^neurodamus-core@2.5.0')
+    depends_on('synapsetool+mpi+sonata@0.5.1', when='+synapsetool+sonata ^neurodamus-core@2.5.0')
 
     depends_on("mpi")
     depends_on("hdf5+mpi")
