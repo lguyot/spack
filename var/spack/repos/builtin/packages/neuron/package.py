@@ -254,9 +254,9 @@ class Neuron(Package):
 
         cc_compiler = self.compiler.cc
         cxx_compiler = self.compiler.cxx
-        if self.spec.satisfies('+mpi'):
-            cc_compiler = self.spec['mpi'].mpicc
-            cxx_compiler = self.spec['mpi'].mpicxx
+        #if self.spec.satisfies('+mpi'):
+        #    cc_compiler = self.spec['mpi'].mpicc
+        #    cxx_compiler = self.spec['mpi'].mpicxx
 
         arch = self.get_neuron_archdir()
         libtool_makefile = join_path(self.prefix, arch, '../share/nrn/libtool')
@@ -269,7 +269,7 @@ class Neuron(Package):
         }
 
         # hpe-mpi requires linking to libmpi++ and hence needs to use cxx wrapper
-        filter_file(env['CC'],  cxx_compiler, libtool_makefile, **kwargs)
+        filter_file(env['CC'],  cc_compiler, libtool_makefile, **kwargs)
         filter_file(env['CXX'], cxx_compiler, libtool_makefile, **kwargs)
 
         filter_file(env['CC'],  cc_compiler, nrnmech_makefile, **kwargs)
