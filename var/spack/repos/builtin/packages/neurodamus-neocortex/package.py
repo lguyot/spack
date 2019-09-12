@@ -14,7 +14,6 @@ class NeurodamusNeocortex(NeurodamusModel):
     version('develop', git=git, branch='master', submodules=True, clean=False)
     # Updated CoreNeuron to 0.15 and neurodamus-core to 2.6.0
     version('0.2-1', git=git, tag='0.2', submodules=True, clean=False)
-    version('0.2', git=git, tag='0.2', submodules=True, clean=False)
     version('0.1', git=git, tag='0.1', submodules=True, clean=False)
 
     variant('v5', default=True, description='Enable support for previous v5 circuits')
