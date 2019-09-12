@@ -21,10 +21,10 @@ class Neuron(Package):
 
     homepage = "https://www.neuron.yale.edu/"
     url      = "http://www.neuron.yale.edu/ftp/neuron/versions/v7.5/nrn-7.5.tar.gz"
-    git      = "https://github.com/nrnhines/nrn.git"
+    git      = "https://github.com/jorblancoa/nrn.git"
 
-    version('develop', branch='master')
-    version('7.6.6',   tag='7.6.6', preferred=True)
+    version('develop', branch='master', preferred=True)
+    version('7.6.6',   tag='7.6.6')
     version('2018-10', commit='b3097b7')
     # versions from url, with checksum
     version('7.5', 'fb72c841374dfacbb6c2168ff57bfae9')
