@@ -81,7 +81,7 @@ class Neuron(Package):
         '+mpi+multisend': ['--with-multisend'],
         '~rx3d':      ['--disable-rx3d'],
         '~mpi':       ['--without-paranrn'],
-        '+mpi':       ['--with-paranrn=dynamic'],
+        '+mpi':       ['--with-paranrn'],
         '~shared':    ['--disable-shared'],
         '+binary':    ['linux_nrnmech=no'],
     }
