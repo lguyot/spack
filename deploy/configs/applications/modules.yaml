@@ -43,8 +43,7 @@ modules:
       - neurodamus-neocortex
       - neurodamus-thalamus
       - neurodamus-mousify
-      #- 'neuron+mpi%intel'
-      - neuron~debug
+      - neuron~debug+mpi
       - parquet-converters
       - placement-algorithm
       - psp-validation
@@ -77,7 +76,6 @@ modules:
         '^coreneuron+knl': '/knl'
         '^python@:2.99': '/python2'
         '^python@3:': '/python3'
-        '+mpi': '/parallel'
         'neuron~mpi': '/serial'
       environment:
         set:
