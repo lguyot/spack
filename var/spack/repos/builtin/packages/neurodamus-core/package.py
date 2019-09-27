@@ -13,6 +13,7 @@ class NeurodamusCore(Package):
     git      = "ssh://bbpcode.epfl.ch/sim/neurodamus-core"
 
     version('develop', git=git, branch='master', clean=False)
+    version('2.7.0-1', git=git, branch='sandbox/magkanar/coreneuron_fastimem', clean=False)
     version('2.7.0', git=git, tag='2.7.0', clean=False)
     version('2.6.0', git=git, tag='2.6.0', clean=False)
     version('2.5.0', git=git, tag='2.5.0', clean=False)
