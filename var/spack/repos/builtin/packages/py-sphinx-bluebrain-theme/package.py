@@ -6,17 +6,18 @@
 from spack import *
 
 
-class PySphinxLimestoneTheme(PythonPackage):
-    """Sphinx Limestone Theme"""
+class PySphinxBluebrainTheme(PythonPackage):
+    """Sphinx BlueBrain Theme"""
 
     homepage = "https://bbpteam.epfl.ch/project/spaces/display/BBPSTD/Documentation+Standards"
-    git = "ssh://bbpcode.epfl.ch/nse/sphinx-limestone-theme"
+    url = "https://github.com/BlueBrain/sphinx-bluebrain-theme"
+    git = "git@github.com:BlueBrain/sphinx-bluebrain-theme.git"
 
-    version('0.0.3', tag='sphinx-limestone-theme-v0.0.3', submodules=True, clean=False)
+    version("develop", branch="master", submodules=True, clean=False)
 
     depends_on('python@3:', type=('build', 'run'))
     depends_on('py-setuptools', type='build')
-    depends_on('py-sphinx@2:', type='run')
+    depends_on('py-sphinx', type='run')
 
     @run_before('build')
     def generate(self):
