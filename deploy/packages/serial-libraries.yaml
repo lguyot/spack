@@ -14,7 +14,7 @@ packages:
   gnu-stable-serial-python:
     target_matrix:
       - gnu-stable
-      - gnu-stable-py2
+      # - gnu-stable-py2
     requires:
       - architecture
       - compiler
@@ -37,7 +37,7 @@ packages:
   gnu-intel-stable-serial:
     target_matrix:
       - gnu-stable
-      - intel-stable
+      # - intel-stable
     requires:
       - architecture
       - compiler
@@ -68,11 +68,11 @@ packages:
       - rockets
       - rocksdb~static
 
-  intel-stable-serial:
-    target_matrix:
-      - intel-stable
-    requires:
-      - architecture
-      - compiler
-    specs:
-      - embree
+  # intel-stable-serial:
+  #   target_matrix:
+  #     - intel-stable
+  #   requires:
+  #     - architecture
+  #     - compiler
+  #   specs:
+  #     - embree
