@@ -24,7 +24,7 @@ def build_and_deploy_docker() {
 def deployment_directory(parent) {
     def pull = env.ghprbPullId
     if (parent || pull == null) {
-        return "/gpfs/bbp.cscs.ch/apps/hpc/jenkins/i_would_like_to_be_deleted—merge-2019-10"
+        return "/gpfs/bbp.cscs.ch/apps/hpc/jenkins/i_would_like_to_be_deleted---merge-2019-10"
     } else {
         return "/gpfs/bbp.cscs.ch/apps/hpc/jenkins/pulls/${pull}"
     }
@@ -72,7 +72,7 @@ def run_stages() {
 
 pipeline {
     agent {
-        label 'bb5-full'
+        label 'bb5'
     }
 
     options {
