@@ -619,7 +619,9 @@ EOF
         spack install -y --log-format=junit --log-file="${HOME}/stack.xml" ${spec_list}
 
         # BUILD CACHE
+        set -x
         populate_build_cache "${install_start}"
+        set +x
 
         # Do not activate any packages for now. Maybe with lmod…
         # if [[ "${what}" = "serial-libraries" ]]; then
