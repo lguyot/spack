@@ -13,7 +13,7 @@ packages:
 
   gnu-stable-serial:
     target_matrix:
-      - gnu-stable
+      - gnu-outdated
     requires:
       - architecture
       - compiler
