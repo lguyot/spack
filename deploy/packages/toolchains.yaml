@@ -1,7 +1,7 @@
 # core toolchain typically represent system compilers
 core:
   architecture:
-  - x86_64
+  - broadwell
   compiler:
   - gcc@4.8.5
   mpi: None
@@ -11,7 +11,7 @@ core:
 # stable gnu toolchain
 gnu-stable:
   architecture:
-  - x86_64
+  - broadwell
   compiler:
   - gcc@9.2.0
   mpi:

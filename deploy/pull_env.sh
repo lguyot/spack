@@ -3,7 +3,7 @@
 DEPLOYMENT_ROOT="/gpfs/bbp.cscs.ch/apps/hpc/jenkins"
 
 usage() {
-    echo "$0 pulls/PR STAGE"
+    echo "$0 pull/PR STAGE"
 }
 
 pr=$1
@@ -12,9 +12,14 @@ stage=$2
 [ -z "$pr" ] && usage
 [ -z "$stage" ] && usage
 
-tmpdir=$(mktemp -d spack_${pr}_XXXXXX)
+tmpdir=$(mktemp -d spack_${pr//\//-}_XXXXXX)
 spack=$(readlink -f "${DEPLOYMENT_ROOT}/${pr}/spack")
 deployment=$(readlink -f "${DEPLOYMENT_ROOT}/${pr}/deploy/${stage}/latest")
+
+if [ -z "${spack}" ]; then
+    echo 'echo unable to find PR!'
+    exit 1
+fi
 
 mkdir -p ${tmpdir}/install
 

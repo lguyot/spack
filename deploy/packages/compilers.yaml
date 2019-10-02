@@ -13,7 +13,7 @@ combinations:
   # core toolchain typically represent system compilers
   core:
     architecture:
-    - x86_64
+    - broadwell
     compiler:
     - gcc@4.8.5
     mpi: None
