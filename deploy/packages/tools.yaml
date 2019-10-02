@@ -13,15 +13,15 @@ packages:
 
   gnu-stable-serial:
     target_matrix:
-      - gnu-outdated
+      - gnu-stable
     requires:
-      - architecture
       - compiler
+      - architecture
     specs:
       # - arm-forge@19.0.4-linux-rhel7-x86_64
       - binutils@2.31.1
       - bison@3.0.5
-      - cmake@3.13.0
+      - cmake@3.15.3
       - doxygen@1.8.15
       - emacs@26.1
       - environment-modules@3.2.10
