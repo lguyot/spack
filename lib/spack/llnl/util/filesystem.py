@@ -161,8 +161,9 @@ def filter_file(regex, repl, *filenames, **kwargs):
             shutil.copy(filename, backup_filename)
 
         try:
-            for line in fileinput.input(filename, inplace=True):
-                print(re.sub(regex, repl, line.rstrip('\n')))
+            with fileinput.input(filename, inplace=True) as fd:
+                for line in fd:
+                    print(re.sub(regex, repl, line.rstrip('\n')))
         except BaseException:
             # clean up the original file on failure.
             shutil.move(backup_filename, filename)
