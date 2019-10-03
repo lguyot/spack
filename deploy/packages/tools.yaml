@@ -49,4 +49,4 @@ packages:
       - texinfo@6.5
       - tk@8.6.8
       - util-macros@1.19.1
-      - valgrind~mpi@3.13.0
+      - valgrind~mpi@3.15.0
