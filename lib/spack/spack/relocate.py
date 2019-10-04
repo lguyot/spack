@@ -564,8 +564,6 @@ def relocate_text(path_names, oldpath, newpath, oldprefix, newprefix):
     """
     Replace old path with new path in text file path_name
     """
-    tty.warn("FILTERING")
-    tty.warn(" ".join(path_names))
     fs.filter_file('%s' % oldpath, '%s' % newpath, *path_names,
                    backup=False, string=True)
     sbangre = '#!/bin/bash %s/bin/sbang' % oldprefix
