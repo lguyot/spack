@@ -26,17 +26,17 @@ packages:
       # - cudnn@7.3.0
       - freeimage@3.18.0
       - glew
-      - gmsh+oce~mpi@3.0.6
+      # - gmsh+oce~mpi@3.0.6
       - hdf5~mpi@1.10.4
       - highfive~mpi@2.0
       - intel-mkl@2018.1.163
       # - jdk@1.8.0_131-b11
-      - julia
+      # - julia
       - libjpeg
       - libjpeg-turbo
       - libxml2
       - libxslt
-      - metis@5.1.0
+      # - metis@5.1.0
       - ncurses
       - ninja
       - openblas@0.3.3
