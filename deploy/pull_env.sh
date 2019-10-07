@@ -12,7 +12,7 @@ stage=$2
 [ -z "$pr" ] && usage
 [ -z "$stage" ] && usage
 
-tmpdir=$(mktemp -d spack_${pr//\//-}_XXXXXX)
+tmpdir=$(mktemp -d ${PWD}/spack_${pr//\//-}_XXXXXX)
 spack=$(readlink -f "${DEPLOYMENT_ROOT}/${pr}/spack")
 deployment=$(readlink -f "${DEPLOYMENT_ROOT}/${pr}/deploy/${stage}/latest")
 
