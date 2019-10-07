@@ -7,13 +7,11 @@ from spack import *
 import os
 import platform
 
-class PythonDev(Package):
+class PythonDev(BundlePackage):
     """Meta package to bundle python packages for development"""
 
     homepage = "http://www.dummy.org/"
     url      = "https://www.dummy.org/source/dummy-0.2.zip"
-
-    has_code = False
 
     version('0.2')
 
