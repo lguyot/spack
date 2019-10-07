@@ -13,12 +13,14 @@ class PythonDev(Package):
     homepage = "http://www.dummy.org/"
     url      = "https://www.dummy.org/source/dummy-0.2.zip"
 
+    has_code = False
+
     version('0.2')
 
     depends_on('python', type=('build', 'run'))
     depends_on('py-beautifulsoup4', type=('build', 'run'))
     depends_on('py-click', type=('build', 'run'))
-    depends_on('py-clustershell', type=('build', 'run'))
+    depends_on('py-clustershell', type=('build', 'run'
     depends_on('py-cython', type=('build', 'run'))
     depends_on('py-h5py~mpi', type=('build', 'run'))
     depends_on('py-jinja2', type=('build', 'run'))
@@ -42,13 +44,6 @@ class PythonDev(Package):
     depends_on('py-numpy', type=('build', 'run'))
     depends_on('py-scipy', type=('build', 'run'))
     depends_on('py-matplotlib', type=('build', 'run'))
-
-    def do_stage(self, mirror_only=False):
-        build_dir = os.path.join(self.stage.path, 'build')
-        os.makedirs(build_dir)
-
-    def install(self, spec, prefix):
-        open(os.path.join(prefix, 'success.txt'), 'w').close()
 
     def setup_environment(self, spack_env, run_env):
         deps = ['py-pip', 'py-ipython', 'py-virtualenv', 'py-wheel', 'py-cython', 'py-pyspark',
