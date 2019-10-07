@@ -18,7 +18,7 @@ class PythonDev(BundlePackage):
     depends_on('python', type=('build', 'run'))
     depends_on('py-beautifulsoup4', type=('build', 'run'))
     depends_on('py-click', type=('build', 'run'))
-    depends_on('py-clustershell', type=('build', 'run'
+    depends_on('py-clustershell', type=('build', 'run'))
     depends_on('py-cython', type=('build', 'run'))
     depends_on('py-h5py~mpi', type=('build', 'run'))
     depends_on('py-jinja2', type=('build', 'run'))
