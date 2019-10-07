@@ -13,7 +13,7 @@ class PythonDev(BundlePackage):
     homepage = "http://www.dummy.org/"
     url      = "https://www.dummy.org/source/dummy-0.2.zip"
 
-    version('0.2')
+    version('0.3')
 
     depends_on('python', type=('build', 'run'))
     depends_on('py-beautifulsoup4', type=('build', 'run'))
