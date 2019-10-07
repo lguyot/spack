@@ -62,6 +62,7 @@ packages:
       - highfive~mpi
       - libarchive
       - morphio
+      - morpho-kit
       - pugixml
       - range-v3
       - rockets
