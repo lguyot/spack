@@ -598,6 +598,7 @@ EOF
 
     log "gathering specs"
     spack -d filter --not-installed $(< ${HOME}/specs.txt)
+    log "END DEBUG"
     spec_list=$(spack filter --not-installed $(< ${HOME}/specs.txt))
 
     # Only perform installation for actionable items
