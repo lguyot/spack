@@ -44,7 +44,6 @@ class PythonDev(BundlePackage):
     depends_on('py-matplotlib', type=('build', 'run'))
 
     def setup_environment(self, spack_env, run_env):
-        deps = ['py-pip', 'py-ipython', 'py-virtualenv', 'py-wheel', 'py-cython', 'py-pyspark',
-                'py-ipyparallel']
+        deps = ['py-pip', 'py-virtualenv', 'py-wheel', 'py-cython', 'py-pyspark']
         for dep in deps:
             run_env.prepend_path('PATH', self.spec[dep].prefix.bin)
