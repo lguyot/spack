@@ -12,6 +12,7 @@ class PyLineProfiler(PythonPackage):
     homepage = "https://github.com/rkern/line_profiler"
     url      = "https://pypi.io/packages/source/l/line_profiler/line_profiler-2.0.tar.gz"
 
+    version('2.1.2', sha256='efa66e9e3045aa7cb1dd4bf0106e07dec9f80bc781a993fbaf8162a36c20af5c')
     version('2.0', 'fc93c6bcfac3b7cb1912cb28836d7ee6')
 
     depends_on('python@2.5:')
