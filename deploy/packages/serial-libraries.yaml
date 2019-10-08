@@ -53,11 +53,8 @@ packages:
       - assimp
       - boost
       - brion
-<<<<<<< HEAD
       # - deflect  ^boost@1.65.0
-=======
       - deflect
->>>>>>> 3aab3b739... Add Brayns plugins and make viz stack work with boost 1.68.0 (#542)
       - eigen
       - fmt
       - gmsh
