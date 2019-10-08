@@ -3,6 +3,8 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+import os
+
 from spack import *
 
 
@@ -19,3 +21,12 @@ class PyLineProfiler(PythonPackage):
     depends_on('py-setuptools',     type='build')
     depends_on('py-cython',         type='build')
     depends_on('py-ipython@0.13:',  type=('build', 'run'))
+
+    @run_before('build')
+    @when('^python@3.7:')
+    def fix_cython(self):
+        cython = self.spec['py-cython'].command
+        for root, _, files in os.walk('.'):
+            for fn in files:
+                if fn.endswith('.pyx'):
+                    cython(os.path.join(root, fn))
