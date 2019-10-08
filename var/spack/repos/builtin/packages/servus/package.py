@@ -19,3 +19,10 @@ class Servus(CMakePackage):
     depends_on('cmake@3.1:', type='build')
     depends_on('ninja', type='build')
     depends_on('boost', type='build')
+
+    # Fix for gcc9+
+    def cmake_args(self):
+        args = [
+            "-DCMAKE_CXX_FLAGS=-Wno-error=deprecated-copy"
+        ]
+        return args
