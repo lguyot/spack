@@ -22,6 +22,7 @@ class PyLineProfiler(PythonPackage):
     depends_on('py-cython',         type='build')
     depends_on('py-ipython@0.13:',  type=('build', 'run'))
 
+    # See https://github.com/rkern/line_profiler/issues/166
     @run_before('build')
     @when('^python@3.7:')
     def fix_cython(self):
