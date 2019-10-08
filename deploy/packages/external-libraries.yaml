@@ -19,7 +19,7 @@ packages:
       - compiler
     specs:
       - arrow+parquet~python@0.15.0
-      - boost~mpi@1.68.0
+      - boost~mpi@1.70.0
       - bzip2@1.0.6
       # - cuda@9.0.176
       # - cuda@9.2.88
