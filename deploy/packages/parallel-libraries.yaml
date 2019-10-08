@@ -62,7 +62,7 @@ packages:
       - mpi
       - python
     specs:
-      - petsc+int64+mpi@3.10.2
+      - petsc+int64+mpi@3.111.3
 
   # intel-stable-parallel:
   #   target_matrix:
