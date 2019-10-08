@@ -62,6 +62,9 @@ class Rocksdb(MakefilePackage):
     depends_on('zlib', when='+zlib')
     depends_on('zstd', when='+zstd')
 
+    # backport of https://github.com/facebook/rocksdb/commit/61876614dce8c9155e28d40b5d95ec1bf1cbfa47
+    patch('gcc_warnings.patch')
+
     def build(self, spec, prefix):
         cflags = []
         ldflags = []
