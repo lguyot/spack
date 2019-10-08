@@ -26,10 +26,25 @@ mkdir -p ${tmpdir}/install
 cp -Rp ${deployment}/data/{.spack,*} ${tmpdir}
 cp -Rp ${deployment}/.spack-db ${tmpdir}/install
 
+for arch in ${deployment}/*; do
+    if [[ "$(basename ${arch})" = "data" ]]; then
+        continue
+    fi
+    mkdir -p "${tmpdir}/install/$(basename ${arch})"
+    for compiler in ${arch}/*; do
+        mkdir -p "${tmpdir}/install/$(basename ${arch})/$(basename ${compiler})"
+
+        for soft in ${compiler}/*; do
+            ln -s "${soft}" "${tmpdir}/install/$(basename ${arch})/$(basename ${compiler})"
+        done
+    done
+done
+
 cat <<EOF
 export SOFTS_DIR_PATH=${tmpdir}/install;
 export MODS_DIR_PATH=${tmpdir}/modules;
 export HOME=${tmpdir};
 alias spacktivate="source ${spack}/share/spack/setup-env.sh";
+echo "created the directory (to be deleted by the user) ${tmpdir}"
 echo "use the command 'spacktivate' to source the spack of the PR";
 EOF
