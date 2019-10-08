@@ -53,7 +53,6 @@ packages:
       - assimp
       - boost
       - brion
-      # - deflect  ^boost@1.65.0
       - deflect
       - eigen
       - fmt
