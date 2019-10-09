@@ -53,17 +53,17 @@ packages:
       - superlu-dist@5.4.0
       - trilinos@xsdk-0.4.0-rc1
 
-  gnu-stable-parallel-lapack-python:
-    target_matrix:
-      - gnu-stable
-    requires:
-      - architecture
-      - compiler
-      - lapack
-      - mpi
-      - python
-    specs:
-      - petsc+int64+mpi@3.11.2
+  # gnu-stable-parallel-lapack-python:
+  #   target_matrix:
+  #     - gnu-stable
+  #   requires:
+  #     - architecture
+  #     - compiler
+  #     - lapack
+  #     - mpi
+  #     - python
+  #   specs:
+  #     - petsc+int64+mpi@3.11.2
 
   # intel-stable-parallel:
   #   target_matrix:
