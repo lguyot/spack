@@ -161,14 +161,17 @@ def filter_file(regex, repl, *filenames, **kwargs):
             shutil.copy(filename, backup_filename)
 
         try:
-            for line in fileinput.input(filename, inplace=True):
-                print(re.sub(regex, repl, line.rstrip('\n')))
+            tmp_fd, tmp_fn = tempfile.mkstemp(text=True)
+            with os.fdopen(tmp_fd, mode='w', errors='surrogateescape') as tmp:
+                with open(filename, errors='surrogateescape') as fd:
+                    for line in fd:
+                        tmp.write(re.sub(regex, repl, line))
+            shutil.move(tmp_fn, filename)
         except BaseException:
             # clean up the original file on failure.
             shutil.move(backup_filename, filename)
             raise
         finally:
-            fileinput.close()
             if not backup and os.path.exists(backup_filename):
                 os.remove(backup_filename)
 
