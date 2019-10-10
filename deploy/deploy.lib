@@ -593,8 +593,32 @@ EOF
     log "cleaning up after a bad spack"
     spack clean -a
 
+    log "cleaning failed installations"
+    for toplevel in $(ls "${SOFTS_DIR_PATH}"); do
+        if [ "${toplevel}" = "modules" ]; then
+            continue
+        elif [ "${toplevel}" = "data" ]; then
+            continue
+        fi
+        find "${SOFTS_DIR_PATH}/${toplevel}" -mindepth 2 -maxdepth 2 -type d | while read dirname; do
+            [ -z "$(ls ${dirname})" ] && {
+                pkgname=$(sed -ne '/spec:/ { n; s/^- //; s/:$//; p }' ${dirname}/.spack/spec.yaml)
+                pkgdir=$(find ${dirname}/.spack -name ${pkgname} -type d)
+                [ -z "$(grep Bundle ${pkgdir}/package.py)" ] && {
+                    echo ${dirname}
+                }
+            }
+        done | while read bogus_package; do
+            log "removing potentially failed installation of $(basename ${bogus_package})"
+            rm -rf "${bogus_package}"
+        done
+    done
+
+    log "reindexing software"
+    spack reindex
+
     log "installed specs"
-    spack reindex && spack find -lv
+    spack find -lv
 
     log "gathering specs"
     spec_list=$(spack filter --not-installed $(< ${HOME}/specs.txt))
