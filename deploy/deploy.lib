@@ -609,7 +609,7 @@ EOF
                 }
             }
         done | while read bogus_package; do
-            log "removing potentially failed installation of $(basename ${bogus_package})"
+            log "...removing potentially failed installation of $(basename ${bogus_package})"
             rm -rf "${bogus_package}"
         done
     done
