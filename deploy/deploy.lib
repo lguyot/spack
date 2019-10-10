@@ -556,7 +556,7 @@ bogus_packages() {
             [ -z "$(ls ${dirname})" ] && [ -f "${dirname}/.spack/spec.yaml" ] && {
                 pkgname=$(sed -ne '/spec:/ { n; s/^- //; s/:$//; p }' ${dirname}/.spack/spec.yaml)
                 pkgdir=$(find ${dirname}/.spack -name ${pkgname} -type d)
-                [ -z "$(grep Bundle ${pkgdir}/package.py)" ] && {
+                [ -f "${pkgdir}/package.py" ] && [ -z "$(grep Bundle ${pkgdir}/package.py)" ] && {
                     echo ${dirname}
                 }
             }
