@@ -166,7 +166,7 @@ def filter_file(regex, repl, *filenames, **kwargs):
                 with open(filename, errors='surrogateescape') as fd:
                     for line in fd:
                         tmp.write(re.sub(regex, repl, line))
-            permissions = os.fstat(filename).st_mode
+            permissions = os.stat(filename).st_mode
             shutil.move(tmp_filename, filename)
             os.chmod(filename, permissions)
         except BaseException:
