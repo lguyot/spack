@@ -18,6 +18,7 @@ class NeurodamusModel(SimModel):
     """
     # NOTE: Several variants / dependencies come from SimModel
     variant('synapsetool', default=True,  description="Enable Synapsetool reader")
+    variant('mvdtool',     default=False, description="Enable MVDTool reader for Sonata Edges")
     variant('python',      default=False, description="Install neurodamus-python alongside")
     variant('common_mods', default='',    description="Source of common mods. '': no change,"
                                                       " other string: alternate path")
@@ -31,6 +32,7 @@ class NeurodamusModel(SimModel):
     depends_on('reportinglib')
     depends_on('reportinglib+profile', when='+profile')
     depends_on('synapsetool+mpi', when='+synapsetool')
+    depends_on('mvdtool+python', when='+mvdtool', type=('run',))
     # NOTE: With Spack chain we no longer require support for external libs.
     # However, in some setups (notably tests) some libraries might still be
     # specificed as external and, if static, and we must bring their dependencies.

@@ -15,7 +15,7 @@ class Mvdtool(CMakePackage):
     url      = "https://github.com/BlueBrain/MVDTool.git"
     git      = "https://github.com/BlueBrain/MVDTool.git"
 
-    version('develop', git=url)
+    version('develop', git=url, clean=False, submodules=True)
     version('2.2.0', tag='v2.2.0', clean=False)
     version('2.1.0', tag='v2.1.0', clean=False)
     version('2.0.0', tag='v2.0.0', clean=False)
@@ -59,8 +59,7 @@ class Mvdtool(CMakePackage):
 
     @when('+python')
     def setup_dependent_environment(self, spack_env, run_env, dependent_spec):
-        site_dir = self.spec['python'].package.site_packages_dir.split(os.sep)[1:]
         for target in (self.prefix.lib, self.prefix.lib64):
-            pathname = os.path.join(target, *site_dir)
+            pathname = os.path.join(target, 'python')
             if os.path.isdir(pathname):
                 run_env.prepend_path('PYTHONPATH', pathname)
