@@ -160,18 +160,22 @@ def filter_file(regex, repl, *filenames, **kwargs):
         if not os.path.exists(backup_filename):
             shutil.copy(filename, backup_filename)
 
+        fileno, tmp_filename = tempfile.mkstemp(text=True)
         try:
-            tmp_fd, tmp_fn = tempfile.mkstemp(text=True)
-            with os.fdopen(tmp_fd, mode='w', errors='surrogateescape') as tmp:
+            with os.fdopen(fileno, mode='w', errors='surrogateescape') as tmp:
                 with open(filename, errors='surrogateescape') as fd:
                     for line in fd:
                         tmp.write(re.sub(regex, repl, line))
-            shutil.move(tmp_fn, filename)
+            permissions = os.fstat(filename).st_mode
+            shutil.move(tmp_filename, filename)
+            os.chmod(filename, permissions)
         except BaseException:
             # clean up the original file on failure.
             shutil.move(backup_filename, filename)
             raise
         finally:
+            if os.path.exists(tmp_filename):
+                os.remove(tmp_filename)
             if not backup and os.path.exists(backup_filename):
                 os.remove(backup_filename)
 
