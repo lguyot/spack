@@ -67,11 +67,11 @@ packages:
       - rockets
       - rocksdb~static
 
-  # intel-stable-serial:
-  #   target_matrix:
-  #     - intel-stable
-  #   requires:
-  #     - architecture
-  #     - compiler
-  #   specs:
-  #     - embree
+  intel-stable-serial:
+    target_matrix:
+      - intel-stable
+    requires:
+      - architecture
+      - compiler
+    specs:
+      - embree
