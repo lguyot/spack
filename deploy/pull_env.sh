@@ -45,6 +45,6 @@ export SOFTS_DIR_PATH=${tmpdir}/install;
 export MODS_DIR_PATH=${tmpdir}/modules;
 export HOME=${tmpdir};
 alias spacktivate="source ${spack}/share/spack/setup-env.sh";
-echo "created the directory (to be deleted by the user) ${tmpdir}"
+echo "created the directory (to be deleted by the user) ${tmpdir}";
 echo "use the command 'spacktivate' to source the spack of the PR";
 EOF
