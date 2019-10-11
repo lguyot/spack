@@ -9,7 +9,8 @@
 # * `DEPLOYMENT_DATE` to force a date for the installation directory
 
 DEFAULT_DEPLOYMENT_DATE=${DEFAULT_DEPLOYMENT_DATE:-$(date +%Y-%m-%d)}
-DEFAULT_MODULE_DATE=${DEFAULT_MODULE_DATE-$(date +Y-%m)}
+
+INTEL_BASE_GCC_VERSION=${DEFAULT_INTEL_BASE_GCC_VERSION:-9.2.0}
 
 # A list of stages in the order they will be built
 stages="compilers tools external-libraries serial-libraries parallel-libraries applications"
@@ -18,6 +19,13 @@ stages="compilers tools external-libraries serial-libraries parallel-libraries a
 # mentioned above, this should be a list of filenames *without* extension
 # found in `packages`.
 declare -A spec_definitions=([compilers]=compilers
+                             [tools]=tools
+                             [external-libraries]="external-libraries"
+                             [serial-libraries]="serial-libraries python-packages"
+                             [parallel-libraries]=parallel-libraries
+                             [applications]=bbp-packages)
+
+declare -A module_locations=([compilers]=compilers
                              [tools]=tools
                              [external-libraries]="external-libraries"
                              [serial-libraries]="serial-libraries python-packages"
@@ -279,7 +287,7 @@ configure_compilers() {
         fi
 
         if [[ ${line} = *"intel"* ]]; then
-            GCC_DIR=$(spack location --latest --install-dir gcc@6.4.0)
+            GCC_DIR=$(spack location --latest --install-dir gcc@${INTEL_BASE_GCC_VERSION})
 
             # update intel modules to use gcc@6.4.0 in .cfg files
             install_dir=$(spack location --latest --install-dir ${line})
