@@ -10,10 +10,10 @@
 
 DEFAULT_DEPLOYMENT_DATE=${DEFAULT_DEPLOYMENT_DATE:-$(date +%Y-%m-%d)}
 
-INTEL_BASE_GCC_VERSION=${DEFAULT_INTEL_BASE_GCC_VERSION:-8.3.0}
+INTEL_BASE_GCC_VERSION=${DEFAULT_INTEL_BASE_GCC_VERSION:-9.2.0}
 
 # A list of stages in the order they will be built
-stages="compilers tools external-libraries serial-libraries parallel-libraries applications"
+stages="compilers tools external-libraries libraries applications"
 
 # Definitions for the installation spec generation. For every stage
 # mentioned above, this should be a list of filenames *without* extension
@@ -21,15 +21,13 @@ stages="compilers tools external-libraries serial-libraries parallel-libraries a
 declare -A spec_definitions=([compilers]=compilers
                              [tools]=tools
                              [external-libraries]="external-libraries"
-                             [serial-libraries]="serial-libraries python-packages"
-                             [parallel-libraries]=parallel-libraries
+                             [libraries]="serial-libraries python-packages parallel-libraries"
                              [applications]=bbp-packages)
 
 declare -A module_locations=([compilers]=compilers
                              [tools]=tools
-                             [external-libraries]=utilities
-                             [serial-libraries]=utilities
-                             [parallel-libraries]=utilities
+                             [external-libraries]=libraries
+                             [libraries]=libraries
                              [applications]=bbp-packages)
 
 # Export installed software as packages to be re-used later
@@ -43,8 +41,7 @@ declare -A module_locations=([compilers]=compilers
 declare -A export_packages=([compilers]=no
                             [tools]=yes
                             [external-libraries]=yes
-                            [serial-libraries]=no
-                            [parallel-libraries]=no
+                            [libraries]=no
                             [applications]=no)
 
 # Re-use installed software via the chain mechanism
@@ -52,8 +49,7 @@ declare -A export_packages=([compilers]=no
 declare -A include_in_chain=([compilers]=no
                              [tools]=no
                              [external-libraries]=no
-                             [serial-libraries]=yes
-                             [parallel-libraries]=yes
+                             [libraries]=yes
                              [applications]=yes)
 
 # Set up the dependency graph
