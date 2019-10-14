@@ -33,7 +33,7 @@ packages:
       - git@2.18.0
       - gmp@6.1.2
       - help2man@1.47.4
-      - hpe-mpi@2.16
+      - hpe-mpi@2.21
       - intel-mpi@2018.1.163
       - isl@0.18
       - ispc@1.10.0

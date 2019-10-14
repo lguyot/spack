@@ -43,10 +43,6 @@ packages:
         version: [2.9.0]
     hdf5:
         variants: +hl
-    hpe-mpi:
-        paths:
-            hpe-mpi@2.16: /opt/hpe/hpc/mpt/mpt-2.16
-        version: [2.16]
     intel-mkl:
         version: [2018.3.222]
     julia:

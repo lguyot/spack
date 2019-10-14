@@ -15,7 +15,7 @@ gnu-stable:
   compiler:
   - gcc@9.2.0
   mpi:
-  - hpe-mpi@2.16
+  - hpe-mpi@2.21
   lapack:
   - intel-mkl@2019.3.199
   python:
@@ -27,7 +27,7 @@ gnu-stable:
 #   compiler:
 #   - gcc@6.4.0
 #   mpi:
-#   - hpe-mpi@2.16
+#   - hpe-mpi@2.21
 #   lapack:
 #   - intel-mkl@2019.3.199
 #   python:
@@ -40,7 +40,7 @@ intel-stable:
   compiler:
   - intel@19.0.1
   mpi:
-  - hpe-mpi@2.16
+  - hpe-mpi@2.21
   lapack:
   - intel-mkl@2019.3.199
   python:
@@ -53,7 +53,7 @@ intel-stable:
 #   compiler:
 #   - intel@18.0.3
 #   mpi:
-#   - hpe-mpi@2.16
+#   - hpe-mpi@2.21
 #   lapack:
 #   - intel-mkl@2019.3.199
 #   python:
@@ -66,7 +66,7 @@ intel-stable:
 #   compiler:
 #   - intel@18.0.3
 #   mpi:
-#   - hpe-mpi@2.16
+#   - hpe-mpi@2.21
 #   lapack:
 #   - intel-mkl@2019.3.199
 #   python:
@@ -79,7 +79,7 @@ intel-stable:
 #   compiler:
 #   - pgi@18.4
 #   mpi:
-#   - hpe-mpi@2.16
+#   - hpe-mpi@2.21
 #   lapack:
 #   - openblas@0.3.3
 #   python:
@@ -92,7 +92,7 @@ intel-stable:
 #   compiler:
 #   - clang@6.0.1
 #   mpi:
-#   - hpe-mpi@2.16
+#   - hpe-mpi@2.21
 #   lapack:
 #   - openblas@0.3.3
 #   python:
