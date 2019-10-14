@@ -22,4 +22,4 @@ class Embree(CMakePackage):
     depends_on('tbb')
 
     def cmake_args(self):
-        return ['-DEMBREE_TUTORIALS=OFF', '-DEMBREE_STATIC_LIB=ON']
+        return ['-DEMBREE_TUTORIALS=OFF']

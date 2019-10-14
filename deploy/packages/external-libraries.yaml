@@ -53,3 +53,12 @@ packages:
       - vrpn
       - zeromq@4.2.5
       - zlib@1.2.11
+
+  intel-stable-serial:
+    target_matrix:
+      - intel-stable
+    requires:
+      - architecture
+      - compiler
+    specs:
+      - embree
