@@ -24,6 +24,9 @@
 ##############################################################################
 from tempfile import TemporaryFile
 
+import os
+import stat
+
 from llnl.util.filesystem import find
 from spack import *
 
@@ -38,7 +41,6 @@ class HpeMpi(Package):
 
     provides('mpi')
 
-
     @run_before('install')
     def unpack(self):
         rpm2cpio = spack.util.executable.which('rpm2cpio')
@@ -46,22 +48,21 @@ class HpeMpi(Package):
 
         print(self.stage)
         for rpm_filename in find(self.stage.source_path, '*.rpm'):
-            print(rpm_filename)
             with TemporaryFile() as tmpf:
                 rpm2cpio(rpm_filename, output=tmpf)
                 tmpf.seek(0) 
                 cpio('-dium',input=tmpf)
 
-
     def install(self, spec, prefix):
         for mpic in find(self.stage.source_path, 'mpic*'):
-          filter_file(r'-I(.*mpiroot)', r'-isystem\1', mpic)
-        
+            mode = os.stat(mpic).st_mode
+            os.chmod(mpic, mode | stat.S_IWRITE)
+            filter_file(r'-I(.*mpiroot)', r'-isystem\1', mpic)
+
         install_tree(
             join_path(self.stage.source_path, 'opt/hpe/hpc/mpt/mpt-' + str(self.spec.version)),
             prefix
         )
-
 
     def setup_dependent_environment(self, spack_env, run_env, dependent_spec):
         bindir = self.prefix.bin
@@ -73,7 +74,6 @@ class HpeMpi(Package):
         spack_env.set('MPICC_CC', spack_cc)
         spack_env.set('MPICXX_CXX', spack_cxx)
         spack_env.set('MPIF90_F90', spack_fc)
-
 
     def setup_dependent_package(self, module, dep_spec):
         bindir = self.prefix.bin
