@@ -27,9 +27,9 @@ declare -A spec_definitions=([compilers]=compilers
 
 declare -A module_locations=([compilers]=compilers
                              [tools]=tools
-                             [external-libraries]="external-libraries"
-                             [serial-libraries]="serial-libraries python-packages"
-                             [parallel-libraries]=parallel-libraries
+                             [external-libraries]=utilities
+                             [serial-libraries]=utilities
+                             [parallel-libraries]=utilities
                              [applications]=bbp-packages)
 
 # Export installed software as packages to be re-used later
@@ -543,8 +543,9 @@ EOF
 copy_modules() {
     what="$1"
 
+    local where="${module_locations[${what}]}"
     local source="$(install_dir ${what})/modules"
-    local target="${DEPLOYMENT_ROOT}/modules/${what}/$(date +%Y-%m)"
+    local target="${DEPLOYMENT_ROOT}/modules/${where}/$(date +%Y-%m)"
 
     log "copying module files"
     log "...from ${source}"
