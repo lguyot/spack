@@ -239,7 +239,7 @@ pipeline {
 
 
 
-        stage('Serial Libraries') {
+        stage('Libraries') {
             when {
                 expression {
                     return 'libraries' in run_stages()
