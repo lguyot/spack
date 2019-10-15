@@ -817,6 +817,7 @@ class IntelPackage(PackageBase):
             blacs_lib = 'libmkl_blacs'
         elif ('^mpich@2:' in spec_root or
               '^mvapich2' in spec_root or
+              '^hpe-mpi' in spec_root or
               '^intel-mpi' in spec_root or
               '^intel-parallel-studio' in spec_root):
             blacs_lib = 'libmkl_blacs_intelmpi'
