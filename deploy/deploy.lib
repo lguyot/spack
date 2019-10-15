@@ -10,7 +10,7 @@
 
 DEFAULT_DEPLOYMENT_DATE=${DEFAULT_DEPLOYMENT_DATE:-$(date +%Y-%m-%d)}
 
-INTEL_BASE_GCC_VERSION=${DEFAULT_INTEL_BASE_GCC_VERSION:-8.3.0}
+INTEL_BASE_GCC_VERSION=${DEFAULT_INTEL_BASE_GCC_VERSION:-9.2.0}
 
 # A list of stages in the order they will be built
 stages="compilers tools external-libraries libraries applications"

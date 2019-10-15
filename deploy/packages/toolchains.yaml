@@ -38,7 +38,7 @@ intel-stable:
   architecture:
   - x86_64
   compiler:
-  - intel@19.0.1
+  - intel@19.0.4
   mpi:
   - hpe-mpi@2.21
   lapack:
