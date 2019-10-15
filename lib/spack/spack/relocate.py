@@ -444,12 +444,8 @@ def relocate_macho_binaries(path_names, old_dir, new_dir, allow_root):
             modify_object_macholib(path_name, placeholder, new_dir)
             modify_object_macholib(path_name, old_dir, new_dir)
         if len(new_dir) <= len(old_dir):
-<<<<<<< HEAD
-            replace_prefix_bin(path_name, old_dir, new_dir)
-=======
             replace_prefix_bin(path_name, old_dir,
                                new_dir)
->>>>>>> d248b0e9d... Fix python3 errors from string and byte concatenation (#13141)
         else:
             tty.warn('Cannot do a binary string replacement'
                      ' with padding for %s'
