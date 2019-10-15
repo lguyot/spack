@@ -51,17 +51,17 @@ packages:
       - trilinos@xsdk-0.4.0-rc1
       - omega-h+trilinos@9.29.0
 
-  # gnu-stable-parallel-lapack-python:
-  #   target_matrix:
-  #     - gnu-stable
-  #   requires:
-  #     - architecture
-  #     - compiler
-  #     - lapack
-  #     - mpi
-  #     - python
-  #   specs:
-  #     - petsc+int64+mpi@3.11.2
+  gnu-stable-parallel-lapack-python:
+    target_matrix:
+      - gnu-stable
+    requires:
+      - architecture
+      - compiler
+      - lapack
+      - mpi
+      - python
+    specs:
+      - petsc+int64+mpi@3.11.2
 
   intel-stable-parallel:
     target_matrix:
@@ -76,14 +76,14 @@ packages:
       - ospray@1.7.3
       - ospray@1.8.5
 
-  # intel-stable-parallel-python:
-  #   target_matrix:
-  #     - intel-stable
-  #   requires:
-  #     - architecture
-  #     - compiler
-  #     - mpi
-  #     - python
-  #   specs:
-  #     - neuron@7.6.8
-  #     - neuron+debug@7.6.8
+  intel-stable-parallel-python:
+    target_matrix:
+      - intel-stable
+    requires:
+      - architecture
+      - compiler
+      - mpi
+      - python
+    specs:
+      - neuron@7.6.8
+      - neuron+debug@7.6.8
