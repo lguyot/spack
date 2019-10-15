@@ -583,18 +583,10 @@ def relocate_text(path_names, oldpath, newpath, oldprefix, newprefix):
     """
     sbangre = '#!/bin/bash %s/bin/sbang' % oldprefix
     sbangnew = '#!/bin/bash %s/bin/sbang' % newprefix
-<<<<<<< HEAD
-    tty.msg("FILTERING {}".format(path_names))
-    fs.filter_file(sbangre, sbangnew, *path_names,
-                   backup=False, string=True)
-    fs.filter_file(oldprefix, newprefix, *path_names,
-                   backup=False, string=True)
-=======
     for path_name in path_names:
         replace_prefix_text(path_name, oldpath, newpath)
         replace_prefix_text(path_name, sbangre, sbangnew)
         replace_prefix_text(path_name, oldprefix, newprefix)
->>>>>>> d248b0e9d... Fix python3 errors from string and byte concatenation (#13141)
 
 
 def substitute_rpath(orig_rpath, topdir, new_root_path):
