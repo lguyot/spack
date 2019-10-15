@@ -18,7 +18,7 @@ class NeurodamusModel(SimModel):
     """
     # NOTE: Several variants / dependencies come from SimModel
     variant('synapsetool', default=True,  description="Enable Synapsetool reader")
-    variant('mvdtool',     default=False, description="Enable MVDTool reader for Sonata Edges")
+    variant('mvdtool',     default=False, description="Enable MVDTool reader for Sonata Nodes")
     variant('python',      default=False, description="Install neurodamus-python alongside")
     variant('common_mods', default='',    description="Source of common mods. '': no change,"
                                                       " other string: alternate path")
