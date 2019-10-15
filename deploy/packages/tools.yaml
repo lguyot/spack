@@ -33,6 +33,7 @@ packages:
       - git@2.18.0
       - gmp@6.1.2
       - help2man@1.47.4
+      - hpctoolkit
       - hpe-mpi@2.21
       - intel-mpi@2018.1.163
       - isl@0.18
@@ -45,6 +46,7 @@ packages:
       - node-js@6.12.2
       - npm@3.10.9
       - pkg-config@0.29.2
+      - stat
       - swig@3.0.12
       - tcl@8.6.8
       - texinfo@6.5
