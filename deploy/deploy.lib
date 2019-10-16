@@ -508,17 +508,9 @@ copy_user_configuration() {
 
     rm -f ${target}/modules.{,c}sh
     for modpath in ${modpaths}; do
-        echo "MODULEPATH=\"\${MODULEPATH}\${MODULEPATH:+:}${modpath}\"" >> ${target}/modules.sh
-
-        cat <<EOF >> ${target}/modules.csh
-if ( \$?MODULEPATH ) then
-    setenv MODULEPATH \${MODULEPATH}:${modpath}
-else
-    setenv MODULEPATH ${modpath}
-endif
-EOF
+        echo "module use \"${modpath}\"" >> ${target}/modules.sh
+        echo "module use \"${modpath}\"" >> ${target}/modules.csh
     done
-    echo "export MODULEPATH" >> ${target}/modules.sh
 
     ./modules.rb > "${target}/modules.yaml"
 
