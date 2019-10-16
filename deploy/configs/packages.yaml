@@ -1,4 +1,8 @@
 packages:
+    atk:
+        paths:
+            atk@2.22.0: /usr
+        version: [2.22.0]
     autoconf:
         paths:
             autoconf@2.69: /usr
