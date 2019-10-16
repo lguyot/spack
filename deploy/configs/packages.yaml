@@ -46,7 +46,7 @@ packages:
     # Drags in heavy PEARL dependencies
     intltool:
         paths:
-            intltool@0.50.2
+            intltool@0.50.2: /usr
         version: [0.50.2]
     julia:
         variants: +external_llvm
