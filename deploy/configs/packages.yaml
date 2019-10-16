@@ -33,10 +33,6 @@ packages:
         paths:
             fontconfig@2.10.95: /usr
         version: [2.10.95]
-    glib:
-        paths:
-            glib@2.50.3: /usr
-        version: [2.50.3]
     gtkplus:
         paths:
             gtkplus@2.24.31: /usr
