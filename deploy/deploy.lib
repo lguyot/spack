@@ -458,6 +458,8 @@ generate_specs() {
             log "...using ${stub}.yaml"
             spackd --input packages/${stub}.yaml packages x86_64 >> "${datadir}/specs.txt"
         done
+
+        rpm -q -a > "${datadir}/rpms.txt"
     done
     log "leaving the deployment virtualenv"
     deactivate
