@@ -43,6 +43,11 @@ packages:
         variants: +hl
     intel-mkl:
         version: [2018.3.222]
+    # Drags in heavy PEARL dependencies
+    intltool:
+        paths:
+            intltool@0.50.2
+        version: [0.50.2]
     julia:
         variants: +external_llvm
     libjpeg:
