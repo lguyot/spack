@@ -1,0 +1,44 @@
+diff --git a/deps/cli11 b/deps/cli11
+--- a/deps/cli11
++++ b/deps/cli11
+@@ -1 +1 @@
+-Subproject commit 0be526e2471a019bcb31d1b8ae1f70a04a35d376
++Subproject commit 0be526e2471a019bcb31d1b8ae1f70a04a35d376-dirty
+diff --git a/deps/hadoken b/deps/hadoken
+--- a/deps/hadoken
++++ b/deps/hadoken
+@@ -1 +1 @@
+-Subproject commit c043da0cd614d68dff24fcecde23b8eb5f25a75d
++Subproject commit c043da0cd614d68dff24fcecde23b8eb5f25a75d-dirty
+diff --git a/deps/highfive b/deps/highfive
+index 6a4032e..fb79a7c 160000
+--- a/deps/highfive
++++ b/deps/highfive
+@@ -1 +1 @@
+-Subproject commit 6a4032e628decde7bb0576430a09fd037c46dbdb
++Subproject commit fb79a7cbe8faf92d281bcc9f4ed85ffd1913e2c8-dirty
+diff --git a/deps/hpc-coding-conventions b/deps/hpc-coding-conventions
+--- a/deps/hpc-coding-conventions
++++ b/deps/hpc-coding-conventions
+@@ -1 +1 @@
+-Subproject commit f14440f23f6286266bc5feaf12cbc8084151d4c9
++Subproject commit f14440f23f6286266bc5feaf12cbc8084151d4c9-dirty
+diff --git a/deps/nlohmann/json b/deps/nlohmann/json
+--- a/deps/nlohmann/json
++++ b/deps/nlohmann/json
+@@ -1 +1 @@
+-Subproject commit e326df211bd5b46c8ff9324cf093a932661da88a
++Subproject commit e326df211bd5b46c8ff9324cf093a932661da88a-dirty
+diff --git a/touchdetector/CMakeLists.txt b/touchdetector/CMakeLists.txt
+index 128a5fd..b2386fc 100644
+--- a/touchdetector/CMakeLists.txt
++++ b/touchdetector/CMakeLists.txt
+@@ -13,7 +13,7 @@ target_compile_options(touchdetector
+                                # -Wconversion
+                                # -Wdouble-promotion
+                                -Wduplicated-cond
+-                               -Werror
++			       # -Werror
+                                -Wextra
+                                -Wmisleading-indentation
+                                -Wnon-virtual-dtor

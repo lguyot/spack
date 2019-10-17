@@ -65,6 +65,8 @@ class Touchdetector(CMakePackage):
     depends_on('libxml2', when='@:4.4')
     depends_on('zlib', when='@:4.4')
 
+    patch("no-wall.patch")
+
     def cmake_args(self):
         args = [
             '-DUSE_OPENMP:BOOL={}'.format('+openmp' in self.spec),
