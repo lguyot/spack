@@ -76,14 +76,14 @@ packages:
       - ospray@1.7.3
       - ospray@1.8.5
 
-  # intel-stable-parallel-python:
-  #   target_matrix:
-  #     - intel-stable
-  #   requires:
-  #     - architecture
-  #     - compiler
-  #     - mpi
-  #     - python
-  #   specs:
-  #     - neuron@7.6.8
-  #     - neuron+debug@7.6.8
+  intel-stable-parallel-python:
+    target_matrix:
+      - intel-stable
+    requires:
+      - architecture
+      - compiler
+      - mpi
+      - python
+    specs:
+      - neuron@7.6.8
+      - neuron+debug@7.6.8

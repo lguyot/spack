@@ -36,7 +36,7 @@ packages:
   gnu-intel-stable-serial:
     target_matrix:
       - gnu-stable
-      # - intel-stable
+      - intel-stable
     requires:
       - architecture
       - compiler
