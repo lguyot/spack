@@ -175,5 +175,6 @@
   ```
   Evaluating the first line will override local environment variables such
   as the current `$HOME` directory.  *After leaving the shell, this will
-  leave a temporary directory `spack_*` behind that should be deleted.*
+  leave a temporary directory behind*, following the pattern `spack_*`.
+  Please make sure to delete this directory when not needed any longer.
 </details>
