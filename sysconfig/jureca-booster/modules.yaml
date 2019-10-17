@@ -38,6 +38,7 @@ modules:
       - 'neuron'
       - 'py-bluepyopt'
       - 'py-bluepy'
+      - 'libxslt'
     blacklist:
       - '%gcc'
       - '%intel'
