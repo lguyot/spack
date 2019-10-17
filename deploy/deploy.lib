@@ -556,7 +556,7 @@ bogus_packages() {
                 pkgname=$(sed -ne '/spec:/ { n; s/^- //; s/:$//; p }' ${dirname}/.spack/spec.yaml)
                 pkgdir=$(find ${dirname}/.spack -name ${pkgname} -type d)
 
-                log "...found empty installation directory for $(baseanme ${dirname})"
+                log "...found empty installation directory for $(basename ${dirname})"
                 [ -f "${pkgdir}/package.py" ] && [ -z "$(grep Bundle ${pkgdir}/package.py)" ] && {
                     echo ${dirname}
                 }
