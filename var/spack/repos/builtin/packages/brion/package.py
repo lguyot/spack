@@ -29,7 +29,7 @@ class Brion(CMakePackage):
     depends_on('boost@1.65.0')
     depends_on('lunchbox')
     depends_on('vmmlib')
-    depends_on('highfive@2.1: +boost ~mpi')
+    depends_on('highfive@1.6: +boost ~mpi')
     depends_on('mvdtool ~mpi')
 
     def cmake_args(self):

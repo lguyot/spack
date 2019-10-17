@@ -9,10 +9,10 @@ class Embree(CMakePackage):
     """High-performance ray tracing kernel"""
 
     homepage = "https://embree.github.io/"
-    url = "https://github.com/embree/embree/archive/v3.5.1.tar.gz"
+    url = "https://github.com/embree/embree/archive/v3.6.1.tar.gz"
     generator = 'Ninja'
 
-    version('3.5.2', sha256='245af8820a820af94679fa1d43a05a9c825451be0d603b6165229556adf49517')
+    version('3.6.1', sha256='d3ccbc54fe1a3eb1c373036fb146757082773735')
 
     depends_on('cmake@2.8.11:', type='build')
     depends_on('ispc', type='build')
@@ -20,4 +20,4 @@ class Embree(CMakePackage):
     depends_on('tbb')
 
     def cmake_args(self):
-        return ['-DEMBREE_TUTORIALS=OFF']
+        return ['-DEMBREE_TUTORIALS=OFF', '-DEMBREE_IGNORE_INVALID_RAYS=ON']

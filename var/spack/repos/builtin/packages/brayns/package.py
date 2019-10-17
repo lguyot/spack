@@ -8,8 +8,8 @@ from spack import *
 class Brayns(CMakePackage):
     """Visualizer for large-scale and interactive ray-tracing of neurons"""
 
-    homepage = "https://github.com/BlueBrain/Brayns"
-    git = "https://github.com/BlueBrain/Brayns.git"
+    homepage = "https://github.com/favreau/Brayns"
+    git = "https://github.com/favreau/Brayns.git"
     generator = 'Ninja'
 
     version('develop', submodules=True)
@@ -51,6 +51,7 @@ class Brayns(CMakePackage):
 
     def cmake_args(self):
         args = [
+            '-DOSPRAY_ROOT=/gpfs/bbp.cscs.ch/apps/hpc/jenkins/deploy/parallel-libraries/2018-12-19/linux-rhel7-x86_64/gcc-6.4.0/ospray-1.8.5-lnfsktkcvh',
             '-DDISABLE_SUBPROJECTS=ON',
             '-DBRAYNS_ASSIMP_ENABLED={}'.format(
                 'ON' if '+assimp' in self.spec else 'OFF'),

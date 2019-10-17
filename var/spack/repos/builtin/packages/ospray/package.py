@@ -20,7 +20,7 @@ class Ospray(CMakePackage):
     depends_on('cmake@3.1:', type='build')
     depends_on('ispc', type='build')
     depends_on('ninja', type='build')
-    depends_on('embree')
+    depends_on('embree@3.6.1')
     depends_on('mpi')
     depends_on('tbb')
 

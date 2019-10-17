@@ -33,4 +33,5 @@ class Assimp(CMakePackage):
         flags = list(flags)
         if name == 'cxxflags':
             flags.append(self.compiler.cxx11_flag)
+            flags.append('-fPIC')
         return (None, None, flags)
