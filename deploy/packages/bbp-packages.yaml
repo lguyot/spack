@@ -80,29 +80,29 @@ packages:
 
   #### sub-cellular ####
 
-  # gnu-stable-lapack-python-parallel:
-  #   target_matrix:
-  #     - gnu-stable
-  #   requires:
-  #     - architecture
-  #     - compiler
-  #     - lapack
-  #     - mpi
-  #     - python
-  #   specs:
-  #     - steps@3.4.1+petsc
-
-  gnu-stable-lapack-parallel:
+  gnu-stable-lapack-python-parallel:
     target_matrix:
       - gnu-stable
     requires:
       - architecture
       - compiler
-      - mpi
       - lapack
-      #- python
+      - mpi
+      - python
     specs:
-      - zee@develop
+      - steps@3.4.1+petsc
+
+  #gnu-stable-lapack-parallel:
+  #  target_matrix:
+  #    - gnu-stable
+  #  requires:
+  #    - architecture
+  #    - compiler
+  #    - mpi
+  #    - lapack
+  #    #- python
+  #  specs:
+  #    - zee@develop
 
   gnu-stable-lapack-python:
     target_matrix:
@@ -143,16 +143,16 @@ packages:
     specs:
       - reportinglib
 
-  # intel-stable-python-parallel:
-  #   target_matrix:
-  #     - intel-stable
-  #   requires:
-  #     - architecture
-  #     - compiler
-  #     - mpi
-  #     - python
-  #   specs:
-  #     - neurodamus-neocortex+coreneuron@0.3
+  intel-stable-python-parallel:
+    target_matrix:
+      - intel-stable
+    requires:
+      - architecture
+      - compiler
+      - mpi
+      - python
+    specs:
+      - neurodamus-neocortex+coreneuron@0.3
   #     - neurodamus-hippocampus+coreneuron@0.4
   #     - neurodamus-thalamus+coreneuron@0.3
   #     - neurodamus-mousify+coreneuron@0.3
