@@ -1,9 +1,3 @@
-diff --git a/deps/mpi-cpp b/deps/mpi-cpp
---- a/deps/mpi-cpp
-+++ b/deps/mpi-cpp
-@@ -1 +1 @@
--Subproject commit 4afa25d80797d0ea0098e60a1f2a90660d07145e
-+Subproject commit 4afa25d80797d0ea0098e60a1f2a90660d07145e-dirty
 diff --git a/tests/unit/CMakeLists.txt b/tests/unit/CMakeLists.txt
 index 29f1550..e8876fe 100644
 --- a/tests/unit/CMakeLists.txt
