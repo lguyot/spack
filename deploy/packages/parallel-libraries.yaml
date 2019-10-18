@@ -20,7 +20,6 @@ packages:
       - mpi
     specs:
       - py-mpi4py@3.0.0
-      # FORTRAN needed for steps+petsc
       - hdf5+mpi@1.10.4
       - highfive+mpi@2.0
       - parmetis@4.0.3
