@@ -69,8 +69,7 @@ class SimModel(Package):
         spec = self.spec
         assert os.path.isdir(mods_location), mods_location
         include_flag += ' -I%s' % (spec['coreneuron'].prefix.include)
-        if (str(spec['coreneuron'].version) == 'develop') or (str(spec['coreneuron'].version) ==
-                'master'):
+        if spec.satisfies('coeneuron@develop') or spec.satisfies('coeneuron@master'):
             which('nrnivmodl-core')(
                 '-i', include_flag, '-l', link_flag, '-n', self.mech_name,
                 '-v', str(spec.version), mods_location)
