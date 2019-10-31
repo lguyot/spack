@@ -13,9 +13,9 @@ class Mvdtool(CMakePackage):
 
     homepage = "https://github.com/BlueBrain/MVDTool"
     url      = "https://github.com/BlueBrain/MVDTool.git"
-    git      = "https://github.com/BlueBrain/MVDTool.git"
+    git      = "file:////gpfs/bbp.cscs.ch/home/leite/dev/MVDTool"
 
-    version('develop', git=url, clean=False, submodules=True)
+    version('develop', clean=False, submodules=True)
     version('2.2.0', tag='v2.2.0', clean=False)
     version('2.1.0', tag='v2.1.0', clean=False)
     version('2.0.0', tag='v2.0.0', clean=False)
@@ -24,12 +24,10 @@ class Mvdtool(CMakePackage):
     version('1.4', tag='v1.4')
 
     variant('mpi', default=True, description="Enable MPI backend")
-    variant('python', default=False, description="Enable Python bindings")
+    # variant('python', ...)  # Please use py-mvdtool instead
 
     depends_on('boost')
     depends_on('cmake', type='build')
-    depends_on('py-setuptools-scm', type='build', when='@2:')
-    depends_on('py-setuptools', type='build', when='@2:')
 
     depends_on('hdf5+mpi', when='+mpi')
     depends_on('hdf5~mpi', when='~mpi')
@@ -40,10 +38,6 @@ class Mvdtool(CMakePackage):
     depends_on('libsonata+mpi', when='@2.1: +mpi')
     depends_on('libsonata~mpi', when='@2.1: ~mpi')
 
-    depends_on('python', when='+python')
-    depends_on('py-cython', when='+python')
-    depends_on('py-numpy', when='+python')
-
     def cmake_args(self):
         args = []
         if self.spec.satisfies('+mpi'):
@@ -51,15 +45,5 @@ class Mvdtool(CMakePackage):
                 '-DCMAKE_C_COMPILER:STRING={}'.format(self.spec['mpi'].mpicc),
                 '-DCMAKE_CXX_COMPILER:STRING={}'.format(self.spec['mpi'].mpicxx),
             ])
-        if self.spec.satisfies('+python'):
-            args.extend([
-                '-DBUILD_PYTHON_BINDINGS:BOOL=ON'
-            ])
         return args
 
-    @when('+python')
-    def setup_dependent_environment(self, spack_env, run_env, dependent_spec):
-        for target in (self.prefix.lib, self.prefix.lib64):
-            pathname = os.path.join(target, 'python')
-            if os.path.isdir(pathname):
-                run_env.prepend_path('PYTHONPATH', pathname)

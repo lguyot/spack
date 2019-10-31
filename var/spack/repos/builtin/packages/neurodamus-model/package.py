@@ -18,7 +18,7 @@ class NeurodamusModel(SimModel):
     """
     # NOTE: Several variants / dependencies come from SimModel
     variant('synapsetool', default=True,  description="Enable Synapsetool reader")
-    variant('mvdtool',     default=False, description="Enable MVDTool reader for Sonata Nodes")
+    variant('mvdtool',     default=True , description="Enable MVDTool reader for Sonata Edges")
     variant('python',      default=False, description="Install neurodamus-python alongside")
     variant('common_mods', default='',    description="Source of common mods. '': no change,"
                                                       " other string: alternate path")
@@ -32,7 +32,8 @@ class NeurodamusModel(SimModel):
     depends_on('reportinglib')
     depends_on('reportinglib+profile', when='+profile')
     depends_on('synapsetool+mpi', when='+synapsetool')
-    depends_on('mvdtool+python', when='+mvdtool', type=('run',))
+    depends_on('py-mvdtool', type=('run',), when='+mvdtool')
+
     # NOTE: With Spack chain we no longer require support for external libs.
     # However, in some setups (notably tests) some libraries might still be
     # specificed as external and, if static, and we must bring their dependencies.
@@ -43,6 +44,10 @@ class NeurodamusModel(SimModel):
     def build_model(self, spec, prefix):
         """Build and install the bare model.
         """
+        if spec.satisfies('@develop'):
+            real_version = which('git')('describe', '--tags', output=str)
+            tty.warn('Building develop version. Real version is ' + real_version)
+
         SimModel.build(self, spec, prefix)
         # Dont install intermediate src. Worse, would move mod
         SimModel.install(self, spec, prefix, install_src=False)

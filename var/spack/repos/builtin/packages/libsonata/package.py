@@ -22,7 +22,7 @@ class Libsonata(CMakePackage):
     version('0.1.0', tag='v0.1.0', submodules=False, clean=False)
     version('0.0.3', tag='v0.0.3', submodules=False)
 
-    variant('mpi', default=False, description="Enable MPI backend")
+    variant('mpi', default=True, description="Enable MPI backend")
 
 
     depends_on('cmake@3.3:', type='build')
