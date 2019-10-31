@@ -16,6 +16,7 @@ class Mvdtool(CMakePackage):
     git      = "file:////gpfs/bbp.cscs.ch/home/leite/dev/MVDTool"
 
     version('develop', clean=False, submodules=True)
+    version('2.2.1', tag='v2.2.1', clean=False)
     version('2.2.0', tag='v2.2.0', clean=False)
     version('2.1.0', tag='v2.1.0', clean=False)
     version('2.0.0', tag='v2.0.0', clean=False)
