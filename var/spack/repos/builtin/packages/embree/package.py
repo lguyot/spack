@@ -22,4 +22,10 @@ class Embree(CMakePackage):
     depends_on('tbb')
 
     def cmake_args(self):
-        return ['-DEMBREE_TUTORIALS=OFF']
+        args = ['-DEMBREE_TUTORIALS=OFF']
+        # NOTE : spack will add target architecture to wrapper (e.g. avx512) but
+        # embree will try to build all tagrtes like sse, avx2 and this will result
+        # into wrong targets (and link errors). Set max isa to DEFAULT so that
+        # only max isa will be detected and used for building
+        args.append('-DEMBREE_MAX_ISA=DEFAULT')
+        return args
