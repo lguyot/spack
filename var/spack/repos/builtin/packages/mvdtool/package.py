@@ -13,7 +13,7 @@ class Mvdtool(CMakePackage):
 
     homepage = "https://github.com/BlueBrain/MVDTool"
     url      = "https://github.com/BlueBrain/MVDTool.git"
-    git      = "file:////gpfs/bbp.cscs.ch/home/leite/dev/MVDTool"
+    git      = "https://github.com/BlueBrain/MVDTool.git"
 
     version('develop', clean=False, submodules=True)
     version('2.2.1', tag='v2.2.1', clean=False)
