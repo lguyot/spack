@@ -39,7 +39,6 @@ class Bazel(Package):
 
     depends_on('java@8:', type=('build', 'link', 'run'))
     depends_on('zip')
-    depends_on('cares')
 
     patch('fix_env_handling.patch', when='@:0.4.5')
     patch('fix_env_handling-0.9.0.patch', when='@0.9.0:0.12.0')
