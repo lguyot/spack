@@ -10,7 +10,7 @@
 
 DEFAULT_DEPLOYMENT_DATE=${DEFAULT_DEPLOYMENT_DATE:-$(date +%Y-%m-%d)}
 
-INTEL_BASE_GCC_VERSION=${DEFAULT_INTEL_BASE_GCC_VERSION:-8.3.0}
+BASE_GCC_VERSION=${DEFAULT_BASE_GCC_VERSION:-9.2.0}
 
 # A list of stages in the order they will be built
 stages="compilers tools external-libraries libraries applications"
@@ -282,9 +282,8 @@ configure_compilers() {
             spack compiler find --scope=user
         fi
 
+        GCC_DIR=$(spack location --latest --install-dir gcc@${BASE_GCC_VERSION})
         if [[ ${line} = *"intel"* ]]; then
-            GCC_DIR=$(spack location --latest --install-dir gcc@${INTEL_BASE_GCC_VERSION})
-
             # update intel modules to use gcc@6.4.0 in .cfg files
             install_dir=$(spack location --latest --install-dir ${line})
             for f in $(find ${install_dir} -name "icc.cfg" -o -name "icpc.cfg" -o -name "ifort.cfg"); do
