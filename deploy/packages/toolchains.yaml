@@ -21,6 +21,18 @@ gnu-stable:
   python:
   - python@3.7.4
 
+gnu-stable-cuda:
+  architecture:
+  - x86_64
+  compiler:
+  - gcc@8.3.0
+  mpi:
+  - hpe-mpi@2.21
+  lapack:
+  - intel-mkl@2019.3.199
+  python:
+  - python@3.7.4
+
 # gnu-stable-py2:
 #   architecture:
 #   - x86_64

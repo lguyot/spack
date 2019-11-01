@@ -25,7 +25,7 @@ packages:
 
   gnu-stable-serial-python3:
     target_matrix:
-      - gnu-stable
+      - gnu-stable-cuda
     requires:
       - architecture
       - compiler
