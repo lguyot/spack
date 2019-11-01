@@ -129,9 +129,9 @@ class Tensorflow(Package):
             # Note : do not enable skylake yet, see https://github.com/easybuilders/easybuild-easyconfigs/issues/5936
             # get path for all dependent libraries to avoid issue with linking especially cuda and cudnn
             ld_lib_path = env.get('LD_LIBRARY_PATH')
-            bazel('-c', 'opt', '--copt=-mavx2', '--copt=-msse4.2', '--copt=-mfma', '--copt=-mavx', '--copt=-mfpmath=both', '--config=cuda', '--action_env="LD_LIBRARY_PATH=%s"' % ld_lib_path,  '//tensorflow/tools/pip_package:build_pip_package')
+            bazel('--jobs={}'.format(make_jobs), '-c', 'opt', '--copt=-mavx2', '--copt=-msse4.2', '--copt=-mfma', '--copt=-mavx', '--copt=-mfpmath=both', '--config=cuda', '--cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0"', '--action_env="LD_LIBRARY_PATH=%s"' % ld_lib_path,  '//tensorflow/tools/pip_package:build_pip_package')
         else:
-            bazel('-c', 'opt', '--copt=-mavx2', '--copt=-msse4.2', '--copt=-mfma', '--copt=-mavx', '--copt=-mfpmath=both', '--config=mkl', '//tensorflow/tools/pip_package:build_pip_package')
+            bazel('--jobs={}'.format(make_jobs), '-c', 'opt', '--copt=-mavx2', '--copt=-msse4.2', '--copt=-mfma', '--copt=-mavx', '--copt=-mfpmath=both', '--config=mkl', '//tensorflow/tools/pip_package:build_pip_package')
 
         build_pip_package = Executable('bazel-bin/tensorflow/tools/pip_package/build_pip_package')
         build_pip_package('.')
