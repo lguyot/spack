@@ -59,6 +59,7 @@ modules:
       - py-entity-management
       - py-jupyter-notebook
       - py-morph-tool
+      - 'py-mvdtool%gcc'
       - py-simwriter
       - py-pytouchreader
       - reportinglib
