@@ -32,7 +32,7 @@ class NeurodamusModel(SimModel):
     depends_on('reportinglib')
     depends_on('reportinglib+profile', when='+profile')
     depends_on('synapsetool+mpi', when='+synapsetool')
-    depends_on('py-mvdtool', type=('run',), when='+mvdtool')
+    depends_on('py-mvdtool+mpi', type='run', when='+mvdtool')
 
     # NOTE: With Spack chain we no longer require support for external libs.
     # However, in some setups (notably tests) some libraries might still be
