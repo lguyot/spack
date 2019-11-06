@@ -17,8 +17,8 @@ class NeurodamusModel(SimModel):
        Eventually in the future Models are independent entities, not tied to neurodamus
     """
     # NOTE: Several variants / dependencies come from SimModel
-    variant('synapsetool', default=True,  description="Enable Synapsetool reader")
-    variant('mvdtool',     default=True , description="Enable MVDTool reader for Sonata Edges")
+    variant('synapsetool', default=True,  description="Enable SynapseTool reader (for edges)")
+    variant('mvdtool',     default=True , description="Enable MVDTool reader (for nodes)")
     variant('python',      default=False, description="Install neurodamus-python alongside")
     variant('common_mods', default='',    description="Source of common mods. '': no change,"
                                                       " other string: alternate path")
