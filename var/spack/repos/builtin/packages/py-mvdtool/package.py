@@ -38,7 +38,8 @@ class PyMvdtool(PythonPackage):
     depends_on('highfive+mpi', type='build', when='+mpi')
 
     @run_before('build')
-    @when('+mpi')
     def configure(self):
-        env['CC'] = self.spec['mpi'].mpicc
-        env['CXX'] = self.spec['mpi'].mpicxx
+        # we cant use @when('+mpi'), raises NoSuchMethodError
+        if self.spec.satisfies('+mpi'):
+            env['CC'] = self.spec['mpi'].mpicc
+            env['CXX'] = self.spec['mpi'].mpicxx
