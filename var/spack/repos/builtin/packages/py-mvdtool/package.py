@@ -37,8 +37,8 @@ class PyMvdtool(PythonPackage):
     depends_on('highfive~mpi', type='build', when='~mpi')
     depends_on('highfive+mpi', type='build', when='+mpi')
 
-    @when('+mpi')
     @run_before('build')
+    @when('+mpi')
     def configure(self):
         env['CC'] = self.spec['mpi'].mpicc
         env['CXX'] = self.spec['mpi'].mpicxx
