@@ -22,8 +22,14 @@ class Highfive(CMakePackage):
     version('1.1', '986f0bd18c5264709688a536c02d2b2a')
     version('1.0', 'e44e548560ea92afdb244c223b7655b6')
 
-    variant('boost', default=True, description='Support Boost')
+    # This is a header-only lib so dependencies shall be specified in the
+    # target project directly and never specified here since they get truncated
+    # when installed as external packages (which makes sense to improve reuse)
+    variant('boost', default=False, description='Support Boost')
     variant('mpi', default=True, description='Support MPI')
+
+    # Develop builds tests which require boost
+    conflicts('~boost', when='@develop')
 
     depends_on('boost @1.41:', when='+boost')
     depends_on('hdf5 ~mpi', when='~mpi')
