@@ -25,7 +25,7 @@ class Highfive(CMakePackage):
     # This is a header-only lib so dependencies shall be specified in the
     # target project directly and never specified here since they get truncated
     # when installed as external packages (which makes sense to improve reuse)
-    variant('boost', default=False, description='Support Boost')
+    variant('boost', default=True, description='Support Boost')
     variant('mpi', default=True, description='Support MPI')
 
     # Develop builds tests which require boost
