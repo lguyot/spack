@@ -14,32 +14,25 @@ class Highfive(CMakePackage):
     url      = "https://github.com/BlueBrain/HighFive/archive/v2.0.tar.gz"
     git      = "https://github.com/BlueBrain/HighFive.git"
 
-    version('develop', git=git, branch='master')
-    version('2.1.1', git=git, tag='v2.1.1')
+    version('develop', branch='master')
+    version('2.1.1', tag='v2.1.1')
     version('2.0', 'deee33d7f578e33dccb5d04771f4e01b')
     version('1.5', '5e631c91d2ea7f3677e99d6bb6db8167')
     version('1.2', '030728d53519c7e13b5a522d34240301')
     version('1.1', '986f0bd18c5264709688a536c02d2b2a')
     version('1.0', 'e44e548560ea92afdb244c223b7655b6')
 
-    variant('boost', default=False, description='Support Boost')
+    variant('boost', default=True, description='Support Boost')
     variant('mpi', default=True, description='Support MPI')
 
     depends_on('boost @1.41:', when='+boost')
     depends_on('hdf5 ~mpi', when='~mpi')
     depends_on('hdf5 +mpi', when='+mpi')
 
-    def common_cmake_args(self):
+    def cmake_args(self):
         return [
             '-DUSE_BOOST:Bool={0}'.format('+boost' in self.spec),
             '-DHIGHFIVE_PARALLEL_HDF5:Bool={0}'.format('+mpi' in self.spec),
-            '-DHIGHFIVE_EXAMPLES:Bool=false']
-
-    def cmake_args(self):
-        return self.common_cmake_args() + [
-            '-DUNIT_TESTS:Bool=false']
-
-    @when('@develop')
-    def cmake_args(self):
-        return self.common_cmake_args() + [
-            '-DHIGHFIVE_UNIT_TESTS:Bool=false']
+            '-DHIGHFIVE_EXAMPLES:Bool=false',
+            '-DHIGHFIVE_UNIT_TESTS:Bool={0}'.format(self.spec.satisfies('@develop'))
+        ]

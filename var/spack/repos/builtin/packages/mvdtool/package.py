@@ -9,7 +9,9 @@ from spack import *
 
 
 class Mvdtool(CMakePackage):
-    """MVD3 neuroscience file format parser and tool"""
+    """Reader library and tool for neuroscientific node formats (MVD, Sonata).
+    For the Python bindings please see py-mvdtool
+    """
 
     homepage = "https://github.com/BlueBrain/MVDTool"
     url      = "https://github.com/BlueBrain/MVDTool.git"
@@ -26,7 +28,6 @@ class Mvdtool(CMakePackage):
     version('1.4', tag='v1.4')
 
     variant('mpi', default=True, description="Enable MPI backend")
-    # variant('python', ...)  # Please use py-mvdtool instead
 
     depends_on('boost')
     depends_on('cmake', type='build')
