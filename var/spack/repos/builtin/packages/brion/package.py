@@ -27,7 +27,7 @@ class Brion(CMakePackage):
     depends_on('python', type=('build', 'run'), when='+python')
     depends_on('py-numpy', type=('build', 'run'), when='+python')
 
-    depends_on('boost +shared'. when='~python')
+    depends_on('boost +shared', when='~python')
     depends_on('boost +shared +python', when='+python')
 
     # TODO: bzip2 is a dependency of boost. Needed here because of linking
