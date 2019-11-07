@@ -17,9 +17,6 @@ class PyMvdtool(PythonPackage):
     version('develop', branch='master', submodules=True, clean=False)
     version('2.3.0', tag='v2.3.0', submodules=True, clean=False)
     version('2.2.1', tag='v2.2.1', submodules=True, clean=False)
-    version('2.2.0', tag='v2.2.0', submodules=True, clean=False)
-    version('2.1.0', tag='v2.1.0', submodules=True, clean=False)
-    version('2.0.0', tag='v2.0.0', submodules=True, clean=False)
 
     variant('mpi', default=True, description='Build with support for MPI')
 

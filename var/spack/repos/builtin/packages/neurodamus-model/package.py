@@ -44,10 +44,6 @@ class NeurodamusModel(SimModel):
     def build_model(self, spec, prefix):
         """Build and install the bare model.
         """
-        if spec.satisfies('@develop'):
-            real_version = which('git')('describe', '--tags', output=str)
-            tty.warn('Building develop version. Real version is ' + real_version)
-
         SimModel.build(self, spec, prefix)
         # Dont install intermediate src. Worse, would move mod
         SimModel.install(self, spec, prefix, install_src=False)
