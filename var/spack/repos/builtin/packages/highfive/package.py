@@ -16,7 +16,7 @@ class Highfive(CMakePackage):
 
     version('develop', branch='master')
     version('2.1.1', tag='v2.1.1')
-    version('2.0', 'deee33d7f578e33dccb5d04771f4e01b')
+    version('2.0', '51676953bfeeaf5f0368840525d269e3')
     version('1.5', '5e631c91d2ea7f3677e99d6bb6db8167')
     version('1.2', '030728d53519c7e13b5a522d34240301')
     version('1.1', '986f0bd18c5264709688a536c02d2b2a')
