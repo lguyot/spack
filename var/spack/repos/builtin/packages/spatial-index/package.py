@@ -16,6 +16,7 @@ class SpatialIndex(PythonPackage):
     depends_on("cmake")
     depends_on("boost")
 
+    version('0.2.0', tag='0.2.0', submodules=True)
     version('0.1.0', tag='0.1.0', submodules=True)
 
 
