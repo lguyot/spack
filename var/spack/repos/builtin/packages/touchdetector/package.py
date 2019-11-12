@@ -45,6 +45,9 @@ class Touchdetector(CMakePackage):
     version('4.3.3', tag='4.3.3', submodules=True)
 
     variant('openmp', default=False, description='Enables OpenMP support')
+    variant('codechecks', default=False,
+            description='Perform additional code checks like ' +
+                        'formatting or static analysis')
 
     depends_on('cmake', type='build')
     depends_on('boost@1.50:')
@@ -57,6 +60,10 @@ class Touchdetector(CMakePackage):
     depends_on('mvdtool@1.5.1:2.0.0', when='@4.5:5.1')
     depends_on('mpi')
     depends_on('pugixml', when='@4.5:')
+    depends_on('py-cmake-format', type='build', when='+codechecks')
+    depends_on('py-pre-commit', type='build', when='+codechecks')
+    depends_on('py-pyyaml', type='build', when='+codechecks')
+    depends_on('python@3:', type='build', when='+codechecks')
     depends_on('range-v3', when='@5.0.2:')
     depends_on('highfive+mpi', when='@5.3.0:')
 
@@ -72,4 +79,9 @@ class Touchdetector(CMakePackage):
             '-DCMAKE_C_COMPILER={}'.format(self.spec['mpi'].mpicc),
             '-DCMAKE_CXX_COMPILER={}'.format(self.spec['mpi'].mpicxx)
         ]
+        if '+codechecks' in self.spec:
+            args +=  [
+                '-DTouchDetector_FORMATTING:BOOL=TRUE',
+                '-DTouchDetector_TEST_FORMATTING:BOOL=TRUE',
+            ]
         return args
