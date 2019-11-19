@@ -36,10 +36,7 @@ class Coreneuron(CMakePackage):
     homepage = "https://github.com/BlueBrain/CoreNeuron"
     url      = "https://github.com/BlueBrain/CoreNeuron"
 
-    version('develop', git=url, submodules=True)
-    version('0.16', git=url, tag='0.16', submodules=True)
-    version('0.15', git=url, tag='0.15', submodules=True)
-    version('0.14', git=url, tag='0.14', submodules=True)
+    version('refactor', git=url, branch='cleanup', submodules=True)
 
     variant('debug', default=False, description='Build debug with O0')
     variant('gpu', default=False, description="Enable GPU build")
@@ -71,16 +68,6 @@ class Coreneuron(CMakePackage):
     depends_on('nmodl', when='+nmodl')
     depends_on('eigen@3.3.4:~metis~scotch~fftw~suitesparse~mpfr', when='+nmodl')
     depends_on('ispc', when='+ispc')
-
-    # Old versions. Required by previous neurodamus package.
-    version('master',      git=url, submodules=True)
-    version('mousify',     git=url, submodules=True)
-    version('hippocampus', git=url, submodules=True)
-    version('plasticity',  git=url, submodules=True)
-    depends_on('neurodamus-base@master', when='@master')
-    depends_on('neurodamus-base@mousify', when='@mousify')
-    depends_on('neurodamus-base@plasticity', when='@plasticity')
-    depends_on('neurodamus-base@hippocampus', when='@hippocampus')
 
    # sympy and ispc options are only usable with nmodl
     conflicts('+sympyopt', when='~sympy')
