@@ -35,7 +35,7 @@ class HpeMpi(Package):
 
     version('2.21', '2dd6c53a82993c4df929fdf898ac3d19',
         url='file:///gpfs/bbp.cscs.ch/apps/hpc/download/hpe-mpi/hpe-mpi-2.21.tar.xz')
-    version('2.16', '0123456789abcdef0123456789abcdef', preferred=True)
+    version('2.16', '0123456789abcdef0123456789abcdef')
 
     provides('mpi')
 
@@ -48,14 +48,14 @@ class HpeMpi(Package):
         for rpm_filename in find(self.stage.source_path, '*.rpm'):
             with TemporaryFile() as tmpf:
                 rpm2cpio(rpm_filename, output=tmpf)
-                tmpf.seek(0) 
+                tmpf.seek(0)
                 cpio('-dium',input=tmpf)
 
 
     def install(self, spec, prefix):
         for mpic in find(self.stage.source_path, 'mpic*'):
           filter_file(r'-I(.*mpiroot)', r'-isystem\1', mpic)
-        
+
         install_tree(
             join_path(self.stage.source_path, 'opt/hpe/hpc/mpt/mpt-' + str(self.spec.version)),
             prefix

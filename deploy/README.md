@@ -108,7 +108,7 @@ gnu-stable:
   compiler:
   - gcc@6.4.0
   mpi:
-  - hpe-mpi@2.16
+  - hpe-mpi@2.21
   lapack:
   - openblas@0.2.20
   python:
@@ -168,8 +168,8 @@ These specs can be the used to install packages using `spack install` command. T
 
 ```
 → spackd --input packages/parallel-libraries.yaml packages x86_64
-hdf5+mpi@1.10.2 ^hpe-mpi@2.16 %intel@18.0.3 target=x86_64
-hdf5+mpi@1.10.2 ^hpe-mpi@2.16 %gcc@6.4.0 target=x86_64
+hdf5+mpi@1.10.2 ^hpe-mpi@2.21 %intel@18.0.3 target=x86_64
+hdf5+mpi@1.10.2 ^hpe-mpi@2.21 %gcc@6.4.0 target=x86_64
 omega-h@9.17.2 ^openblas@0.2.20 %gcc@6.4.0 target=x86_64
 petsc+int64+mpi@3.9.3 ^openblas@0.2.20 %gcc@6.4.0 target=x86_64
 trilinos@12.12.1 ^openblas@0.2.20 %gcc@6.4.0 target=x86_64
