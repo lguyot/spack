@@ -12,7 +12,7 @@ class Mpc(AutotoolsPackage):
        result."""
 
     homepage = "http://www.multiprecision.org"
-    url      = "https://ftpmirror.gnu.org/mpc/mpc-1.1.0.tar.gz"
+    url      = "ftp://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz"
     list_url = "http://www.multiprecision.org/mpc/download.html"
 
     version('1.1.0', '4125404e41e482ec68282a2e687f6c73')
