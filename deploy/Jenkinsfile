@@ -96,7 +96,7 @@ pipeline {
                      defaultValue: true,
                      description: 'Use cache to install already downloaded sources')
         string(name: 'sha1',
-               defaultValue: 'develop',
+               defaultValue: 'tds/develop',
                description: 'Used for fetching the right Jenkinsfile')
     }
 
