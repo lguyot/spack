@@ -72,7 +72,7 @@ def run_stages() {
 
 pipeline {
     agent {
-        label 'bb5-full'
+        label 'tds'
     }
 
     options {
@@ -338,23 +338,23 @@ pipeline {
                     }
                 }
 
-                stage("Test Modules") {
-                    steps {
-                        build job: "hpc.module-testing", parameters: [
-                            string(name: "MODULE_SCRIPT_PATH", value: "${DEPLOYMENT_ROOT}/config/modules.sh")
-                        ]
-                    }
-                }
+                // stage("Test Modules") {
+                //     steps {
+                //         build job: "hpc.module-testing", parameters: [
+                //             string(name: "MODULE_SCRIPT_PATH", value: "${DEPLOYMENT_ROOT}/config/modules.sh")
+                //         ]
+                //     }
+                // }
 
-                stage('Build Docker') {
-                    agent {
-                        label 'docker18'
-                    }
+                // stage('Build Docker') {
+                //     agent {
+                //         label 'docker18'
+                //     }
 
-                    steps {
-                        build_and_deploy_docker()
-                    }
-                }
+                //     steps {
+                //         build_and_deploy_docker()
+                //     }
+                // }
             }
         }
     }
