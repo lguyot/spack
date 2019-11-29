@@ -38,7 +38,7 @@ intel-stable:
   architecture:
   - x86_64
   compiler:
-  - intel@18.0.3
+  - intel@19.0.4
   mpi:
   - hpe-mpi@2.16
   lapack:
@@ -51,7 +51,7 @@ intel-stable-py2:
   architecture:
   - x86_64
   compiler:
-  - intel@18.0.3
+  - intel@19.0.4
   mpi:
   - hpe-mpi@2.16
   lapack:
@@ -64,7 +64,7 @@ intel-knl-stable:
   architecture:
   - x86_64_knl
   compiler:
-  - intel@18.0.3
+  - intel@19.0.4
   mpi:
   - hpe-mpi@2.16
   lapack:
