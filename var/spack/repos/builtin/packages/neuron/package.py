@@ -24,8 +24,9 @@ class Neuron(Package):
     git      = "https://github.com/nrnhines/nrn.git"
 
     version('develop', branch='master')
+    version('8.0.0a',  branch='pramodk/cmake_master_merge', preferred=True)
     version('7.8.0',   tag='7.8.0')
-    version('7.6.8',   tag='7.6.8', preferred=True)
+    version('7.6.8',   tag='7.6.8')
     version('7.6.6',   tag='7.6.6')
     version('2018-10', commit='b3097b7')
     # versions from url, with checksum
