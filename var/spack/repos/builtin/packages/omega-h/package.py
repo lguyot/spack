@@ -40,8 +40,10 @@ class OmegaH(CMakePackage):
     variant('optimize', default=True, description='Compile C++ with optimization')
     variant('symbols', default=True, description='Compile C++ with debug symbols')
     variant('warnings', default=False, description='Compile C++ with warnings')
+    variant('gmsh', default=False, description='Use Gmsh API for parallel mesh format')
 
     depends_on('gmsh', when='+examples', type='build')
+    depends_on('gmsh', when='+gmsh', type='build')
     depends_on('mpi', when='+mpi')
     depends_on('trilinos +kokkos +teuchos', when='+trilinos')
     depends_on('zlib', when='+zlib')
@@ -86,6 +88,10 @@ class OmegaH(CMakePackage):
             args.append('-DOmega_h_THROW:BOOL=ON')
         else:
             args.append('-DOmega_h_THROW:BOOL=OFF')
+        if '+gmsh' in self.spec:
+            args.append('-DOmega_h_USE_Gmsh:BOOL=ON')
+        else:
+            args.append('-DOmega_h_USE_Gmsh:BOOL=OFF')
         args += list(self._bob_options())
         return args
 
