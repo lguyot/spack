@@ -15,6 +15,7 @@ class Highfive(CMakePackage):
     git      = "https://github.com/BlueBrain/HighFive.git"
 
     version('develop', branch='master')
+    version('2.1.2', branch='build_find_hdf5')
     version('2.1.1', tag='v2.1.1')
     version('2.0', '51676953bfeeaf5f0368840525d269e3')
     version('1.5', '5e631c91d2ea7f3677e99d6bb6db8167')
@@ -42,12 +43,13 @@ class Highfive(CMakePackage):
 
     def cmake_args(self):
         return [
-            '-DUSE_EIGEN:Bool=' + ('TRUE' if '+eigen' in self.spec else 'FALSE'),
-            '-DUSE_XTENSOR:Bool=' + ('TRUE' if '+xtensor' in self.spec else 'FALSE'),
-            '-DUSE_BOOST:Bool={0}'.format('+boost' in self.spec),
+            '-DHIGHFIVE_USE_BOOST:Bool={0}'.format('+boost' in self.spec),
             '-DHIGHFIVE_PARALLEL_HDF5:Bool={0}'.format('+mpi' in self.spec),
+            '-DHIGHFIVE_USE_EIGEN:Bool=' + ('TRUE' if '+eigen' in self.spec else 'FALSE'),
+            '-DHIGHFIVE_USE_XTENSOR:Bool=' + ('TRUE' if '+xtensor' in self.spec else 'FALSE'),
             '-DHIGHFIVE_EXAMPLES:Bool={0}'.format(self.spec.satisfies('@develop')),
             '-DHIGHFIVE_UNIT_TESTS:Bool={0}'.format(self.spec.satisfies('@develop')),
             '-DHIGHFIVE_TEST_SINGLE_INCLUDES:Bool={0}'.format(self.spec.satisfies('@develop')),
             '-DHDF5_NO_FIND_PACKAGE_CONFIG_FILE=1',  # Dont use targets
+            '-DHIGHFIVE_USE_INSTALL_DEPS:Bool=ON',  # Newer highfive. Otherwise dynamic deps
         ]

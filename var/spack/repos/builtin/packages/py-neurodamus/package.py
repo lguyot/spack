@@ -15,7 +15,7 @@ class PyNeurodamus(PythonPackage):
     version('develop', branch='master')
     version('0.7.1',   tag='0.7.1')
 
-    # We depend on Neurodamus but let the user decide which one
+    depends_on('neurodamus-core',  type=('build', 'run'))
     depends_on('python@3.4:',      type=('build', 'run'))
     depends_on('py-setuptools',    type=('build', 'run'))
     depends_on('py-h5py',          type='run')
