@@ -36,6 +36,8 @@ class Jdk(Package):
     # found in a link above. The build number can be deciphered from the URL.
     # Alternatively, run `bin/java -version` after extracting. Replace '+'
     # symbol in version with '_', otherwise it will be interpreted as a variant
+    version('1.8.0_231-b11', 'c1fef2e714be761773ee0fc2be5dd78e', curl_options=curl_options,
+            url='http://download.oracle.com/otn-pub/java/jdk/8u231-b11/5b13a193868b4bf28bcb45c792fce896/jdk-8u231-linux-x64.tar.gz')
     version('1.8.0_191-b12', '6d0be0797d400a694c43eddf74efa7fd', curl_options=curl_options,
             url='http://download.oracle.com/otn-pub/java/jdk/8u191-b12/2787e4a523244c269598db4e85c51e0c/jdk-8u191-linux-x64.tar.gz')
     version('1.8.0_172-b11', 'eda2945e8c02b84adbf78f46c37b71c1', curl_options=curl_options,
