@@ -9,7 +9,7 @@ from spack import *
 from contextlib import contextmanager
 
 
-class Neuron(Package):
+class Neuron(CMakePackage, Package):
     """NEURON is a simulation environment for single and networks of neurons.
 
     NEURON is a simulation environment for modeling individual and networks of
@@ -39,27 +39,39 @@ class Neuron(Package):
     version('7.3', '993e539cb8bf102ca52e9fefd644ab61')
     version('7.2', '5486709b6366add932e3a6d141c4f7ad')
 
-    variant('binary',        default=False, description="Create special as a binary instead of shell script")
-    variant('coreneuron',    default=True,  description="Patch hh.mod for CoreNEURON compatibility")
-    variant('cross-compile', default=False, description='Build for cross-compile environment')
-    variant('debug',         default=False, description='Build debug with O0')
-    variant('mpi',           default=True,  description='Enable MPI parallelism')
-    variant('multisend',     default=True,  description="Enable multi-send spike exchange")
-    variant('profile',       default=False, description="Enable Tau profiling")
-    variant('python',        default=True,  description='Enable python')
-    variant('shared',        default=True,  description='Build shared libraries')
-    variant('pysetup',       default=True,  description="Build Python module with setup.py")
-    variant('rx3d',          default=False, description="Enable cython translated 3-d rxd. Depends on pysetup")
+    variant('cmake',                   default=True,  description="Build NEURON using cmake")
+    variant('binary',                  default=False, description="Create special as a binary instead of shell script")
+    variant('coreneuron',              default=True,  description="Patch hh.mod for CoreNEURON compatibility")
+    variant('cross-compile',           default=False, description='Build for cross-compile environment')
+    variant('debug',                   default=False, description='Build debug with O0')
+    variant('discrete-event-observer', default=True,  description='Enable Observer to be a subclass of DiscreteEvent')
+    variant('interviews',              default=False, description='Enable GUI with INTERVIEWS')
+    variant('legacy-fr',               default=True,  description='Use original faraday, R, etc. instead of 2019 nist constants')
+    variant('mech-dll-style',          default=True,  description='Dynamically load nrnmech shared library')
+    variant('memacs',                  default=True,  description='Enable use of memacs')
+    variant('mpi',                     default=True,  description='Enable MPI parallelism')
+    variant('multisend',               default=True,  description="Enable multi-send spike exchange")
+    variant('profile',                 default=False, description="Enable Tau profiling")
+    variant('pysetup',                 default=True,  description="Build Python module with setup.py")
+    variant('python',                  default=True,  description='Enable python')
+    variant('rx3d',                    default=True,  description="Enable cython translated 3-d rxd. Depends on pysetup")
+    variant('shared',                  default=True,  description='Build shared libraries')
+    variant('tests',                   default=False, description='Enable unit tests')
+    variant('threads',                 default=True,  description='Allow use of Pthreads')
 
     variant('deployment_build', default='1',  description='Build number for re-builds')
 
-    depends_on('autoconf',   type='build')
-    depends_on('automake',   type='build')
-    depends_on('bison',      type='build')
-    depends_on('flex',       type='build')
-    depends_on('libtool',    type='build')
-    depends_on('pkgconfig',  type='build')
+    variant('codechecks', default=False,
+            description='Perform additional code checks like ' +
+                        'formatting or static analysis')
 
+    depends_on('autoconf',    type='build', when='~cmake')
+    depends_on('automake',    type='build', when='~cmake')
+    depends_on('bison',       type='build')
+    depends_on('flex',        type='build')
+    depends_on('libtool',     type='build')
+    depends_on('pkgconfig',   type='build')
+    
     # Readline became incompatible with Mac so we use neuron internal readline.
     # HOWEVER, with the internal version there is a bug which makes Vector.as_numpy() not work!
     depends_on('readline', when=sys.platform != 'darwin')
@@ -75,27 +87,64 @@ class Neuron(Package):
     conflicts('+pysetup', when='~python')
     conflicts('+rx3d',    when='~pysetup')
 
-    _default_options = ['--without-iv',
-                        '--without-x']
-    _specs_to_options = {
-        '+cross-compile': ['cross_compiling=yes',
-                           '--without-readline',
-                           '--without-memacs',
-                           '--without-nmodl'],
-        '~python':    ['--without-nrnpython'],
-        '~pysetup':   ['--disable-pysetup'],
-        '+mpi+multisend': ['--with-multisend'],
-        '~rx3d':      ['--disable-rx3d'],
-        '~mpi':       ['--without-paranrn'],
-        '+mpi':       ['--with-paranrn=dynamic'],
-        '~shared':    ['--disable-shared'],
-        '+binary':    ['linux_nrnmech=no'],
-    }
+    @when('+cmake')
+    def cmake_args(self):
+        def cmake_enable_option(name, spec_requiremement):
+            value = 'TRUE' if spec_requiremement in self.spec else 'FALSE'
+            return '-DNRN_ENABLE_' + name + ':BOOL=' + value
+        args = [
+            cmake_enable_option('SHARED', '+shared'),
+            cmake_enable_option('INTERVIEWS', '+interviews'),
+            cmake_enable_option('LEGACY_FR', '+legacy-fr'),
+            cmake_enable_option('MECH_DLL_STYLE', '+mech-dll-style'),
+            cmake_enable_option('DISCRETE_EVENT_OBSERVER', '+discrete-event-observer'),
+            cmake_enable_option('PYTHON', '+python'),
+            cmake_enable_option('THREADS', '+threads'),
+            cmake_enable_option('MPI', '+mpi'),
+            cmake_enable_option('MEMACS', '+memacs'),
+            cmake_enable_option('RX3D', '+rx3d'),
+            cmake_enable_option('CORENEURON', '+coreneuron'),
+            cmake_enable_option('TESTS', '+tests'),
+        ]
+        if "+python" in self.spec:
+            args.append('-DPYTHON_EXECUTABLE:FILEPATH=' + self.spec['python'].command.path)
 
-    filter_compiler_wrappers('*/bin/nrniv_makefile')
-    filter_compiler_wrappers('*/bin/nrnmech_makefile')
-    filter_compiler_wrappers('*/bin/nrnoc_makefile')
-    filter_compiler_wrappers('*/share/nrn/libtool')
+        filter_compiler_wrappers('*/bin/nrnmech_makefile')
+
+        return args
+
+    @when('~cmake')
+    @run_before('install')
+    def set_autoconf_options(self):
+        _default_options = ['--without-iv',
+                            '--without-x']
+        _specs_to_options = {
+            '+cross-compile': ['cross_compiling=yes',
+                               '--without-readline',
+                               '--without-memacs',
+                               '--without-nmodl'],
+            '~python': ['--without-nrnpython'],
+            '~pysetup': ['--disable-pysetup'],
+            '+mpi+multisend': ['--with-multisend'],
+            '~rx3d': ['--disable-rx3d'],
+            '~mpi': ['--without-paranrn'],
+            '+mpi': ['--with-paranrn=dynamic'],
+            '~shared': ['--disable-shared'],
+            '+binary': ['linux_nrnmech=no'],
+        }
+
+        filter_compiler_wrappers('*/bin/nrniv_makefile')
+        filter_compiler_wrappers('*/bin/nrnmech_makefile')
+        filter_compiler_wrappers('*/bin/nrnoc_makefile')
+        filter_compiler_wrappers('*/share/nrn/libtool')
+
+    @when('~cmake')
+    def cmake(self, spec, prefix):
+        return
+
+    @when('~cmake')
+    def build(self, spec, prefix):
+        return
 
     def get_neuron_archdir(self):
         """Determine the architecture-specific neuron base directory.
@@ -104,15 +153,19 @@ class Neuron(Package):
         we dynamically find the architecture-specific directory by
         looking for a specific binary.
         """
-        file_list = find(self.prefix, '*/bin/nrniv_makefile')
-        # check needed as when initially evaluated the prefix is empty
-        if file_list:
-            neuron_archdir = os.path.dirname(os.path.dirname(file_list[0]))
-        else:
+        if self.spec.satisfies('+cmake'):
             neuron_archdir = self.prefix
+        else:
+            file_list = find(self.prefix, '*/bin/nrniv_makefile')
+            # check needed as when initially evaluated the prefix is empty
+            if file_list:
+                neuron_archdir = os.path.dirname(os.path.dirname(file_list[0]))
+            else:
+                neuron_archdir = self.prefix
 
         return neuron_archdir
 
+    @when('~cmake')
     def patch(self):
         # aclocal need complete include path (especially on os x)
         pkgconf_inc = '-I %s/share/aclocal/' % (self.spec['pkgconfig'].prefix)
@@ -125,6 +178,31 @@ class Neuron(Package):
             filter_file(r'GLOBAL minf', r'RANGE minf', 'src/nrnoc/hh.mod')
             filter_file(r'TABLE minf', r':TABLE minf', "src/nrnoc/hh.mod")
 
+
+    @run_after('install')
+    @when('+cmake')
+    def filter_compilers(self):
+        """run after install to avoid spack compiler wrappers
+        getting embded into nrnivmodl script"""
+
+        cc_compiler = self.compiler.cc
+        cxx_compiler = self.compiler.cxx
+        if self.spec.satisfies('+mpi'):
+            cc_compiler = self.spec['mpi'].mpicc
+            cxx_compiler = self.spec['mpi'].mpicxx
+
+        arch = self.get_neuron_archdir()
+        nrnmech_makefile = join_path(self.prefix, arch, './bin/nrnmech_makefile')
+
+        kwargs = {
+            'backup': False,
+            'string': True
+        }
+
+        filter_file(env['CC'],  cc_compiler, nrnmech_makefile, **kwargs)
+        filter_file(env['CXX'], cxx_compiler, nrnmech_makefile, **kwargs)
+
+    @when('~cmake')
     def get_arch_options(self, spec):
         options = []
         # need to enable bg-q arch
@@ -138,6 +216,7 @@ class Neuron(Package):
 
         return options
 
+    @when('~cmake')
     def get_python_options(self, spec):
         """Determine config options for Python
         """
@@ -161,6 +240,7 @@ class Neuron(Package):
 
         return options
 
+    @when('~cmake')
     def get_compilation_options(self, spec):
         """ Build options setting compilers and compilation flags,
             using MPIC[XX] and C[XX]FLAGS
@@ -191,6 +271,7 @@ class Neuron(Package):
                             'MPICXX=%s' % spec['mpi'].mpicxx])
         return options
 
+    @when('~cmake')
     def build_nmodl(self, spec, prefix):
         # build components for front-end arch in cross compiling environment
         options = ['--prefix=%s' % prefix,
@@ -212,6 +293,7 @@ class Neuron(Package):
         make()
         make('install')
 
+    @when('~cmake')
     def install(self, spec, prefix):
         options = ['--prefix=%s' % prefix] + self._default_options
         for specname, spec_opts in self._specs_to_options.items():
@@ -255,9 +337,10 @@ class Neuron(Package):
                 make('install')
 
     @run_after('install')
+    @when('~cmake')
     def filter_compilers(self):
         """run after install to avoid spack compiler wrappers
-        getting embded into nrnivmodl script"""
+                getting embded into nrnivmodl script"""
 
         cc_compiler = self.compiler.cc
         cxx_compiler = self.compiler.cxx
@@ -277,16 +360,16 @@ class Neuron(Package):
 
         # hpe-mpi requires linking to libmpi++ and hence needs to use cxx wrapper
         if self.spec.satisfies('+mpi'):
-            filter_file(env['CC'],  cxx_compiler, libtool_makefile, **kwargs)
+           filter_file(env['CC'],  cxx_compiler, libtool_makefile, **kwargs)
         else:
-            filter_file(env['CC'],  cc_compiler, libtool_makefile, **kwargs)
+           filter_file(env['CC'],  cc_compiler, libtool_makefile, **kwargs)
         filter_file(env['CXX'], cxx_compiler, libtool_makefile, **kwargs)
         # In Cray systems we overwrite the spack compiler with CC or CXX accordingly
         if 'cray' in self.spec.architecture:
             filter_file(env['CC'], 'cc', libtool_makefile, **kwargs)
             filter_file(env['CXX'], 'CC', libtool_makefile, **kwargs)
 
-        filter_file(env['CC'],  cc_compiler, nrnmech_makefile, **kwargs)
+        filter_file(env['CC'], cc_compiler, nrnmech_makefile, **kwargs)
         filter_file(env['CXX'], cxx_compiler, nrnmech_makefile, **kwargs)
 
         filter_file(env['CC'],  cc_compiler, nrniv_makefile, **kwargs)
