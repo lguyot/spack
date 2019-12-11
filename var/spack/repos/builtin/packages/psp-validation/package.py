@@ -30,4 +30,4 @@ class PspValidation(PythonPackage):
     depends_on('py-bluepy@0.13.3:', type='run')
     depends_on('py-efel@3.0.39:', type='run')
 
-    depends_on('py-mock@3.0.5', type='build')
+    depends_on('py-mock@3.0.5', type='build')  # remove in 2020
