@@ -15,7 +15,8 @@ class PyMock(PythonPackage):
     url      = "https://pypi.io/packages/source/m/mock/mock-1.3.0.tar.gz"
 
     version('3.0.5', 'd834a46d9a129be3e76fdcc99751e82c')
-    version('2.0.0', '0febfafd14330c9dcaa40de2d82d40ad')
+    # Warning: tensorflow depends on it. Mind bumping mock version
+    version('2.0.0', '0febfafd14330c9dcaa40de2d82d40ad', preferred=True)
     version('1.3.0', '73ee8a4afb3ff4da1b4afa287f39fdeb')
 
     depends_on('py-pbr@0.11:', type=('build', 'run'))
