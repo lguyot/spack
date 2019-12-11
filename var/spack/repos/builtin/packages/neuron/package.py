@@ -154,7 +154,7 @@ class Neuron(CMakePackage, Package):
         looking for a specific binary.
         """
         if self.spec.satisfies('+cmake'):
-            neuron_archdir = self.prefix
+            neuron_archdir = self.prefix + 'x86_64'
         else:
             file_list = find(self.prefix, '*/bin/nrniv_makefile')
             # check needed as when initially evaluated the prefix is empty
@@ -191,8 +191,7 @@ class Neuron(CMakePackage, Package):
             cc_compiler = self.spec['mpi'].mpicc
             cxx_compiler = self.spec['mpi'].mpicxx
 
-        arch = self.get_neuron_archdir()
-        nrnmech_makefile = join_path(self.prefix, arch, './bin/nrnmech_makefile')
+        nrnmech_makefile = join_path(self.prefix, './bin/nrnmech_makefile')
 
         kwargs = {
             'backup': False,
