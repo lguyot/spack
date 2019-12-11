@@ -49,9 +49,10 @@ class Neuron(CMakePackage):
     variant('profile',                 default=False, description="Enable Tau profiling")
     variant('pysetup',                 default=True,  description="Build Python module with setup.py")
     variant('python',                  default=True,  description='Enable python')
-    variant('rx3d',                    default=False, description="Enable cython translated 3-d rxd. Depends on pysetup")
+    variant('rx3d',                    default=True, description="Enable cython translated 3-d rxd. Depends on pysetup")
     variant('shared',                  default=True,  description='Build shared libraries')
     variant('tests',                   default=False, description='Enable unit tests')
+    variant('threads',                 default=True,  description='Allow use of Pthreads')
 
     variant('deployment_build', default='1',  description='Build number for re-builds')
 
@@ -104,8 +105,13 @@ class Neuron(CMakePackage):
             cmake_enable_option('LEGACY_FR', '+legacy-fr'),
             cmake_enable_option('MECH_DLL_STYLE', '+mech-dll-style'),
             cmake_enable_option('DISCRETE_EVENT_OBSERVER', '+discrete-event-observer'),
+            cmake_enable_option('PYTHON', '+python'),
+            cmake_enable_option('THREADS', '+threads'),
+            cmake_enable_option('MPI', '+mpi'),
             cmake_enable_option('MEMACS', '+memacs'),
-            cmake_enable_option('TESTS', '+tests')
+            cmake_enable_option('RX3D', '+rx3d'),
+            cmake_enable_option('CORENEURON', '+coreneuron'),
+            cmake_enable_option('TESTS', '+tests'),
         ]
         if "+python" in self.spec:
             args.append('-DPYTHON_EXECUTABLE:FILEPATH=' + self.spec['python'].command.path)
