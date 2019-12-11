@@ -9,7 +9,7 @@ from spack import *
 from contextlib import contextmanager
 
 
-class Neuron(Package):
+class Neuron(CMakePackage):
     """NEURON is a simulation environment for single and networks of neurons.
 
     NEURON is a simulation environment for modeling individual and networks of
@@ -24,6 +24,7 @@ class Neuron(Package):
     git      = "https://github.com/nrnhines/nrn.git"
 
     version('develop', branch='master')
+    version('cmake',   branch='pramodk/cmake_master_merge')
     version('7.8.0',   tag='7.8.0')
     version('7.6.8',   tag='7.6.8', preferred=True)
     version('7.6.6',   tag='7.6.6')
@@ -34,62 +35,103 @@ class Neuron(Package):
     version('7.3', '993e539cb8bf102ca52e9fefd644ab61')
     version('7.2', '5486709b6366add932e3a6d141c4f7ad')
 
-    variant('binary',        default=False, description="Create special as a binary instead of shell script")
-    variant('coreneuron',    default=True,  description="Patch hh.mod for CoreNEURON compatibility")
-    variant('cross-compile', default=False, description='Build for cross-compile environment')
-    variant('debug',         default=False, description='Build debug with O0')
-    variant('mpi',           default=True,  description='Enable MPI parallelism')
-    variant('multisend',     default=True,  description="Enable multi-send spike exchange")
-    variant('profile',       default=False, description="Enable Tau profiling")
-    variant('python',        default=True,  description='Enable python')
-    variant('shared',        default=True,  description='Build shared libraries')
-    variant('pysetup',       default=True,  description="Build Python module with setup.py")
-    variant('rx3d',          default=False, description="Enable cython translated 3-d rxd. Depends on pysetup")
+    variant('binary',                  default=False, description="Create special as a binary instead of shell script")
+    variant('coreneuron',              default=True,  description="Patch hh.mod for CoreNEURON compatibility")
+    variant('cross-compile',           default=False, description='Build for cross-compile environment')
+    variant('debug',                   default=False, description='Build debug with O0')
+    variant('discrete-event-observer', default=True,  description='Enable Observer to be a subclass of DiscreteEvent')
+    variant('interviews',              default=False, description='Enable GUI with INTERVIEWS')
+    variant('legacy-fr',               default=True,  description='Use original faraday, R, etc. instead of 2019 nist constants')
+    variant('mech-dll-style',          default=True,  description='Dynamically load nrnmech shared library')
+    variant('memacs',                  default=True,  description='Enable use of memacs')
+    variant('mpi',                     default=True,  description='Enable MPI parallelism')
+    variant('multisend',               default=True,  description="Enable multi-send spike exchange")
+    variant('profile',                 default=False, description="Enable Tau profiling")
+    variant('pysetup',                 default=True,  description="Build Python module with setup.py")
+    variant('python',                  default=True,  description='Enable python')
+    variant('rx3d',                    default=False, description="Enable cython translated 3-d rxd. Depends on pysetup")
+    variant('shared',                  default=True,  description='Build shared libraries')
+    variant('tests',                   default=False, description='Enable unit tests')
 
     variant('deployment_build', default='1',  description='Build number for re-builds')
 
-    depends_on('autoconf',   type='build')
-    depends_on('automake',   type='build')
-    depends_on('bison',      type='build')
-    depends_on('flex',       type='build')
-    depends_on('libtool',    type='build')
-    depends_on('pkgconfig',  type='build')
+    variant('codechecks', default=False,
+            description='Perform additional code checks like ' +
+                        'formatting or static analysis')
 
+    depends_on('autoconf',    type='build')
+    depends_on('automake',    type='build')
+    depends_on('bison',       type='build')
+    depends_on('flex',        type='build')
+    depends_on('libtool',     type='build')
+    depends_on('pkgconfig',   type='build')
+    
     # Readline became incompatible with Mac so we use neuron internal readline.
     # HOWEVER, with the internal version there is a bug which makes Vector.as_numpy() not work!
     depends_on('readline', when=sys.platform != 'darwin')
 
-    depends_on('mpi',         when='+mpi')
-    depends_on('ncurses',     when='~cross-compile')
-    depends_on('python@2.6:', when='+python', type=('build', 'link', 'run'))
+    depends_on('mpi',             when='+mpi')
+    depends_on('ncurses',         when='~cross-compile')
+    depends_on('python',          type=('build', 'link', 'run'), when='+python')
+    depends_on("py-cython",   type="build", when="+python")
+    depends_on("py-pytest",   type="build", when="+python+tests")
     # Numpy is required for Vector.as_numpy()
-    # depends_on('py-numpy',    when='+python', type='run')
+    depends_on('py-numpy',    when='+python', type='run')
+
+    depends_on('git',             type='build', when='+codechecks')
+    depends_on('py-cmake-format', type='build', when='+codechecks')
+    depends_on('py-pre-commit',   type='build', when='+codechecks')
+    depends_on('py-pyyaml',       type='build', when='+codechecks')
+    depends_on('python@3:',       type='build', when='+codechecks')
+
     depends_on('tau',         when='+profile')
+
+    depends_on('libx11', when="+interviews")
+
+    depends_on('coreneuron', when="+coreneuron")
 
     conflicts('~shared',  when='+python')
     conflicts('+pysetup', when='~python')
     conflicts('+rx3d',    when='~pysetup')
 
-    _default_options = ['--without-iv',
-                        '--without-x']
-    _specs_to_options = {
-        '+cross-compile': ['cross_compiling=yes',
-                           '--without-readline',
-                           '--without-memacs',
-                           '--without-nmodl'],
-        '~python':    ['--without-nrnpython'],
-        '~pysetup':   ['--disable-pysetup'],
-        '+mpi+multisend': ['--with-multisend'],
-        '~rx3d':      ['--disable-rx3d'],
-        '~mpi':       ['--without-paranrn'],
-        '+mpi':       ['--with-paranrn=dynamic'],
-        '~shared':    ['--disable-shared'],
-        '+binary':    ['linux_nrnmech=no'],
-    }
+    def cmake_args(self):
+        def cmake_enable_option(name, spec_requiremement):
+            value = 'TRUE' if spec_requiremement in self.spec else 'FALSE'
+            return '-DNRN_ENABLE_' + name + ':BOOL=' + value
+        args = [
+            cmake_enable_option('SHARED', '+shared'),
+            cmake_enable_option('INTERVIEWS', '+interviews'),
+            cmake_enable_option('LEGACY_FR', '+legacy-fr'),
+            cmake_enable_option('MECH_DLL_STYLE', '+mech-dll-style'),
+            cmake_enable_option('DISCRETE_EVENT_OBSERVER', '+discrete-event-observer'),
+            cmake_enable_option('MEMACS', '+memacs'),
+            cmake_enable_option('TESTS', '+tests')
+        ]
+        if "+python" in self.spec:
+            args.append('-DPYTHON_EXECUTABLE:FILEPATH=' + self.spec['python'].command.path)
+        return args
 
-    filter_compiler_wrappers('*/bin/nrniv_makefile')
-    filter_compiler_wrappers('*/bin/nrnmech_makefile')
-    filter_compiler_wrappers('*/bin/nrnoc_makefile')
+
+    # _default_options = ['--without-iv',
+    #                     '--without-x']
+    # _specs_to_options = {
+    #     '+cross-compile': ['cross_compiling=yes',
+    #                        '--without-readline',
+    #                        '--without-memacs',
+    #                        '--without-nmodl'],
+    #     '~python':    ['--without-nrnpython'],
+    #     '~pysetup':   ['--disable-pysetup'],
+    #     '+mpi+multisend': ['--with-multisend'],
+    #     '~rx3d':      ['--disable-rx3d'],
+    #     '~mpi':       ['--without-paranrn'],
+    #     '+mpi':       ['--with-paranrn=dynamic'],
+    #     '~shared':    ['--disable-shared'],
+    #     '+binary':    ['linux_nrnmech=no'],
+    # }
+
+    # filter_compiler_wrappers('*/bin/nrniv_makefile')
+    # filter_compiler_wrappers('*/bin/nrnmech_makefile')
+    # filter_compiler_wrappers('*/bin/nrnoc_makefile')
 
     def get_neuron_archdir(self):
         """Determine the architecture-specific neuron base directory.
@@ -107,17 +149,17 @@ class Neuron(Package):
 
         return neuron_archdir
 
-    def patch(self):
-        # aclocal need complete include path (especially on os x)
-        pkgconf_inc = '-I %s/share/aclocal/' % (self.spec['pkgconfig'].prefix)
-        libtool_inc = '-I %s/share/aclocal/' % (self.spec['libtool'].prefix)
-        newpath = 'aclocal -I m4 %s %s' % (pkgconf_inc, libtool_inc)
-        filter_file(r'aclocal -I m4', r'%s' % newpath, "build.sh")
+    # def patch(self):
+    #     # aclocal need complete include path (especially on os x)
+    #     pkgconf_inc = '-I %s/share/aclocal/' % (self.spec['pkgconfig'].prefix)
+    #     libtool_inc = '-I %s/share/aclocal/' % (self.spec['libtool'].prefix)
+    #     newpath = 'aclocal -I m4 %s %s' % (pkgconf_inc, libtool_inc)
+    #     filter_file(r'aclocal -I m4', r'%s' % newpath, "build.sh")
 
-        # patch hh.mod to be compatible with coreneuron
-        if self.spec.satisfies('+coreneuron'):
-            filter_file(r'GLOBAL minf', r'RANGE minf', 'src/nrnoc/hh.mod')
-            filter_file(r'TABLE minf', r':TABLE minf', "src/nrnoc/hh.mod")
+    #     # patch hh.mod to be compatible with coreneuron
+    #     if self.spec.satisfies('+coreneuron'):
+    #         filter_file(r'GLOBAL minf', r'RANGE minf', 'src/nrnoc/hh.mod')
+    #         filter_file(r'TABLE minf', r':TABLE minf', "src/nrnoc/hh.mod")
 
     def get_arch_options(self, spec):
         options = []
@@ -132,28 +174,28 @@ class Neuron(Package):
 
         return options
 
-    def get_python_options(self, spec):
-        """Determine config options for Python
-        """
-        options = []
+    # def get_python_options(self, spec):
+    #     """Determine config options for Python
+    #     """
+    #     options = []
 
-        if spec.satisfies('+python'):
-            python_exec = spec['python'].command.path
-            py_inc = spec['python'].headers.directories[0]
-            py_lib = spec['python'].prefix.lib
+    #     if spec.satisfies('+python'):
+    #         python_exec = spec['python'].command.path
+    #         py_inc = spec['python'].headers.directories[0]
+    #         py_lib = spec['python'].prefix.lib
 
-            if not os.path.isdir(py_lib):
-                py_lib = spec['python'].prefix.lib64
+    #         if not os.path.isdir(py_lib):
+    #             py_lib = spec['python'].prefix.lib64
 
-            options.extend(['--with-nrnpython=%s' % python_exec,
-                            'PYINCDIR=%s' % py_inc,
-                            'PYLIBDIR=%s' % py_lib])
+    #         options.extend(['--with-nrnpython=%s' % python_exec,
+    #                         'PYINCDIR=%s' % py_inc,
+    #                         'PYLIBDIR=%s' % py_lib])
 
-            # use python dependency if not cross-compiling or on cray system
-            if spec.satisfies('~cross-compile') or 'cray' in spec.architecture:
-                options.append('PYTHON_BLD=%s' % python_exec)
+    #         # use python dependency if not cross-compiling or on cray system
+    #         if spec.satisfies('~cross-compile') or 'cray' in spec.architecture:
+    #             options.append('PYTHON_BLD=%s' % python_exec)
 
-        return options
+    #     return options
 
     def get_compilation_options(self, spec):
         """ Build options setting compilers and compilation flags,
@@ -185,68 +227,68 @@ class Neuron(Package):
                             'MPICXX=%s' % spec['mpi'].mpicxx])
         return options
 
-    def build_nmodl(self, spec, prefix):
-        # build components for front-end arch in cross compiling environment
-        options = ['--prefix=%s' % prefix,
-                   '--with-nmodl-only',
-                   '--without-x']
+    # def build_nmodl(self, spec, prefix):
+    #     # build components for front-end arch in cross compiling environment
+    #     options = ['--prefix=%s' % prefix,
+    #                '--with-nmodl-only',
+    #                '--without-x']
 
-        if 'bgq' in self.spec.architecture:
-            flags = '-qarch=ppc64'
-            options.extend(['CFLAGS=%s' % flags,
-                            'CXXFLAGS=%s' % flags])
+    #     if 'bgq' in self.spec.architecture:
+    #         flags = '-qarch=ppc64'
+    #         options.extend(['CFLAGS=%s' % flags,
+    #                         'CXXFLAGS=%s' % flags])
 
-        if 'cray' in self.spec.architecture:
-            flags = '-target-cpu=x86_64 -target-network=none'
-            options.extend(['CFLAGS=%s' % flags,
-                            'CXXFLAGS=%s' % flags])
+    #     if 'cray' in self.spec.architecture:
+    #         flags = '-target-cpu=x86_64 -target-network=none'
+    #         options.extend(['CFLAGS=%s' % flags,
+    #                         'CXXFLAGS=%s' % flags])
 
-        configure = Executable(join_path(self.stage.source_path, 'configure'))
-        configure(*options)
-        make()
-        make('install')
+    #     configure = Executable(join_path(self.stage.source_path, 'configure'))
+    #     configure(*options)
+    #     make()
+    #     make('install')
 
-    def install(self, spec, prefix):
-        options = ['--prefix=%s' % prefix] + self._default_options
-        for specname, spec_opts in self._specs_to_options.items():
-            if spec.satisfies(specname):
-                options.extend(spec_opts)
+    # def install(self, spec, prefix):
+    #     options = ['--prefix=%s' % prefix] + self._default_options
+    #     for specname, spec_opts in self._specs_to_options.items():
+    #         if spec.satisfies(specname):
+    #             options.extend(spec_opts)
 
-        options.extend(self.get_arch_options(spec))
-        options.extend(self.get_python_options(spec))
-        options.extend(self.get_compilation_options(spec))
+    #     options.extend(self.get_arch_options(spec))
+    #     options.extend(self.get_python_options(spec))
+    #     options.extend(self.get_compilation_options(spec))
 
-        ld_flags = 'LDFLAGS='
-        if 'readline' in spec:
-            # Except in Mac we always depend on readline, which is anyway a python dependency
-            options.append('--with-readline=' + spec['readline'].prefix)
-            ld_flags += ' -L{0.prefix.lib} {0.libs.rpath_flags}'.format(spec['readline'])
-        else:
-            options.append('--with-readline=no')
+    #     ld_flags = 'LDFLAGS='
+    #     if 'readline' in spec:
+    #         # Except in Mac we always depend on readline, which is anyway a python dependency
+    #         options.append('--with-readline=' + spec['readline'].prefix)
+    #         ld_flags += ' -L{0.prefix.lib} {0.libs.rpath_flags}'.format(spec['readline'])
+    #     else:
+    #         options.append('--with-readline=no')
 
-        # To support prompt (not cross-compile) use readline + ncurses
-        if 'ncurses' in spec:
-            options.extend(['CURSES_LIBS={0.rpath_flags} {0.ld_flags}'.format(spec['ncurses'].libs),
-                            'CURSES_CFLAGS={}'.format(spec['ncurses'].prefix.include)])
-            ld_flags += ' -L{0.prefix.lib} {0.libs.rpath_flags}'.format(spec['ncurses'])
+    #     # To support prompt (not cross-compile) use readline + ncurses
+    #     if 'ncurses' in spec:
+    #         options.extend(['CURSES_LIBS={0.rpath_flags} {0.ld_flags}'.format(spec['ncurses'].libs),
+    #                         'CURSES_CFLAGS={}'.format(spec['ncurses'].prefix.include)])
+    #         ld_flags += ' -L{0.prefix.lib} {0.libs.rpath_flags}'.format(spec['ncurses'])
 
-        if spec.satisfies('+mpi'):
-            ld_flags +=  ' -Wl,-rpath,' + self.spec['mpi'].prefix.lib
+    #     if spec.satisfies('+mpi'):
+    #         ld_flags +=  ' -Wl,-rpath,' + self.spec['mpi'].prefix.lib
 
-        options.append(ld_flags)
+    #     options.append(ld_flags)
 
-        build = Executable('./build.sh')
-        build()
+    #     build = Executable('./build.sh')
+    #     build()
 
-        with working_dir('build', create=True):
-            if spec.satisfies('+cross-compile'):
-                self.build_nmodl(spec, prefix)
-            srcpath = self.stage.source_path
-            configure = Executable(join_path(srcpath, 'configure'))
-            configure(*options)
-            with profiling_wrapper_on():
-                make('VERBOSE=1')
-                make('install')
+    #     with working_dir('build', create=True):
+    #         if spec.satisfies('+cross-compile'):
+    #             self.build_nmodl(spec, prefix)
+    #         srcpath = self.stage.source_path
+    #         configure = Executable(join_path(srcpath, 'configure'))
+    #         configure(*options)
+    #         with profiling_wrapper_on():
+    #             make('VERBOSE=1')
+    #             make('install')
 
     @run_after('install')
     def filter_compilers(self):
