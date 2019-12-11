@@ -42,7 +42,12 @@ class Brion(CMakePackage):
     depends_on('mvdtool ~mpi')
 
     def cmake_args(self):
-        return ['-DDISABLE_SUBPROJECTS=ON']
+        args = ['-DDISABLE_SUBPROJECTS=ON']
+
+        if '+libsonata' in self.spec:
+            args.append('-DEXTLIB_FROM_SUBMODULES=ON')
+
+        return args
 
     @when('+python')
     def setup_environment(self, spack_env, run_env):
