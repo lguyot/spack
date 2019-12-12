@@ -86,13 +86,16 @@ class SimModel(Package):
 
     def __build_mods_coreneuron(self, mods_location, link_flag, include_flag):
         spec = self.spec
-        assert os.path.isdir(mods_location), 'Invalid mods dir: ' + mods_location
+        mods_location = os.path.abspath(mods_location)
+        assert os.path.isdir(mods_location) and find(mods_location, '*.mod', recursive=False),\
+            'Invalid mods dir: ' + mods_location
         nrnivmodl_params = ['-n', self.mech_name,
                             '-i', include_flag,
                             '-l', link_flag,
                             '-V',
-                            mods_location]
+                            'mod']
         with working_dir('build_' + self.mech_name, create=True):
+            force_symlink(mods_location, 'mod')
             which('nrnivmodl-core')(*nrnivmodl_params)
             output_dir = os.path.basename(self.neuron_archdir)
             mechlib = find_libraries('libcorenrnmech' + self.lib_suffix + '*', output_dir)
@@ -155,25 +158,27 @@ class SimModel(Package):
         mkdirp(prefix.lib.mod, prefix.lib.hoc, prefix.lib.python)
         copy_all('mod', prefix.lib.mod)
         copy_all('hoc', prefix.lib.hoc)
-        if os.path.isdir('python'):
-            copy_all('python', prefix.lib.python)  # Recent neurodamus
-        else:
-            shutil.copy('hoc/mapping.py', prefix.lib.python)
+        if os.path.isdir('python'):  # Recent neurodamus
+            copy_all('python', prefix.lib.python)
 
         for cmod in find(arch, '*.c', recursive=False):
             shutil.move(cmod, prefix.share.modc)
 
-    def setup_environment(self, spack_env, run_env):
+    def _setup_environment_common(self, spack_env, run_env):
         spack_env.unset('LC_ALL')
         # Remove LD_LIB_PATHs
         to_rem = ('LD_LIBRARY_PATH', 'DYLD_LIBRARY_PATH', 'DYLD_FALLBACK_LIBRARY_PATH')
         run_env.env_modifications = [envmod for envmod in run_env.env_modifications
                                      if envmod.name not in to_rem]
-        run_env.prepend_path('HOC_LIBRARY_PATH', self.prefix.lib.hoc)
-        run_env.prepend_path('PYTHONPATH', self.prefix.lib.python)
-        for libnrnmech_name in find(self.prefix.lib, 'libnrnmech*_nd.so', recursive=False):
-            run_env.set('NRNMECH_LIB_PATH', libnrnmech_name)
-            run_env.set('BGLIBPY_MOD_LIBRARY_PATH', libnrnmech_name)
+        if os.path.isdir(self.prefix.lib.hoc):
+            run_env.prepend_path('HOC_LIBRARY_PATH', self.prefix.lib.hoc)
+        if os.path.isdir(self.prefix.lib.python):
+            run_env.prepend_path('PYTHONPATH', self.prefix.lib.python)
+
+    def setup_environment(self, spack_env, run_env):
+        self._setup_environment_common(spack_env, run_env)
+        for libnrnmech_name in find(self.prefix.lib, 'libnrnmech*.so', recursive=False):
+            run_env.prepend_path('BGLIBPY_MOD_LIBRARY_PATH', libnrnmech_name)
 
 
 @contextmanager

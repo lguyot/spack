@@ -21,10 +21,11 @@ class NeurodamusModel(SimModel):
     variant('mvdtool',     default=True , description="Enable MVDTool reader (for nodes)")
     variant('common_mods', default='',    description="Source of common mods. '': no change,"
                                                       " other string: alternate path")
-    depends_on('neurodamus-core', type='build')
-    depends_on('neurodamus-core@develop', when='@develop')
 
-    depends_on("mpi")
+    depends_on('neurodamus-core', type='build')
+    depends_on('neurodamus-core@develop', type='build', when='@develop')
+
+    depends_on("mpi", type=('build', 'run'))
     depends_on("hdf5+mpi")
     depends_on('reportinglib')
     depends_on('reportinglib+profile', when='+profile')
@@ -110,16 +111,6 @@ class NeurodamusModel(SimModel):
         force_symlink(spec['neurodamus-core'].prefix.lib.mod, prefix.share.mod_neurodamus)
         force_symlink(prefix.lib.mod, prefix.share.mod_full)
 
-        if spec.satisfies('+python'):
-            py_src = spec['neurodamus-core'].prefix.python
-            assert os.path.isdir(py_src)
-            # Link required paths, create a new lib link (to our lib)
-            py_dst = prefix.lib.python
-            mkdirp(py_dst)
-            force_symlink('../../lib', py_dst.lib)
-            for name in ('neurodamus', 'init.py', '_debug.py'):
-                force_symlink(py_src.join(name), py_dst.join(name))
-
         filter_file(r'UNKNOWN_NEURODAMUS_MODEL', r'%s' % spec.name,
                     prefix.lib.hoc.join('defvar.hoc'))
         filter_file(r'UNKNOWN_NEURODAMUS_VERSION', r'%s' % spec.version,
@@ -132,6 +123,17 @@ class NeurodamusModel(SimModel):
         else:
             filter_file(r'UNKNOWN_NEURODAMUS_HASH', r"'%s'" % commit_hash[:8],
                         prefix.lib.hoc.join('defvar.hoc'))
+
+    def setup_environment(self, spack_env, run_env):
+        self._setup_environment_common(spack_env, run_env)
+        for libnrnmech_name in find(self.prefix.lib, 'libnrnmech*.so', recursive=False):
+            # We have the two libs and must export them in different vars
+            #  - NRNMECH_LIB_PATH the combined lib (used by neurodamus-py)
+            #  - BGLIBPY_MOD_LIBRARY_PATH is the pure mechanism (used by bglib-py)
+            if '_nd.' in libnrnmech_name:
+                run_env.set('NRNMECH_LIB_PATH', libnrnmech_name)
+            else:
+                run_env.set('BGLIBPY_MOD_LIBRARY_PATH', libnrnmech_name)
 
 
 _BUILD_NEURODAMUS_TPL = """#!/bin/sh
