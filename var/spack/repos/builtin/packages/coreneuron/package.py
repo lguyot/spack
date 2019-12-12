@@ -36,6 +36,7 @@ class Coreneuron(CMakePackage):
     homepage = "https://github.com/BlueBrain/CoreNeuron"
     url      = "https://github.com/BlueBrain/CoreNeuron"
 
+    version('sonata_reports', git=url, branch='reporting_api_changes', submodules=True)
     version('develop', git=url, branch='master', submodules=True)
     version('0.16', git=url, tag='0.16', submodules=True)
     version('0.15', git=url, tag='0.15', submodules=True)
@@ -64,6 +65,7 @@ class Coreneuron(CMakePackage):
     depends_on('flex', type='build')
     depends_on('mpi', when='+mpi')
     depends_on('reportinglib', when='+report')
+    depends_on('libsonata', when='+report')
     depends_on('reportinglib+profile', when='+report+profile')
     depends_on('tau', when='+profile')
 
@@ -131,7 +133,7 @@ class Coreneuron(CMakePackage):
                    '-DCMAKE_C_FLAGS=%s' % flags,
                    '-DCMAKE_CXX_FLAGS=%s' % flags,
                    '-DCMAKE_BUILD_TYPE=CUSTOM',
-                   '-DCORENRN_ENABLE_REPORTINGLIB=%s' % ('ON' if '+report' in spec else 'OFF'),
+                   '-DCORENRN_ENABLE_REPORTING=%s' % ('ON' if '+report' in spec else 'OFF'),
                    '-DCORENRN_ENABLE_MPI=%s' % ('ON' if '+mpi' in spec else 'OFF'),
                    '-DCORENRN_ENABLE_OPENMP=%s' % ('ON' if '+openmp' in spec else 'OFF'),
                    '-DCORENRN_ENABLE_UNIT_TESTS=%s' % ('ON' if '+tests' in spec else 'OFF'),

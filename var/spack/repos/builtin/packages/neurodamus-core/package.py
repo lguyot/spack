@@ -16,6 +16,7 @@ class NeurodamusCore(SimModel):
     homepage = "ssh://bbpcode.epfl.ch/sim/neurodamus-core"
     git      = "ssh://bbpcode.epfl.ch/sim/neurodamus-core"
 
+    version('sonata_reports', branch='sandbox/jblanco/sonata_reports', get_full_repo=False)
     version('develop', branch='master', get_full_repo=False)
     version('2.9.2', tag='2.9.2', get_full_repo=False)
     version('2.9.1', tag='2.9.1', get_full_repo=False)
