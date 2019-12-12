@@ -155,25 +155,28 @@ class SimModel(Package):
         mkdirp(prefix.lib.mod, prefix.lib.hoc, prefix.lib.python)
         copy_all('mod', prefix.lib.mod)
         copy_all('hoc', prefix.lib.hoc)
-        if os.path.isdir('python'):
-            copy_all('python', prefix.lib.python)  # Recent neurodamus
-        else:
-            shutil.copy('hoc/mapping.py', prefix.lib.python)
+        if os.path.isdir('python'):  # Recent neurodamus
+            copy_all('python', prefix.lib.python)
 
         for cmod in find(arch, '*.c', recursive=False):
             shutil.move(cmod, prefix.share.modc)
 
-    def setup_environment(self, spack_env, run_env):
+    def setup_environment(self, spack_env, run_env, skip_lib_env_vars=False):
         spack_env.unset('LC_ALL')
         # Remove LD_LIB_PATHs
         to_rem = ('LD_LIBRARY_PATH', 'DYLD_LIBRARY_PATH', 'DYLD_FALLBACK_LIBRARY_PATH')
         run_env.env_modifications = [envmod for envmod in run_env.env_modifications
                                      if envmod.name not in to_rem]
         run_env.prepend_path('HOC_LIBRARY_PATH', self.prefix.lib.hoc)
-        run_env.prepend_path('PYTHONPATH', self.prefix.lib.python)
-        for libnrnmech_name in find(self.prefix.lib, 'libnrnmech*_nd.so', recursive=False):
-            run_env.set('NRNMECH_LIB_PATH', libnrnmech_name)
-            run_env.set('BGLIBPY_MOD_LIBRARY_PATH', libnrnmech_name)
+        if os.path.isdir(self.prefix.lib.python):
+            run_env.prepend_path('PYTHONPATH', self.prefix.lib.python)
+        if skip_lib_env_vars:
+            return
+        for libnrnmech_name in find(self.prefix.lib, 'libnrnmech*.so', recursive=False):
+            run_env.prepend_path('NRNMECH_LIB_PATH', libnrnmech_name)
+            # 'neurodamus' is the only set of mods not really mechanisms
+            if self.mech_name != "neurodamus":
+                run_env.set('BGLIBPY_MOD_LIBRARY_PATH', libnrnmech_name)
 
 
 @contextmanager

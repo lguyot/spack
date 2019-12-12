@@ -16,7 +16,8 @@ class NeurodamusCore(SimModel):
     homepage = "ssh://bbpcode.epfl.ch/sim/neurodamus-core"
     git      = "ssh://bbpcode.epfl.ch/sim/neurodamus-core"
 
-    version('optional_mpi', branch='sandbox/leite/optional_mpi', clean=False)
+    version('develop', branch='sandbox/leite/fix_warns', clean=False)
+    version('2.9.0', tag='2.9.0', clean=False)
     version('2.8.0', tag='2.8.0', clean=False)
     version('2.7.3', tag='2.7.3', clean=False)
     version('2.7.2', tag='2.7.2', clean=False)
@@ -37,8 +38,9 @@ class NeurodamusCore(SimModel):
     variant('mvdtool',      default=False, description="Enable MVDTool reader (for nodes)")
 
     # NOTE: Several variants / dependencies come from SimModel
-    depends_on("mpi", when='+mpi', type=('build', 'run'))  # dont link
-    depends_on("hdf5", when='+hdf5')
+    depends_on("mpi",  when='+mpi', type=('build', 'run'))  # dont link
+    depends_on("hdf5+mpi", when='+hdf5+mpi')
+    depends_on("hdf5~mpi", when='+hdf5~mpi')
     depends_on('reportinglib',         when='+reportinglib')
     depends_on('reportinglib+profile', when='+reportinglib+profile')
     depends_on('synapsetool',          when='+synapsetool')
@@ -94,7 +96,7 @@ class NeurodamusCore(SimModel):
             "~mpi": "-DDISABLE_MPI",
             "~hdf5": "-DDISABLE_HDF5",
             "~reportinglib": "-DDISABLE_REPORTINGLIB",
-            "~synapsetool": "-DDISABLE_SYNTOOL"
+            "+synapsetool": "-DENABLE_SYNTOOL"
         }
 
         compile_flags = " ".join(flag for variant, flag in variant_to_compile_flag.items()
@@ -105,7 +107,6 @@ class NeurodamusCore(SimModel):
 
     def setup_environment(self, spack_env, run_env):
         run_env.prepend_path('HOC_LIBRARY_PATH', self.prefix.lib.hoc)
-        run_env.prepend_path('MOD_LIBRARY_PATH', self.prefix.share.mod)
         run_env.prepend_path("PYTHONPATH", self.prefix.lib.python)
-        for lib in find(self.prefix.lib, 'libnrndamus*'):
-            run_env.set('BGLIBPY_MOD_LIBRARY_PATH', lib)
+        for lib in find(self.prefix.lib, 'libnrnmech*'):
+            run_env.prepend_path('NRNMECH_LIB_PATH', lib)

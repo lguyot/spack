@@ -25,6 +25,8 @@ class Neuron(Package):
 
     # Patch which reverts 81a7a39 for numerical compat
     patch('revert_Import3d_numerical_format.patch', when='@7.8.0:')
+    # Patch which reverts d9605cb for not hanging on ExperimentalMechComplex
+    patch('revert_d9605cb.patch', when='@7.8.0a')
 
     version('develop', branch='master')
     version('7.8.0a',  commit='92a208b', preferred=True)
