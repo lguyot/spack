@@ -27,8 +27,7 @@ class Neuron(Package):
     patch('revert_Import3d_numerical_format.patch', when='@7.8.0:')
 
     version('develop', branch='master')
-    version('7.8.1a',  commit='92a208b', preferred=True)
-    version('7.8.0',   tag='7.8.0')
+    version('7.8.0a',  commit='92a208b')
     version('7.6.8',   tag='7.6.8')
     version('7.6.6',   tag='7.6.6')
     version('2018-10', commit='b3097b7')
