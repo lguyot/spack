@@ -58,6 +58,7 @@ class Neuron(CMakePackage):
     variant('shared',                  default=True,  description='Build shared libraries')
     variant('tests',                   default=False, description='Enable unit tests')
     variant('threads',                 default=True,  description='Allow use of Pthreads')
+    variant('debug',                   default=False, description='Build debug with O0')
 
     variant('deployment_build', default='1',  description='Build number for re-builds')
 
@@ -110,6 +111,10 @@ class Neuron(CMakePackage):
         ]
         if "+python" in self.spec:
             args.append('-DPYTHON_EXECUTABLE:FILEPATH=' + self.spec['python'].command.path)
+        if "+debug" in self.spec:
+            args.append('-DCMAKE_C_FLAGS=-g -O0')
+            args.append('-DCMAKE_CXX_FLAGS=-g -O0')
+            args.append('-DCMAKE_BUILD_TYPE=CUSTOM')
 
         filter_compiler_wrappers('*/bin/nrnmech_makefile')
 
@@ -374,6 +379,7 @@ class Neuron(CMakePackage):
 
         filter_file(env['CC'],  cc_compiler, nrniv_makefile, **kwargs)
         filter_file(env['CXX'], cxx_compiler, nrniv_makefile, **kwargs)
+
 
     @when('+python')
     def set_python_path(self, run_env):
