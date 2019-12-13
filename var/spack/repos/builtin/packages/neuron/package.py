@@ -41,7 +41,7 @@ class Neuron(CMakePackage):
 
     variant('cmake',                   default=True,  description="Build NEURON using cmake")
     variant('binary',                  default=False, description="Create special as a binary instead of shell script")
-    variant('coreneuron',              default=True,  description="Patch hh.mod for CoreNEURON compatibility")
+    variant('coreneuron',              default=False, description="Patch hh.mod for CoreNEURON compatibility")
     variant('cross-compile',           default=False, description='Build for cross-compile environment')
     variant('debug',                   default=False, description='Build debug with O0')
     variant('discrete-event-observer', default=True,  description='Enable Observer to be a subclass of DiscreteEvent')
