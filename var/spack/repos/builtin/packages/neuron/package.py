@@ -9,7 +9,7 @@ from spack import *
 from contextlib import contextmanager
 
 
-class Neuron(CMakePackage, Package):
+class Neuron(CMakePackage):
     """NEURON is a simulation environment for single and networks of neurons.
 
     NEURON is a simulation environment for modeling individual and networks of
@@ -83,6 +83,7 @@ class Neuron(CMakePackage, Package):
     # depends_on('py-numpy',    when='+python', type='run')
     depends_on('tau',         when='+profile')
 
+    conflicts('+cmake',   when='@0:7.8.0a')
     conflicts('~shared',  when='+python')
     conflicts('+pysetup', when='~python')
     conflicts('+rx3d',    when='~pysetup')
@@ -154,7 +155,7 @@ class Neuron(CMakePackage, Package):
         looking for a specific binary.
         """
         if self.spec.satisfies('+cmake'):
-            neuron_archdir = self.prefix + 'x86_64'
+            neuron_archdir = spack.architecture.sys_type().split('-')[2]
         else:
             file_list = find(self.prefix, '*/bin/nrniv_makefile')
             # check needed as when initially evaluated the prefix is empty
@@ -162,7 +163,6 @@ class Neuron(CMakePackage, Package):
                 neuron_archdir = os.path.dirname(os.path.dirname(file_list[0]))
             else:
                 neuron_archdir = self.prefix
-
         return neuron_archdir
 
     @when('~cmake')
