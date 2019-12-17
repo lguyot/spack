@@ -39,7 +39,7 @@ class Neuron(CMakePackage):
     version('7.3', '993e539cb8bf102ca52e9fefd644ab61')
     version('7.2', '5486709b6366add932e3a6d141c4f7ad')
 
-    variant('cmake',                   default=False,  description="Build NEURON using cmake")
+    variant('cmake',                   default=True,  description="Build NEURON using cmake")
     variant('binary',                  default=False, description="Create special as a binary instead of shell script")
     variant('coreneuron',              default=False, description="Patch hh.mod for CoreNEURON compatibility")
     variant('cross-compile',           default=False, description='Build for cross-compile environment')
