@@ -184,9 +184,7 @@ class Neuron(CMakePackage):
             filter_file(r'GLOBAL minf', r'RANGE minf', 'src/nrnoc/hh.mod')
             filter_file(r'TABLE minf', r':TABLE minf', "src/nrnoc/hh.mod")
 
-
     @run_after('install')
-    @when('+cmake')
     def filter_compilers(self):
         """run after install to avoid spack compiler wrappers
         getting embded into nrnivmodl script"""
@@ -197,15 +195,31 @@ class Neuron(CMakePackage):
             cc_compiler = self.spec['mpi'].mpicc
             cxx_compiler = self.spec['mpi'].mpicxx
 
-        nrnmech_makefile = join_path(self.prefix, './bin/nrnmech_makefile')
+        arch = self.get_neuron_archdir() if self.spec.satisfies('~cmake') else ""
+        libtool_makefile = join_path(self.prefix, arch, '../share/nrn/libtool')
+        nrniv_makefile = join_path(self.prefix, arch, './bin/nrniv_makefile')
+        nrnmech_makefile = join_path(self.prefix, arch, './bin/nrnmech_makefile')
 
         kwargs = {
             'backup': False,
             'string': True
         }
 
-        filter_file(env['CC'],  cc_compiler, nrnmech_makefile, **kwargs)
-        filter_file(env['CXX'], cxx_compiler, nrnmech_makefile, **kwargs)
+        if os.path.isfile(libtool_makefile):
+            # hpe-mpi requires linking to libmpi++ and hence needs to use cxx wrapper
+            if self.spec.satisfies('+mpi'):
+                filter_file(env['CC'], cxx_compiler, libtool_makefile, **kwargs)
+            else:
+                filter_file(env['CC'], cc_compiler, libtool_makefile, **kwargs)
+            filter_file(env['CXX'], cxx_compiler, libtool_makefile, **kwargs)
+
+        if os.path.isfile(nrnmech_makefile):
+            filter_file(env['CC'], cc_compiler, nrnmech_makefile, **kwargs)
+            filter_file(env['CXX'], cxx_compiler, nrnmech_makefile, **kwargs)
+
+        if os.path.isfile(nrniv_makefile):
+            filter_file(env['CC'], cc_compiler, nrniv_makefile, **kwargs)
+            filter_file(env['CXX'], cxx_compiler, nrniv_makefile, **kwargs)
 
     @when('~cmake')
     def get_arch_options(self, spec):
