@@ -19,7 +19,7 @@ class Blender(Package):
 
 
     def install(self, spec, prefix):
-	for file in os.listdir(self.stage.source_path):
+        for file in os.listdir(self.stage.source_path):
             src = os.path.join(self.stage.source_path, file)
             dst = os.path.join(prefix, file)
             if os.path.isdir(src):
