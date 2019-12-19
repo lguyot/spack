@@ -124,9 +124,9 @@ class Neuron(CMakePackage):
     @when('~cmake')
     @run_before('install')
     def set_autoconf_options(self):
-        _default_options = ['--without-iv',
+        self._default_options = ['--without-iv',
                             '--without-x']
-        _specs_to_options = {
+        self._specs_to_options = {
             '+cross-compile': ['cross_compiling=yes',
                                '--without-readline',
                                '--without-memacs',
@@ -162,7 +162,7 @@ class Neuron(CMakePackage):
         looking for a specific binary.
         """
         if self.spec.satisfies('+cmake'):
-            neuron_archdir = spack.architecture.sys_type().split('-')[2]
+            neuron_archdir = ""
         else:
             file_list = find(self.prefix, '*/bin/nrniv_makefile')
             # check needed as when initially evaluated the prefix is empty
@@ -222,7 +222,6 @@ class Neuron(CMakePackage):
             filter_file(env['CC'], cc_compiler, nrniv_makefile, **kwargs)
             filter_file(env['CXX'], cxx_compiler, nrniv_makefile, **kwargs)
 
-    @when('~cmake')
     def get_arch_options(self, spec):
         options = []
         # need to enable bg-q arch
@@ -236,7 +235,6 @@ class Neuron(CMakePackage):
 
         return options
 
-    @when('~cmake')
     def get_python_options(self, spec):
         """Determine config options for Python
         """
@@ -260,7 +258,6 @@ class Neuron(CMakePackage):
 
         return options
 
-    @when('~cmake')
     def get_compilation_options(self, spec):
         """ Build options setting compilers and compilation flags,
             using MPIC[XX] and C[XX]FLAGS
@@ -291,7 +288,6 @@ class Neuron(CMakePackage):
                             'MPICXX=%s' % spec['mpi'].mpicxx])
         return options
 
-    @when('~cmake')
     def build_nmodl(self, spec, prefix):
         # build components for front-end arch in cross compiling environment
         options = ['--prefix=%s' % prefix,
@@ -355,46 +351,6 @@ class Neuron(CMakePackage):
             with profiling_wrapper_on():
                 make('VERBOSE=1')
                 make('install')
-
-    @run_after('install')
-    @when('~cmake')
-    def filter_compilers(self):
-        """run after install to avoid spack compiler wrappers
-                getting embded into nrnivmodl script"""
-
-        cc_compiler = self.compiler.cc
-        cxx_compiler = self.compiler.cxx
-        if self.spec.satisfies('+mpi'):
-            cc_compiler = self.spec['mpi'].mpicc
-            cxx_compiler = self.spec['mpi'].mpicxx
-
-        arch = self.get_neuron_archdir()
-        libtool_makefile = join_path(self.prefix, 'share/nrn/libtool')
-        nrniv_makefile = join_path(self.prefix, arch, './bin/nrniv_makefile')
-        nrnmech_makefile = join_path(self.prefix, arch, './bin/nrnmech_makefile')
-
-        kwargs = {
-            'backup': False,
-            'string': True
-        }
-
-        # hpe-mpi requires linking to libmpi++ and hence needs to use cxx wrapper
-        if self.spec.satisfies('+mpi'):
-           filter_file(env['CC'],  cxx_compiler, libtool_makefile, **kwargs)
-        else:
-           filter_file(env['CC'],  cc_compiler, libtool_makefile, **kwargs)
-        filter_file(env['CXX'], cxx_compiler, libtool_makefile, **kwargs)
-        # In Cray systems we overwrite the spack compiler with CC or CXX accordingly
-        if 'cray' in self.spec.architecture:
-            filter_file(env['CC'], 'cc', libtool_makefile, **kwargs)
-            filter_file(env['CXX'], 'CC', libtool_makefile, **kwargs)
-
-        filter_file(env['CC'], cc_compiler, nrnmech_makefile, **kwargs)
-        filter_file(env['CXX'], cxx_compiler, nrnmech_makefile, **kwargs)
-
-        filter_file(env['CC'],  cc_compiler, nrniv_makefile, **kwargs)
-        filter_file(env['CXX'], cxx_compiler, nrniv_makefile, **kwargs)
-
 
     @when('+python')
     def set_python_path(self, run_env):
