@@ -29,7 +29,8 @@ class Neuron(CMakePackage):
     patch('apply_79a4d2af_load_balance_fix.patch', when='@7.8.0b')
 
     version('develop', branch='master')
-    version('7.8.0b',  commit='92a208b', preferred=True)
+    version('8.0.0',   branch='master', preferred=True)
+    version('7.8.0b',  commit='92a208b')
     version('7.6.8',   tag='7.6.8')
     version('7.6.6',   tag='7.6.6')
     version('2018-10', commit='b3097b7')
@@ -154,23 +155,42 @@ class Neuron(CMakePackage):
     def build(self, spec, prefix):
         return
 
-    def get_neuron_archdir(self):
-        """Determine the architecture-specific neuron base directory.
+    def get_neuron_arch(self):
+        """Determine the architecture neuron build architecture.
 
-        Instead of recreating the logic of the neuron's configure
-        we dynamically find the architecture-specific directory by
-        looking for a specific binary.
+        With cmake get the architecture of the system from spack.
+        With autotools instead of recreating the logic of the
+        neuron's configure we dynamically find the architecture-
+        specific directory by looking for a specific binary.
         """
         if self.spec.satisfies('+cmake'):
-            neuron_archdir = ""
+            neuron_arch = spack.architecture.sys_type().split('-')[2]
         else:
             file_list = find(self.prefix, '*/bin/nrniv_makefile')
             # check needed as when initially evaluated the prefix is empty
             if file_list:
-                neuron_archdir = os.path.dirname(os.path.dirname(file_list[0]))
+                neuron_arch = os.path.basename(os.path.dirname(os.path.dirname(file_list[0])))
             else:
-                neuron_archdir = self.prefix
-        return neuron_archdir
+                neuron_arch = ""
+        return neuron_arch
+
+    def get_neuron_basedir(self):
+        """Determine the neuron base directory.
+
+        Neuron base directory is based on the build system. For
+        cmake the bin and lib folders are in self.prefix and for
+        autotools it is in self.prefix/neuron_arch.
+        """
+        if self.spec.satisfies('+cmake'):
+            neuron_basedir = self.prefix
+        else:
+            file_list = find(self.prefix, '*/bin/nrniv_makefile')
+            # check needed as when initially evaluated the prefix is empty
+            if file_list:
+                neuron_basedir = os.path.dirname(os.path.dirname(file_list[0]))
+            else:
+                neuron_basedir = self.prefix
+        return neuron_basedir
 
     @when('~cmake')
     def patch(self):
@@ -196,10 +216,10 @@ class Neuron(CMakePackage):
             cc_compiler = self.spec['mpi'].mpicc
             cxx_compiler = self.spec['mpi'].mpicxx
 
-        arch = self.get_neuron_archdir() if self.spec.satisfies('~cmake') else ""
-        libtool_makefile = join_path(self.prefix, arch, '../share/nrn/libtool')
-        nrniv_makefile = join_path(self.prefix, arch, './bin/nrniv_makefile')
-        nrnmech_makefile = join_path(self.prefix, arch, './bin/nrnmech_makefile')
+        basedir = self.get_neuron_basedir()
+        libtool_makefile = join_path(self.prefix, basedir, '../share/nrn/libtool')
+        nrniv_makefile = join_path(self.prefix, basedir, './bin/nrniv_makefile')
+        nrnmech_makefile = join_path(self.prefix, basedir, './bin/nrnmech_makefile')
 
         kwargs = {
             'backup': False,
@@ -360,22 +380,22 @@ class Neuron(CMakePackage):
                 break
 
     def setup_environment(self, spack_env, run_env):
-        neuron_archdir = self.get_neuron_archdir()
-        run_env.prepend_path('PATH', join_path(neuron_archdir, 'bin'))
-        run_env.prepend_path('LD_LIBRARY_PATH', join_path(neuron_archdir, 'lib'))
+        neuron_basedir = self.get_neuron_basedir()
+        run_env.prepend_path('PATH', join_path(neuron_basedir, 'bin'))
+        run_env.prepend_path('LD_LIBRARY_PATH', join_path(neuron_basedir, 'lib'))
         self.set_python_path(run_env)
         if self.spec.satisfies('+mpi'):
             run_env.set('MPICC_CC', self.compiler.cc)
 
     def setup_dependent_environment(self, spack_env, run_env, dependent_spec):
-        neuron_archdir = self.get_neuron_archdir()
-        spack_env.prepend_path('PATH', join_path(neuron_archdir, 'bin'))
-        spack_env.prepend_path('LD_LIBRARY_PATH', join_path(neuron_archdir, 'lib'))
+        neuron_basedir = self.get_neuron_basedir()
+        spack_env.prepend_path('PATH', join_path(neuron_basedir, 'bin'))
+        spack_env.prepend_path('LD_LIBRARY_PATH', join_path(neuron_basedir, 'lib'))
         self.set_python_path(run_env)
 
     def setup_dependent_package(self, module, dependent_spec):
-        neuron_archdir = self.get_neuron_archdir()
-        dependent_spec.package.neuron_archdir = neuron_archdir
+        dependent_spec.package.neuron_basedir = self.get_neuron_basedir()
+        dependent_spec.package.nrnivmodl_outdir = self.get_neuron_arch()
 
 
 @contextmanager
