@@ -106,7 +106,6 @@ class NeurodamusCore(SimModel):
     # NOTE: install() is inherited
 
     def setup_environment(self, spack_env, run_env):
-        run_env.prepend_path('HOC_LIBRARY_PATH', self.prefix.lib.hoc)
-        run_env.prepend_path("PYTHONPATH", self.prefix.lib.python)
+        self._setup_environment_common(spack_env, run_env)
         for lib in find(self.prefix.lib, 'libnrnmech*'):
-            run_env.prepend_path('NRNMECH_LIB_PATH', lib)
+            run_env.set('NRNMECH_LIB_PATH', lib)

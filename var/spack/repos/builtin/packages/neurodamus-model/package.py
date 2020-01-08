@@ -125,7 +125,7 @@ class NeurodamusModel(SimModel):
                         prefix.lib.hoc.join('defvar.hoc'))
 
     def setup_environment(self, spack_env, run_env):
-        SimModel.setup_environment(self, spack_env, run_env, skip_lib_env_vars=True)
+        self._setup_environment_common(spack_env, run_env)
         for libnrnmech_name in find(self.prefix.lib, 'libnrnmech*.so', recursive=False):
             # We have the two libs and must export them in different vars
             #  - NRNMECH_LIB_PATH the combined lib (used by neurodamus-py)

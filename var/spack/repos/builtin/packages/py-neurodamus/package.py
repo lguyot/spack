@@ -13,6 +13,7 @@ class PyNeurodamus(PythonPackage):
     git      = "ssh://bbpcode.epfl.ch/sim/neurodamus-py"
 
     version('develop', branch='master')
+    version('0.8.0',   branch='sandbox/leite/split_mechs')
     version('0.7.2',   tag='0.7.2')
 
     depends_on('neurodamus-core',  type=('build', 'run'))
@@ -26,7 +27,7 @@ class PyNeurodamus(PythonPackage):
 
     @run_after('install')
     def install_scripts(self):
-        mkdirp(self.prefix.scripts)
+        mkdirp(self.prefix.share)
         for script in ('init.py', '_debug.py'):
             copy(script, self.prefix.share)
 
