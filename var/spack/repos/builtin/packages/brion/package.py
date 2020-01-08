@@ -15,8 +15,8 @@ class Brion(CMakePackage):
     generator = 'Ninja'
 
     version('develop', submodules=True)
-    version('3.0.0', tag='3.0.0', submodules=True)
-    version('3.0.1', tag='3.0.1', submodules=True, preferred=True)
+    version('3.0.0', tag='3.0.0', submodules=True, preferred=True)
+    version('3.1.0', tag='3.1.0', submodules=True)
 
     variant('python', default=False, description='Build Python wrapping')
     variant('doc', default=False, description='Build documentation')
@@ -31,7 +31,7 @@ class Brion(CMakePackage):
     depends_on('boost +shared', when='~python')
     depends_on('boost +shared +python', when='+python')
 
-    depends_on('libsonata', when='@3.0.1')
+    depends_on('libsonata', when='@3.1.0')
 
     # TODO: bzip2 is a dependency of boost. Needed here because of linking
     # issue (libboost_iostreams.so.1.68.0 not finding libbz2.so)
