@@ -44,7 +44,7 @@ class Brion(CMakePackage):
     def cmake_args(self):
         args = ['-DDISABLE_SUBPROJECTS=ON']
 
-        if '+libsonata' in self.spec:
+        if self.version >= Version('3.1.0'):
             args.append('-DEXTLIB_FROM_SUBMODULES=ON')
 
         return args
