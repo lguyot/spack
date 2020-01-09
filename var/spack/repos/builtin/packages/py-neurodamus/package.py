@@ -13,7 +13,7 @@ class PyNeurodamus(PythonPackage):
     git      = "ssh://bbpcode.epfl.ch/sim/neurodamus-py"
 
     version('develop', branch='master')
-    version('0.8.0',   branch='sandbox/leite/split_mechs')
+    version('0.8.0',   tag='0.8.0')
     version('0.7.2',   tag='0.7.2')
 
     depends_on('neuron',           type=('build', 'run'))
