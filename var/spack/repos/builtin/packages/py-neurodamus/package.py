@@ -16,7 +16,7 @@ class PyNeurodamus(PythonPackage):
     version('0.8.0',   branch='sandbox/leite/split_mechs')
     version('0.7.2',   tag='0.7.2')
 
-    depends_on('neurodamus-core',  type=('build', 'run'))
+    depends_on('neuron',           type=('build', 'run'))
     depends_on('python@3.4:',      type=('build', 'run'))
     depends_on('py-setuptools',    type=('build', 'run'))
     depends_on('py-h5py',          type='run')

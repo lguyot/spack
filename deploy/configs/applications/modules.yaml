@@ -39,8 +39,7 @@ modules:
       - functionalizer
       - meshball
       - nest
-      - 'neurodamus%intel'
-      - 'neurodamus-core+common'
+      - neurodamus-core
       - neurodamus-hippocampus
       - neurodamus-neocortex
       - neurodamus-thalamus

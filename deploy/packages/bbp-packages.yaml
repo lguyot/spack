@@ -30,7 +30,7 @@ packages:
       - brainbuilder@0.11.7
       - brion@3.0.0 +python ^boost@1.65.0
       - connectome-tools@0.3.2
-      - spatial-index@0.1.0
+      - spatial-index@0.2.1
       - spykfunc@0.15.2
       - psp-validation@0.2.0
       - psp-validation@0.1.12
@@ -151,7 +151,7 @@ packages:
       - architecture
       - compiler
     specs:
-      - neurodamus-core+common@2.7.3
+      - neurodamus-core+common
       - ultraliser
 
   intel-stable-parallel:
@@ -173,6 +173,7 @@ packages:
       - mpi
       - python
     specs:
+      - neurodamus-core
       - neurodamus-neocortex+coreneuron@0.3
       - neurodamus-hippocampus+coreneuron@0.4
       - neurodamus-thalamus+coreneuron@0.3
