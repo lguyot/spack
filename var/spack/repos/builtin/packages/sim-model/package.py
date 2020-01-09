@@ -74,6 +74,7 @@ class SimModel(Package):
             )
             # Relevant flags to build neuron's nrnmech lib
             include_flag += ' -DENABLE_CORENEURON'  # only now, otherwise mods assume neuron
+            include_flag += ' -I%s' % self.spec['coreneuron'].prefix.include
             link_flag += ' ' + libnrncoremech.ld_flags
 
         # Neuron mechlib and special
