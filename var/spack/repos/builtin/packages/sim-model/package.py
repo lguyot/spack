@@ -79,7 +79,7 @@ class SimModel(Package):
 
         # Neuron mechlib and special
         with profiling_wrapper_on():
-            link_flag += ' -Wl,-rpath,' + self.prefix.lib
+            link_flag += ' -L{0} -Wl,-rpath,{0}'.format(str(self.prefix.lib))
             which('nrnivmodl')('-incflags', include_flag, '-loadflags', link_flag, mods_location)
 
         assert os.path.isfile(os.path.join(output_dir, 'special'))
@@ -107,7 +107,7 @@ class SimModel(Package):
         """Install phase
 
         bin/ <- special and special-core
-        libs/ <- hoc, mod and lib*mech*.so
+        lib/ <- hoc, mod and lib*mech*.so
         share/ <- neuron & coreneuron mod.c's (modc and modc_core)
         """
         mkdirp(prefix.bin)
