@@ -64,7 +64,7 @@ class SimModel(Package):
                 raise Exception('Dependency lib "' + dep + '" coming from system prefix')
         link_flag += ' ' + ' '.join(self.spec[dep].libs.ld_flags for dep in dep_names)
         link_flag += ' ' + ' '.join(self.spec[dep].libs.rpath_flags for dep in dep_names)
-        include_flag += ' ' + ' '.join(self.spec[dep].headers.include_flags for dep in dep_names)
+        include_flag += ''.join(' -I' + str(self.spec[dep].prefix.include) for dep in dep_names)
         include_flag += ' -DENABLE_TAU_PROFILER' if '+profile' in self.spec else ''
         output_dir = os.path.basename(self.neuron_archdir)
 
