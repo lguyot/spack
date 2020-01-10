@@ -15,8 +15,8 @@ class Brion(CMakePackage):
     generator = 'Ninja'
 
     version('develop', submodules=True)
-    version('3.0.0', tag='3.0.0', submodules=True, preferred=True)
-    version('3.1.0', tag='3.1.0', submodules=True)
+    version('3.0.0', tag='3.0.0', submodules=True)
+    version('3.1.0', tag='3.1.0', submodules=True, preferred=True)
 
     variant('python', default=False, description='Build Python wrapping')
     variant('doc', default=False, description='Build documentation')
