@@ -44,7 +44,7 @@ class Brion(CMakePackage):
     def cmake_args(self):
         args = ['-DDISABLE_SUBPROJECTS=ON']
 
-        if self.version >= Version('3.1.0'):
+        if self.spec.satisfies('@3.1.0:'):
             args.append('-DEXTLIB_FROM_SUBMODULES=ON')
 
         return args
