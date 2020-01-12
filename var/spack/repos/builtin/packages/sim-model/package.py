@@ -58,13 +58,10 @@ class SimModel(Package):
         """
         # pass include and link flags for all dependency libraries
         # Compiler wrappers are not used to have a more reproducible building
-        dep_names = set(self.spec.dependencies_dict('link').keys())
-        for dep in dep_names:
-            if self.spec[dep].prefix in ('/usr', '/usr/local'):
-                raise Exception('Dependency lib "' + dep + '" coming from system prefix')
-        link_flag += ' ' + ' '.join(self.spec[dep].libs.ld_flags for dep in dep_names)
-        link_flag += ' ' + ' '.join(self.spec[dep].libs.rpath_flags for dep in dep_names)
-        include_flag += ''.join(' -I' + str(self.spec[dep].prefix.include) for dep in dep_names)
+        for dep in set(self.spec.dependencies_dict('link').keys()):
+            link_flag += " {0.ld_flags} {0.rpath_flags}".format(self.spec[dep].libs)
+            include_flag += " -I " + str(self.spec[dep].prefix.include)
+
         include_flag += ' -DENABLE_TAU_PROFILER' if '+profile' in self.spec else ''
         output_dir = os.path.basename(self.neuron_archdir)
 
@@ -86,7 +83,6 @@ class SimModel(Package):
         return include_flag, link_flag
 
     def __build_mods_coreneuron(self, mods_location, link_flag, include_flag):
-        spec = self.spec
         mods_location = os.path.abspath(mods_location)
         assert os.path.isdir(mods_location) and find(mods_location, '*.mod', recursive=False),\
             'Invalid mods dir: ' + mods_location
@@ -168,9 +164,9 @@ class SimModel(Package):
     def _setup_environment_common(self, spack_env, run_env):
         spack_env.unset('LC_ALL')
         # Remove LD_LIB_PATHs
-        to_rem = ('LD_LIBRARY_PATH', 'DYLD_LIBRARY_PATH', 'DYLD_FALLBACK_LIBRARY_PATH')
+        to_rm = ('LD_LIBRARY_PATH', 'DYLD_LIBRARY_PATH', 'DYLD_FALLBACK_LIBRARY_PATH')
         run_env.env_modifications = [envmod for envmod in run_env.env_modifications
-                                     if envmod.name not in to_rem]
+                                     if envmod.name not in to_rm]
         if os.path.isdir(self.prefix.lib.hoc):
             run_env.prepend_path('HOC_LIBRARY_PATH', self.prefix.lib.hoc)
         if os.path.isdir(self.prefix.lib.python):
@@ -178,6 +174,7 @@ class SimModel(Package):
 
     def setup_environment(self, spack_env, run_env):
         self._setup_environment_common(spack_env, run_env)
+        # We will find 0 or 1 lib
         for libnrnmech_name in find(self.prefix.lib, 'libnrnmech*.so', recursive=False):
             run_env.prepend_path('BGLIBPY_MOD_LIBRARY_PATH', libnrnmech_name)
 

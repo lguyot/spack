@@ -35,7 +35,6 @@ class Synapsetool(CMakePackage):
 
     version('develop', submodules=True)
     version('0.5.8', tag='v0.5.8', submodules=True)
-    version('0.5.7', tag='v0.5.7', submodules=True)
     version('0.5.6', tag='v0.5.6', submodules=True)
     version('0.5.5', tag='v0.5.5', submodules=True)
     version('0.5.4', tag='v0.5.4', submodules=True)

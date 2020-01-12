@@ -173,7 +173,7 @@ packages:
       - mpi
       - python
     specs:
-      - neurodamus-core
+      - neurodamus-core~common
       - neurodamus-neocortex+coreneuron@0.3
       - neurodamus-hippocampus+coreneuron@0.4
       - neurodamus-thalamus+coreneuron@0.3

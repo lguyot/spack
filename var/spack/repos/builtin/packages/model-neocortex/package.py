@@ -9,7 +9,7 @@ from spack.pkg.builtin.sim_model import SimModel
 
 class ModelNeocortex(SimModel):
     """
-    The Norcortex neuron mechanisms for (core)Neuron
+    The Neocortex neuron mechanisms for (core)Neuron
     """
 
     homepage = "ssh://bbpcode.epfl.ch/sim/models/neocortex"
