@@ -83,6 +83,7 @@ modules:
         '^python@3:': '/python3'
         '+mpi': '/parallel'
         '~mpi': '/serial'
+        '+common': '+common'  # neurodamus-core
       environment:
         set:
           '${PACKAGE}_ROOT': '${PREFIX}'
