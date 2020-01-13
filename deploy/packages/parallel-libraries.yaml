@@ -90,3 +90,4 @@ packages:
       - neuron+debug
       - py-h5py
       - py-mpi4py
+      - py-mvdtool
