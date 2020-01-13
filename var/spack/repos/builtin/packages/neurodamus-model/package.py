@@ -21,6 +21,7 @@ class NeurodamusModel(SimModel):
     variant('mvdtool',     default=True , description="Enable MVDTool reader (for nodes)")
     variant('common_mods', default='',    description="Source of common mods. '': no change,"
                                                       " other string: alternate path")
+    variant('python',      default=False, description="Install neurodamus-python alongside")
 
     depends_on('neurodamus-core', type='build')
     depends_on('neurodamus-core@develop', type='build', when='@develop')
