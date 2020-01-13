@@ -151,7 +151,8 @@ packages:
       - architecture
       - compiler
     specs:
-      - neurodamus-core+common
+      - neurodamus-core+common@2.7.3
+      - neurodamus-core+common  # latest
       - ultraliser
 
   intel-stable:

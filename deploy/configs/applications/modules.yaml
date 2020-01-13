@@ -40,7 +40,8 @@ modules:
       - meshball
       - model-neocortex
       - nest
-      - neurodamus-core
+      - 'neurodamus-core+common@2.7.3:'
+      - 'neurodamus-core~common@2.9.0:'
       - neurodamus-hippocampus
       - neurodamus-neocortex
       - neurodamus-thalamus
@@ -83,7 +84,7 @@ modules:
         '^python@3:': '/python3'
         '+mpi': '/parallel'
         '~mpi': '/serial'
-        '+common': '+common'  # neurodamus-core
+        '+common': 'commonmods'  # neurodamus-core
       environment:
         set:
           '${PACKAGE}_ROOT': '${PREFIX}'
