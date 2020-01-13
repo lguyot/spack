@@ -31,11 +31,12 @@ class SimModel(Package):
     variant('coreneuron',  default=False, description="Enable CoreNEURON Support")
     variant('profile',     default=False, description="Enable profiling using Tau")
 
-    # We dont link automatically to neuron/corenrn, nrnivmodl does it for us (=> no 'link' mode)
+    # neuron/corenrn get linked automatically when using nrnivmodl[-core]
+    # Dont duplicate the link dependency (only 'build' and 'run')
     depends_on('neuron+mpi', type=('build', 'run'))
     depends_on('coreneuron', when='+coreneuron', type=('build', 'run'))
-    depends_on('coreneuron+profile', when='+coreneuron+profile')
-    depends_on('neuron+profile', when='+profile')
+    depends_on('neuron+profile', when='+profile', type=('build', 'run'))
+    depends_on('coreneuron+profile', when='+coreneuron+profile', type=('build', 'run'))
     depends_on('tau', when='+profile')
 
     conflicts('^neuron~python', when='+coreneuron')
@@ -163,7 +164,7 @@ class SimModel(Package):
 
     def _setup_environment_common(self, spack_env, run_env):
         spack_env.unset('LC_ALL')
-        # Remove LD_LIB_PATHs
+        # Dont export /lib as an ldpath. We dont want to find these libs automatically
         to_rm = ('LD_LIBRARY_PATH', 'DYLD_LIBRARY_PATH', 'DYLD_FALLBACK_LIBRARY_PATH')
         run_env.env_modifications = [envmod for envmod in run_env.env_modifications
                                      if envmod.name not in to_rm]

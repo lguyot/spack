@@ -154,6 +154,15 @@ packages:
       - neurodamus-core+common
       - ultraliser
 
+  intel-stable:
+    target_matrix:
+      - intel-stable
+    requires:
+      - architecture
+      - compiler
+    specs:
+      - model-neocortex
+
   intel-stable-parallel:
     target_matrix:
       - intel-stable

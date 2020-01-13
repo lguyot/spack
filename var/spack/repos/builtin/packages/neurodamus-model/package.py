@@ -21,11 +21,11 @@ class NeurodamusModel(SimModel):
     variant('mvdtool',     default=True , description="Enable MVDTool reader (for nodes)")
     variant('common_mods', default='',    description="Source of common mods. '': no change,"
                                                       " other string: alternate path")
-
+    # Note: We dont request link to MPI so that mpicc can do what is best
+    # and dont rpath it so we stay dynamic. 'run' mode will load the same mpi module
+    depends_on("mpi", type=('build', 'run'))
     depends_on('neurodamus-core', type='build')
     depends_on('neurodamus-core@develop', type='build', when='@develop')
-
-    depends_on("mpi", type=('build', 'run'))
     depends_on("hdf5+mpi")
     depends_on('reportinglib')
     depends_on('reportinglib+profile', when='+profile')

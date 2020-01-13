@@ -37,9 +37,11 @@ class NeurodamusCore(SimModel):
     variant('reportinglib', default=True, description="Enable ReportingLib")
     variant('synapsetool',  default=True, description="Enable SynapseTool reader (for edges)")
     variant('mvdtool',      default=True, description="Enable MVDTool reader (for nodes)")
-
     # NOTE: Several variants / dependencies come from SimModel
-    depends_on("mpi",  when='+mpi', type=('build', 'run'))  # dont link
+
+    # Note: We dont request link to MPI so that mpicc can do what is best
+    # and dont rpath it so we stay dynamic. 'run' mode will load the same mpi module
+    depends_on("mpi",  when='+mpi', type=('build', 'run'))
     depends_on("hdf5+mpi", when='+hdf5+mpi')
     depends_on("hdf5~mpi", when='+hdf5~mpi')
     depends_on('reportinglib',         when='+reportinglib')

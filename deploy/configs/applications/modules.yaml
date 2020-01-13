@@ -38,6 +38,7 @@ modules:
       - emsim
       - functionalizer
       - meshball
+      - model-neocortex
       - nest
       - neurodamus-core
       - neurodamus-hippocampus
