@@ -129,7 +129,7 @@ class SimModel(Package):
                 elif self.spec.satisfies('^coreneuron@0.14:0.16.99'):
                     which('nrnivmech_install.sh', path=".")(prefix)
                 else:
-                    which('nrnivmodl-core')("-d", prefix)  # Set dest to install
+                    which('nrnivmodl-core')("-d", prefix, 'mod')  # Set dest to install
 
         # Install special
         shutil.copy(join_path(arch, 'special'), prefix.bin)
