@@ -119,7 +119,7 @@ class Neuron(CMakePackage):
         if "+debug" in self.spec:
             args.append('-DCMAKE_C_FLAGS=-g -O0')
             args.append('-DCMAKE_CXX_FLAGS=-g -O0')
-            args.append('-DCMAKE_BUILD_TYPE=CUSTOM')
+            args.append('-DCMAKE_BUILD_TYPE=Custom')
 
         filter_compiler_wrappers('*/bin/nrnmech_makefile')
 
