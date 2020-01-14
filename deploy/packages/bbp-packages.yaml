@@ -74,7 +74,7 @@ packages:
     specs:
       - functionalizer@3.12.2
       - parquet-converters@0.5.2
-      - synapsetool
+      - synapsetool@0.5.8
       - touchdetector@4.4.2
       - touchdetector@5.1.0
       - touchdetector@5.3.3
@@ -151,8 +151,7 @@ packages:
       - architecture
       - compiler
     specs:
-      - neurodamus-core+common@2.7.3
-      - neurodamus-core+common  # latest
+      - neurodamus-core+common@2.9.1
       - ultraliser
 
   intel-stable:
@@ -183,7 +182,7 @@ packages:
       - mpi
       - python
     specs:
-      - neurodamus-core~common
+      - neurodamus-core~common@2.9.1
       - neurodamus-neocortex+coreneuron@0.3
       - neurodamus-hippocampus+coreneuron@0.4
       - neurodamus-thalamus+coreneuron@0.3

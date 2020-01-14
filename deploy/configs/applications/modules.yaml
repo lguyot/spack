@@ -40,8 +40,7 @@ modules:
       - meshball
       - model-neocortex
       - nest
-      - 'neurodamus-core+common@2.7.3:'
-      - 'neurodamus-core~common@2.9.0:'
+      - neurodamus-core
       - neurodamus-hippocampus
       - neurodamus-neocortex
       - neurodamus-thalamus
