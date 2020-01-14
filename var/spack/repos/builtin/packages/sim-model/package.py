@@ -124,9 +124,11 @@ class SimModel(Package):
 
         if self.spec.satisfies('+coreneuron'):
             with working_dir('build_' + mech_name):
-                if self.spec.satisfies('^coreneuron@0.14:0.16.99'):
+                if self.spec.satisfies('^coreneuron@:0.14'):
+                    raise Exception('Coreneuron versions before 0.14 are not supported by Neurodamus model')
+                elif self.spec.satisfies('^coreneuron@0.14:0.16.99'):
                     which('nrnivmech_install.sh', path=".")(prefix)
-                elif self.spec.satisfies('^coreneuron@0.17:'):
+                else:
                     which('nrnivmodl-core')("-d", prefix)  # Set dest to install
 
         # Install special
