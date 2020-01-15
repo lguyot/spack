@@ -86,7 +86,7 @@ class Neuron(CMakePackage):
     depends_on('py-cython',   when='+python', type=('build', 'link', 'run'))
     depends_on('tau',         when='+profile')
 
-    conflicts('+cmake',   when='@0:7.8.0b')
+    conflicts('+cmake',   when='@0:7.8.0b,2018-10')
     conflicts('~shared',  when='+python')
     conflicts('+pysetup', when='~python')
     conflicts('+rx3d',    when='~pysetup')
