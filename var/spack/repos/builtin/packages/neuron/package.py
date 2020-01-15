@@ -96,23 +96,23 @@ class Neuron(CMakePackage):
     # ==============================================
     @when('+cmake')
     def cmake_args(self):
-        def cmake_enable_option(name, spec_requiremement):
+        def cmake_enable_option(spec_requiremement):
             value = 'TRUE' if spec_requiremement in self.spec else 'FALSE'
-            return '-DNRN_ENABLE_' + name + ':BOOL=' + value
-        args = [
-            cmake_enable_option('SHARED', '+shared'),
-            cmake_enable_option('INTERVIEWS', '+interviews'),
-            cmake_enable_option('LEGACY_FR', '+legacy-fr'),
-            cmake_enable_option('MECH_DLL_STYLE', '+mech-dll-style'),
-            cmake_enable_option('DISCRETE_EVENT_OBSERVER', '+discrete-event-observer'),
-            cmake_enable_option('PYTHON', '+python'),
-            cmake_enable_option('THREADS', '+threads'),
-            cmake_enable_option('MPI', '+mpi'),
-            cmake_enable_option('MEMACS', '+memacs'),
-            cmake_enable_option('RX3D', '+rx3d'),
-            cmake_enable_option('CORENEURON', '+coreneuron'),
-            cmake_enable_option('TESTS', '+tests'),
-        ]
+            cmake_name = spec_requiremement[1:].upper().replace('-', '_')
+            return '-DNRN_ENABLE_' + cmake_name + ':BOOL=' + value
+        args = [cmake_enable_option(variant) for variant in ['+shared',
+                                                             '+interviews',
+                                                             '+legacy-fr',
+                                                             '+mech-dll-style',
+                                                             '+discrete-event-observer',
+                                                             '+python',
+                                                             '+threads',
+                                                             '+mpi',
+                                                             '+memacs',
+                                                             '+rx3d',
+                                                             '+coreneuron',
+                                                             '+tests']]
+
         if "+python" in self.spec:
             args.append('-DPYTHON_EXECUTABLE:FILEPATH=' + self.spec['python'].command.path)
         if "+debug" in self.spec:
