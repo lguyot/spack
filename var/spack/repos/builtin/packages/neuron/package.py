@@ -44,7 +44,7 @@ class Neuron(CMakePackage):
     variant('binary',     default=False, description="Create special as a binary instead of shell script")
     variant('coreneuron', default=False, description="Patch hh.mod for CoreNEURON compatibility")
     variant('cross-compile',  default=False, description='Build for cross-compile environment')
-    variant('debug',          default=False, description='Build debug with O0')
+    variant('debug',          default=False, description='Build with flags -g -O0')
     variant('discrete-event-observer', default=True,  description='Enable Observer to be a subclass of DiscreteEvent')
     variant('interviews', default=False, description='Enable GUI with INTERVIEWS')
     variant('legacy-fr',  default=True,  description='Use original faraday, R, etc. instead of 2019 nist constants')
@@ -59,7 +59,6 @@ class Neuron(CMakePackage):
     variant('shared',     default=True,  description='Build shared libraries')
     variant('tests',      default=False, description='Enable unit tests')
     variant('threads',    default=True,  description='Allow use of Pthreads')
-    variant('debug',      default=False, description='Build debug with O0')
 
     variant('deployment_build', default='1',  description='Build number for re-builds')
 
