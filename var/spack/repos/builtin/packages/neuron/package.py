@@ -120,8 +120,6 @@ class Neuron(CMakePackage):
             args.append('-DCMAKE_CXX_FLAGS=-g -O0')
             args.append('-DCMAKE_BUILD_TYPE=Custom')
 
-        filter_compiler_wrappers('*/bin/nrnmech_makefile')
-
         return args
 
     # ==============================================
@@ -146,11 +144,6 @@ class Neuron(CMakePackage):
             '~shared': ['--disable-shared'],
             '+binary': ['linux_nrnmech=no'],
         }
-
-        filter_compiler_wrappers('*/bin/nrniv_makefile')
-        filter_compiler_wrappers('*/bin/nrnmech_makefile')
-        filter_compiler_wrappers('*/bin/nrnoc_makefile')
-        filter_compiler_wrappers('*/share/nrn/libtool')
 
     @when('~cmake')
     def get_arch_options(self, spec):
