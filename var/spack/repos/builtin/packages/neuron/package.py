@@ -370,7 +370,7 @@ class Neuron(CMakePackage):
             'string': True
         }
 
-        if os.path.isfile(libtool_makefile):
+        if self.spec.satisfies('~cmake'):
             # hpe-mpi requires linking to libmpi++ and hence needs to use cxx wrapper
             if self.spec.satisfies('+mpi'):
                 filter_file(env['CC'], cxx_compiler, libtool_makefile, **kwargs)
@@ -378,11 +378,11 @@ class Neuron(CMakePackage):
                 filter_file(env['CC'], cc_compiler, libtool_makefile, **kwargs)
             filter_file(env['CXX'], cxx_compiler, libtool_makefile, **kwargs)
 
-        if os.path.isfile(nrnmech_makefile):
-            filter_file(env['CC'], cc_compiler, nrnmech_makefile, **kwargs)
-            filter_file(env['CXX'], cxx_compiler, nrnmech_makefile, **kwargs)
+        # nrnmech_makefile exists in both cmake and autotools builds
+        filter_file(env['CC'], cc_compiler, nrnmech_makefile, **kwargs)
+        filter_file(env['CXX'], cxx_compiler, nrnmech_makefile, **kwargs)
 
-        if os.path.isfile(nrniv_makefile):
+        if self.spec.satisfies('~cmake'):
             filter_file(env['CC'], cc_compiler, nrniv_makefile, **kwargs)
             filter_file(env['CXX'], cxx_compiler, nrniv_makefile, **kwargs)
 
