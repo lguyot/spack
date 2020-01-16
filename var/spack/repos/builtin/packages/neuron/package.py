@@ -45,7 +45,6 @@ class Neuron(CMakePackage):
     variant('coreneuron', default=False, description="Patch hh.mod for CoreNEURON compatibility")
     variant('cross-compile',  default=False, description='Build for cross-compile environment')
     variant('debug',          default=False, description='Build with flags -g -O0')
-    variant('discrete-event-observer', default=True,  description='Enable Observer to be a subclass of DiscreteEvent')
     variant('interviews', default=False, description='Enable GUI with INTERVIEWS')
     variant('legacy-fr',  default=True,  description='Use original faraday, R, etc. instead of 2019 nist constants')
     variant('mech-dll-style', default=True,  description='Dynamically load nrnmech shared library')
@@ -53,12 +52,10 @@ class Neuron(CMakePackage):
     variant('mpi',        default=True,  description='Enable MPI parallelism')
     variant('multisend',  default=True,  description="Enable multi-send spike exchange")
     variant('profile',    default=False, description="Enable Tau profiling")
-    variant('pysetup',    default=True,  description="Build Python module with setup.py")
     variant('python',     default=True,  description='Enable python')
     variant('rx3d',       default=True,  description="Enable cython translated 3-d rxd. Depends on pysetup")
     variant('shared',     default=True,  description='Build shared libraries')
     variant('tests',      default=False, description='Enable unit tests')
-    variant('threads',    default=True,  description='Allow use of Pthreads')
 
     variant('deployment_build', default='1',  description='Build number for re-builds')
 
@@ -70,7 +67,7 @@ class Neuron(CMakePackage):
     depends_on('automake',  type='build', when='~cmake')
     depends_on('bison',     type='build')
     depends_on('flex',      type='build')
-    depends_on('libtool',   type='build')
+    depends_on('libtool',   type='build', when='~cmake')
     depends_on('pkgconfig', type='build')
     
     # Readline became incompatible with Mac so we use neuron internal readline.
@@ -88,8 +85,7 @@ class Neuron(CMakePackage):
 
     conflicts('+cmake',   when='@0:7.8.0b,2018-10')
     conflicts('~shared',  when='+python')
-    conflicts('+pysetup', when='~python')
-    conflicts('+rx3d',    when='~pysetup')
+    conflicts('+rx3d',    when='~python')
 
     # ==============================================
     # ==== CMake build system related functions ====
@@ -104,9 +100,7 @@ class Neuron(CMakePackage):
                                                              '+interviews',
                                                              '+legacy-fr',
                                                              '+mech-dll-style',
-                                                             '+discrete-event-observer',
                                                              '+python',
-                                                             '+threads',
                                                              '+mpi',
                                                              '+memacs',
                                                              '+rx3d',
@@ -135,8 +129,7 @@ class Neuron(CMakePackage):
                                '--without-readline',
                                '--without-memacs',
                                '--without-nmodl'],
-            '~python': ['--without-nrnpython'],
-            '~pysetup': ['--disable-pysetup'],
+            '~python': ['--without-nrnpython', '--disable-pysetup'],
             '+mpi+multisend': ['--with-multisend'],
             '~rx3d': ['--disable-rx3d'],
             '~mpi': ['--without-paranrn'],
@@ -390,7 +383,8 @@ class Neuron(CMakePackage):
         neuron_basedir = self.get_neuron_basedir()
         run_env.prepend_path('PATH', join_path(neuron_basedir, 'bin'))
         run_env.prepend_path('LD_LIBRARY_PATH', join_path(neuron_basedir, 'lib'))
-        self.set_python_path(run_env)
+        if self.spec.satisfies('+python'):
+            self.set_python_path(run_env)
         if self.spec.satisfies('+mpi'):
             run_env.set('MPICC_CC', self.compiler.cc)
 
@@ -398,7 +392,8 @@ class Neuron(CMakePackage):
         neuron_basedir = self.get_neuron_basedir()
         spack_env.prepend_path('PATH', join_path(neuron_basedir, 'bin'))
         spack_env.prepend_path('LD_LIBRARY_PATH', join_path(neuron_basedir, 'lib'))
-        self.set_python_path(run_env)
+        if self.spec.satisfies('+python'):
+            self.set_python_path(run_env)
 
     def setup_dependent_package(self, module, dependent_spec):
         dependent_spec.package.neuron_basedir = self.get_neuron_basedir()
