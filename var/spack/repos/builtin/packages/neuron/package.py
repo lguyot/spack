@@ -385,6 +385,9 @@ class Neuron(CMakePackage):
         run_env.prepend_path('LD_LIBRARY_PATH', join_path(neuron_basedir, 'lib'))
         if self.spec.satisfies('+python'):
             self.set_python_path(run_env)
+            # Unset PYTHONHOME to avoid "import site" issue in the build
+            if 'darwin' in self.spec.architecture:
+                spack_env.unset('PYTHONHOME')
         if self.spec.satisfies('+mpi'):
             run_env.set('MPICC_CC', self.compiler.cc)
 
