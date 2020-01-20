@@ -42,7 +42,8 @@ class Neuron(CMakePackage):
 
     variant('cmake',      default=True, description="Build NEURON using cmake")
     variant('binary',     default=False, description="Create special as a binary instead of shell script")
-    variant('coreneuron', default=True, description="Patch hh.mod for CoreNEURON compatibility")
+    variant('coreneuron',     default=False, description='Build Neuron with CoreNEURON as submodule')
+    variant('coreneuron-compatible', default=True, description="Patch hh.mod for CoreNEURON compatibility")
     variant('cross-compile',  default=False, description='Build for cross-compile environment')
     variant('debug',          default=False, description='Build with flags -g -O0')
     variant('interviews', default=False, description='Enable GUI with INTERVIEWS')
@@ -83,9 +84,10 @@ class Neuron(CMakePackage):
     depends_on('py-cython',   when='+python', type=('build', 'link', 'run'))
     depends_on('tau',         when='+profile')
 
-    conflicts('+cmake',   when='@0:7.8.0b,2018-10')
-    conflicts('~shared',  when='+python')
-    conflicts('+rx3d',    when='~python')
+    conflicts('+cmake',      when='@0:7.8.0b,2018-10')
+    conflicts('~shared',     when='+python')
+    conflicts('+rx3d',       when='~python')
+    conflicts('+coreneuron', when='~cmake')
 
     # ==============================================
     # ==== CMake build system related functions ====
@@ -282,22 +284,23 @@ class Neuron(CMakePackage):
             with profiling_wrapper_on():
                 make('install')
 
-    @when('~cmake')
-    def patch(self):
-        # aclocal need complete include path (especially on os x)
-        pkgconf_inc = '-I %s/share/aclocal/' % (self.spec['pkgconfig'].prefix)
-        libtool_inc = '-I %s/share/aclocal/' % (self.spec['libtool'].prefix)
-        newpath = 'aclocal -I m4 %s %s' % (pkgconf_inc, libtool_inc)
-        filter_file(r'aclocal -I m4', r'%s' % newpath, "build.sh")
-
-        # patch hh.mod to be compatible with coreneuron
-        if self.spec.satisfies('+coreneuron'):
-            filter_file(r'GLOBAL minf', r'RANGE minf', 'src/nrnoc/hh.mod')
-            filter_file(r'TABLE minf', r':TABLE minf', "src/nrnoc/hh.mod")
-
     # ==============================================
     # ============== Common functions ==============
     # ==============================================
+    @run_before('build')
+    def patch(self):
+        if self.spec.satisfies('~cmake'):
+            # aclocal need complete include path (especially on os x)
+            pkgconf_inc = '-I %s/share/aclocal/' % (self.spec['pkgconfig'].prefix)
+            libtool_inc = '-I %s/share/aclocal/' % (self.spec['libtool'].prefix)
+            newpath = 'aclocal -I m4 %s %s' % (pkgconf_inc, libtool_inc)
+            filter_file(r'aclocal -I m4', r'%s' % newpath, "build.sh")
+
+        # patch hh.mod to be compatible with coreneuron
+        if self.spec.satisfies('+coreneuron-compatible~coreneuron'):
+            filter_file(r'GLOBAL minf', r'RANGE minf', 'src/nrnoc/hh.mod')
+            filter_file(r'TABLE minf', r':TABLE minf', "src/nrnoc/hh.mod")
+
     def get_neuron_arch(self):
         """Determine the architecture neuron build architecture.
 
