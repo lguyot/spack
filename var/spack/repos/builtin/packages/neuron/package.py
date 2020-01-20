@@ -42,7 +42,7 @@ class Neuron(CMakePackage):
 
     variant('cmake',      default=False, description="Build NEURON using cmake")
     variant('binary',     default=False, description="Create special as a binary instead of shell script")
-    variant('coreneuron', default=False, description="Patch hh.mod for CoreNEURON compatibility")
+    variant('coreneuron', default=True, description="Patch hh.mod for CoreNEURON compatibility")
     variant('cross-compile',  default=False, description='Build for cross-compile environment')
     variant('debug',          default=False, description='Build with flags -g -O0')
     variant('interviews', default=False, description='Enable GUI with INTERVIEWS')
@@ -390,6 +390,7 @@ class Neuron(CMakePackage):
                 spack_env.unset('PYTHONHOME')
         if self.spec.satisfies('+mpi'):
             run_env.set('MPICC_CC', self.compiler.cc)
+            run_env.set('MPICXX_CXX', self.compiler.cxx)
 
     def setup_dependent_environment(self, spack_env, run_env, dependent_spec):
         neuron_basedir = self.get_neuron_basedir()
