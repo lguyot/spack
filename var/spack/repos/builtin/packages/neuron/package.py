@@ -29,7 +29,7 @@ class Neuron(CMakePackage):
     patch('apply_79a4d2af_load_balance_fix.patch', when='@7.8.0b')
 
     version('develop', branch='master')
-    version('7.8.1',   commit='79a4d2a', preferred=True)
+    version('7.8.1',   commit='79a4d2a', clean=False, preferred=True)
     version('7.8.0b',  commit='92a208b')
     version('7.6.8',   tag='7.6.8')
     version('7.6.6',   tag='7.6.6')
@@ -40,7 +40,7 @@ class Neuron(CMakePackage):
     version('7.3', '993e539cb8bf102ca52e9fefd644ab61')
     version('7.2', '5486709b6366add932e3a6d141c4f7ad')
 
-    variant('cmake',      default=False, description="Build NEURON using cmake")
+    variant('cmake',      default=True, description="Build NEURON using cmake")
     variant('binary',     default=False, description="Create special as a binary instead of shell script")
     variant('coreneuron', default=True, description="Patch hh.mod for CoreNEURON compatibility")
     variant('cross-compile',  default=False, description='Build for cross-compile environment')
