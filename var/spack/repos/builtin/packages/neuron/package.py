@@ -116,6 +116,15 @@ class Neuron(CMakePackage):
 
         return args
 
+    # Remove CoreNeuron executables installed with Neuron
+    # to avoid using them in neurondamus-xxx+coreneuron installations
+    @run_after('install')
+    def remove_coreneuron_binaries(self):
+        if self.spec.satisfies('+cmake+coreneuron'):
+            os.remove(os.path.join(self.prefix.bin, 'mod2c_core'))
+            os.remove(os.path.join(self.prefix.bin, 'nrniv-core'))
+            os.remove(os.path.join(self.prefix.bin, 'nrnivmodl-core'))
+
     # ==============================================
     # == Autotools build system related functions ==
     # ==============================================
