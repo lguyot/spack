@@ -79,7 +79,7 @@ class Neuron(CMakePackage):
     depends_on('python@2.6:', when='+python', type=('build', 'link', 'run'))
     depends_on('py-pytest',   when='+python+tests')
     # Numpy is required for Vector.as_numpy()
-    # depends_on('py-numpy',    when='+python', type='run')
+    depends_on('py-numpy',    when='+python', type=('build', 'run'))
     depends_on('py-cython',   when='+python', type=('build', 'link', 'run'))
     depends_on('tau',         when='+profile')
 
