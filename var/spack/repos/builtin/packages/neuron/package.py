@@ -121,9 +121,9 @@ class Neuron(CMakePackage):
     @run_after('install')
     def remove_coreneuron_binaries(self):
         if self.spec.satisfies('+cmake+coreneuron'):
-            os.remove(os.path.join(self.prefix.bin, 'mod2c_core'))
-            os.remove(os.path.join(self.prefix.bin, 'nrniv-core'))
-            os.remove(os.path.join(self.prefix.bin, 'nrnivmodl-core'))
+            for binary in os.listdir(self.prefix.bin):
+                if 'core' in binary:
+                    os.remove(os.path.join(self.prefix.bin, binary))
 
     # ==============================================
     # == Autotools build system related functions ==
