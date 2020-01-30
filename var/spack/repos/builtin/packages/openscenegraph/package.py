@@ -12,15 +12,17 @@ class Openscenegraph(CMakePackage):
        that's used in a variety of visual simulation applications."""
 
     homepage = "http://www.openscenegraph.org"
-    url      = "http://trac.openscenegraph.org/downloads/developer_releases/OpenSceneGraph-3.2.3.zip"
+    url      = "https://github.com/openscenegraph/OpenSceneGraph/archive/OpenSceneGraph-3.2.3.zip"
 
-    version('3.2.3', '02ffdad7744c747d8fad0d7babb58427')
-    version('3.1.5', '1c90b851b109849c985006486ef59822')
+    version('3.2.3', sha256='1e15f2c92e2e4a396f42fd4a8b64b31a65d2036b9fb5d1555a798a81598a533d')
+    version('3.1.5', sha256='1ca3f16ec023486686087c832e64e54da81cc12344549ba26ededfd9295572bc')
 
     variant('shared', default=True, description='Builds a shared version of the library')
 
+    patch('relwithdebinfo_postfix.patch')
+
     depends_on('cmake@2.8.7:', type='build')
-    depends_on('qt@4:')
+    depends_on('qt@4: +opengl')
     depends_on('zlib')
 
     def cmake_args(self):
