@@ -547,6 +547,7 @@ EOF
 
 generate_archive_modules() {
     local root="${1}"
+    set -x
 
     mkdir -p "${root}/archive"
 
