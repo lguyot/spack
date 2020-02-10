@@ -67,7 +67,7 @@ class Neuron(Package):
 
     # Transient dependency
     depends_on('gettext')
-    
+
     depends_on('interviews',  when='+interviews')
     depends_on('mpi',         when='+mpi')
     depends_on('ncurses',     when='~cross-compile')
