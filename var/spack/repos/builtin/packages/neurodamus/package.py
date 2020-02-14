@@ -89,9 +89,9 @@ class Neurodamus(NeurodamusBase):
         # dont fetch but stage as mod files come from neurodamus-base
         self._fetch_time = 0
         self.stage.create()
-        build_dir = os.path.join(self.stage.path, 'build')
-        os.makedirs(build_dir)
-        os.symlink(self.spec['neurodamus-base'].prefix.lib.modlib, os.path.join(build_dir, 'm'))
+        fake_source = os.path.join(self.stage.path, 'spack-src')
+        os.makedirs(fake_source)
+        os.symlink(self.spec['neurodamus-base'].prefix.lib.modlib, os.path.join(fake_source, 'm'))
 
     def build(self, spec, prefix):
         """ Build mod files from m dir
