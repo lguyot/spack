@@ -183,7 +183,7 @@ class SimModel(Package):
             shutil.move(cmod, prefix.share.modc)
 
     def _setup_build_environment_common(self, env):
-        pass
+        env.unset('LC_ALL')
 
     def _setup_run_environment_common(self, env):
         # Dont export /lib as an ldpath.
@@ -200,7 +200,6 @@ class SimModel(Package):
 
     def setup_build_environment(self, env):
         self._setup_build_environment_common(env)
-        env.unset('LC_ALL')
 
     def setup_run_environment(self, env):
         self._setup_run_environment_common(env)
