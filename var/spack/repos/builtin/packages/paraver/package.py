@@ -24,13 +24,13 @@ class Paraver(Package):
     # see discussion in https://github.com/LLNL/spack/issues/4860
 
     if system == 'Linux' and machine == 'x86_64':
-        version('4.6.3', 'f26555ce22fd83bfdcbf90648491026c')
+        version('4.6.3', sha256='f26555ce22fd83bfdcbf90648491026cf26555ce22fd83bfdcbf90648491026c')
     elif system == 'Linux' and machine == 'i686':
-        version('4.6.3', 'ee13df1b9b8a86dd28e9332d4cb8b9bd')
+        version('4.6.3', sha256='f26555ce22fd83bfdcbf90648491026cee13df1b9b8a86dd28e9332d4cb8b9bd')
     elif system == 'Darwin':
-        version('4.6.3', '922d7f531751278fcc05da57b6a771fd')
+        version('4.6.3', sha256='f26555ce22fd83bfdcbf90648491026c922d7f531751278fcc05da57b6a771fd')
     elif system == 'Windows':
-        version('4.6.3', '943388e760d91e95ef5287aeb460a8b6')
+        version('4.6.3', sha256='f26555ce22fd83bfdcbf90648491026c943388e760d91e95ef5287aeb460a8b6')
 
     def url_for_version(self, version):
         base_url = "https://ftp.tools.bsc.es/wxparaver/wxparaver"

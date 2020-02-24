@@ -13,7 +13,7 @@ class PyRdflib(PythonPackage):
     homepage = "https://rdflib.readthedocs.io/en/stable"
     url      = "https://pypi.io/packages/source/r/rdflib/rdflib-4.2.2.tar.gz"
 
-    version('4.2.2', '534fe35b13c5857d53fa1ac5a41eca67')
+    version('4.2.2', sha256='da1df14552555c5c7715d8ce71c08f404c988c58a1ecd38552d0da4fc261280d')
 
     depends_on('py-setuptools', type='build')
 

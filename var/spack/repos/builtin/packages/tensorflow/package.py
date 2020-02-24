@@ -15,15 +15,7 @@ class Tensorflow(Package):
     url      = "https://github.com/tensorflow/tensorflow/archive/v0.10.0.tar.gz"
 
     version('1.13.1',    sha256='7cd19978e6bc7edc2c847bce19f95515a742b34ea5e28e4389dade35348f58ed')
-    version('1.12.0',    '48164180a2573e75f1c8dff492a550a0', preferred=True)
-    version('1.9.0',     '3426192cce0f8e070b2010e5bd5695cd')
-    version('1.8.0',     'cd45874be9296644471dd43e7da3fbd0')
-    version('1.6.0',     '6dc60ac37e49427cd7069968da42c1ac')
-    version('1.5.0',     'e087dc1f47dbbda87cf4278acddf785b')
-    version('1.3.0',     '01c008c58d206324ef68cd5116a83965')
-    version('1.2.0',     '3f15746caabfd2583724258643fd1678')
-    version('1.1.0',     'fb745649d33954c97d29b7acaffe7d65')
-    version('0.10.0',    'b75cbd494d61a809af5ef25d7fba561b')
+    version('1.12.0',    sha256='3c87b81e37d4ed7f3da6200474fa5e656ffd20d8811068572f43610cae97ca92', preferred=True)
 
     depends_on('swig',                          type='build')
 
@@ -149,74 +141,74 @@ class Tensorflow(Package):
         setup_py('install', '--prefix={0}'.format(prefix))
 
 
-    def setup_environment(self, spack_env, run_env):
+    def setup_build_environment(self, env):
         spec = self.spec
 
         # add libcuda.so to LD_LIBRARY_PATH as build can be triggered on the node without cuda driver
         #if '+cuda' in spec:
-        #    spack_env.prepend_path('LD_LIBRARY_PATH', spec['cuda'].prefix.lib64.stubs)
+        #    env.prepend_path('LD_LIBRARY_PATH', spec['cuda'].prefix.lib64.stubs)
 
         if '+gcp' in spec:
-            spack_env.set('TF_NEED_GCP', '1')
+            env.set('TF_NEED_GCP', '1')
         else:
-            spack_env.set('TF_NEED_GCP', '0')
+            env.set('TF_NEED_GCP', '0')
 
-        spack_env.set('PYTHON_BIN_PATH', str(spec['python'].prefix.bin) + '/python')
-        spack_env.set('PYTHONUSERBASE', str(spec['python'].prefix))
-        spack_env.set('USE_DEFAULT_PYTHON_LIB_PATH', '1')
-        spack_env.set('GCC_HOST_COMPILER_PATH', spack_cc)
+        env.set('PYTHON_BIN_PATH', str(spec['python'].prefix.bin) + '/python')
+        env.set('PYTHONUSERBASE', str(spec['python'].prefix))
+        env.set('USE_DEFAULT_PYTHON_LIB_PATH', '1')
+        env.set('GCC_HOST_COMPILER_PATH', spack_cc)
 
-        spack_env.set('TF_ENABLE_XLA', '0')
+        env.set('TF_ENABLE_XLA', '0')
 
         if '+cuda' in spec:
-            spack_env.set('TF_NEED_CUDA', '1')
-            spack_env.set('TF_CUDA_CLANG', '0')
-            spack_env.set('TF_NEED_TENSORRT', '0')
-            spack_env.set('TF_CUDA_VERSION', str(spec['cuda'].version))
-            spack_env.set('CUDA_TOOLKIT_PATH', str(spec['cuda'].prefix))
-            spack_env.set('TF_CUDNN_VERSION', str(spec['cudnn'].version)[0])
-            spack_env.set('CUDNN_INSTALL_PATH', str(spec['cudnn'].prefix))
-            spack_env.set('NCCL_INSTALL_PATH', str(spec['nccl'].prefix))
-            spack_env.set('TF_NCCL_VERSION', str(spec['nccl'].version)[0])
-            spack_env.set('TF_CUDA_COMPUTE_CAPABILITIES', '6.0,6.1,7.0')
+            env.set('TF_NEED_CUDA', '1')
+            env.set('TF_CUDA_CLANG', '0')
+            env.set('TF_NEED_TENSORRT', '0')
+            env.set('TF_CUDA_VERSION', str(spec['cuda'].version))
+            env.set('CUDA_TOOLKIT_PATH', str(spec['cuda'].prefix))
+            env.set('TF_CUDNN_VERSION', str(spec['cudnn'].version)[0])
+            env.set('CUDNN_INSTALL_PATH', str(spec['cudnn'].prefix))
+            env.set('NCCL_INSTALL_PATH', str(spec['nccl'].prefix))
+            env.set('TF_NCCL_VERSION', str(spec['nccl'].version)[0])
+            env.set('TF_CUDA_COMPUTE_CAPABILITIES', '6.0,6.1,7.0')
         else:
-            spack_env.set('TF_NEED_CUDA', '0')
-            spack_env.set('TF_CUDA_VERSION', '')
-            spack_env.set('CUDA_TOOLKIT_PATH', '')
-            spack_env.set('TF_CUDNN_VERSION', '')
-            spack_env.set('CUDNN_INSTALL_PATH', '')
+            env.set('TF_NEED_CUDA', '0')
+            env.set('TF_CUDA_VERSION', '')
+            env.set('CUDA_TOOLKIT_PATH', '')
+            env.set('TF_CUDNN_VERSION', '')
+            env.set('CUDNN_INSTALL_PATH', '')
 
         # additional config options starting with version 1.2
         if spec.satisfies('@1.2.0:'):
-            spack_env.set('TF_NEED_MKL', '1')
-            spack_env.set('TF_NEED_VERBS', '1')
+            env.set('TF_NEED_MKL', '1')
+            env.set('TF_NEED_VERBS', '1')
 
         # additional config options starting with version 1.3
         if spec.satisfies('@1.3.0:'):
-            spack_env.set('TF_NEED_MPI', '0')
+            env.set('TF_NEED_MPI', '0')
 
         # additional config options starting with version 1.5
         if spec.satisfies('@1.5.0:'):
-            spack_env.set('TF_NEED_S3', '0')
-            spack_env.set('TF_NEED_GDR', '0')
-            spack_env.set('TF_NEED_OPENCL_SYCL', '0')
-            spack_env.set('TF_SET_ANDROID_WORKSPACE', '0')
+            env.set('TF_NEED_S3', '0')
+            env.set('TF_NEED_GDR', '0')
+            env.set('TF_NEED_OPENCL_SYCL', '0')
+            env.set('TF_SET_ANDROID_WORKSPACE', '0')
             # env variable is somehow ignored -> brute force
             # filter_file(r'if workspace_has_any_android_rule\(\)', r'if True', 'configure.py')
 
         # additional config options starting with version 1.6
         if spec.satisfies('@1.6.0:'):
-            spack_env.set('TF_NEED_KAFKA', '0')
+            env.set('TF_NEED_KAFKA', '0')
 
         # additional config options starting with version 1.8
         if spec.satisfies('@1.8.0:'):
-            spack_env.set('TF_DOWNLOAD_CLANG', '0')
-            spack_env.set('TF_NEED_AWS', '0')
+            env.set('TF_DOWNLOAD_CLANG', '0')
+            env.set('TF_NEED_AWS', '0')
 
         # boringssl error again, build against openssl instead via TF_SYSTEM_LIBS
         # does not work for tf < 1.12.0
         # (https://github.com/tensorflow/tensorflow/issues/25283#issuecomment-460124556)
         if spec.satisfies('@1.12.0:'):
-            spack_env.set('TF_SYSTEM_LIBS', "boringssl")
-            spack_env.set('TF_NEED_IGNITE', '0')
-            spack_env.set('TF_NEED_ROCM', '0')
+            env.set('TF_SYSTEM_LIBS', "boringssl")
+            env.set('TF_NEED_IGNITE', '0')
+            env.set('TF_NEED_ROCM', '0')
