@@ -23,6 +23,5 @@ class Meshball(CMakePackage):
     depends_on('cgal')
 
     def cmake_args(self):
-        return [ '-DGLM_INSTALL_ENABLE=OFF',
-                 '-DCMAKE_CXX_FLAGS=-Wno-deprecated-declarations' ]
-
+        return ['-DGLM_INSTALL_ENABLE=OFF',
+                '-DCMAKE_CXX_FLAGS=-Wno-deprecated-declarations']
