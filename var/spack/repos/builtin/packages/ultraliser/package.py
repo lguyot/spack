@@ -9,6 +9,7 @@ from spack import *
 class Ultraliser(CMakePackage):
     """Mesh and volume reconstruction of neuroscientific models
     """
+    homepage = "https://bbpcode.epfl.ch/code/#/admin/projects/viz/Ultraliser"
     git = "ssh://bbpcode.epfl.ch/viz/Ultraliser"
 
     version('0.1.0', tag='v0.1.0')

@@ -9,6 +9,7 @@ from spack import *
 class Meshball(CMakePackage):
     """Tool for generating meshes from morphology file"""
 
+    homepage = "https://bbpcode.epfl.ch/code/#/admin/projects/viz/MeshBall"
     git = "ssh://bbpcode.epfl.ch/viz/MeshBall"
 
     generator = 'Ninja'

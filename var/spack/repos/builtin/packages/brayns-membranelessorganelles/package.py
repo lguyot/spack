@@ -7,6 +7,7 @@ from spack import *
 
 class BraynsMembranelessorganelles(CMakePackage):
     """Brayns plugin"""
+    homepage = "https://bbpcode.epfl.ch/code/#/admin/projects/viz/Brayns-UC-MembranelessOrganelles"
     git = "ssh://bbpcode.epfl.ch/viz/Brayns-UC-MembranelessOrganelles.git"
 
     generator = 'Ninja'
