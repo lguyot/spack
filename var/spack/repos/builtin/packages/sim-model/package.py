@@ -30,6 +30,8 @@ class SimModel(Package):
     from NeurodamusModel instead. See neurodamus-xxx packages for examples.
 
     """
+    homepage = ""
+
     variant('coreneuron',  default=False, description="Enable CoreNEURON Support")
     variant('profile',     default=False, description="Enable profiling using Tau")
 
