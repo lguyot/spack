@@ -7,7 +7,8 @@ from spack import *
 
 
 class PyPythonJose(PythonPackage):
-    """The JavaScript Object Signing and Encryption(JOSE) implementation in Python."""
+    """The JavaScript Object Signing and Encryption(JOSE) implementation in
+    Python."""
 
     homepage = "https://python-jose.readthedocs.io/en/latest"
     url      = "https://pypi.io/packages/source/p/python-jose/python-jose-3.0.1.tar.gz"

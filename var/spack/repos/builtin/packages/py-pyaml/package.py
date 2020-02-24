@@ -7,7 +7,8 @@ from spack import *
 
 
 class PyPyaml(PythonPackage):
-    """PyYAML-based module to produce pretty and readable YAML-serialized data."""
+    """PyYAML-based module to produce pretty and readable YAML-serialized
+    data."""
 
     homepage = "https://github.com/mk-fg/pretty-yaml"
     url      = "https://pypi.io/packages/source/p/pyaml/pyaml-19.4.1.tar.gz"

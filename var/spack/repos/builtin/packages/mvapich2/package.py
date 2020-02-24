@@ -199,7 +199,6 @@ class Mvapich2(AutotoolsPackage):
         return opts
 
     def setup_build_environment(self, env):
-        spec = self.spec
         # mvapich2 configure fails when F90 and F90FLAGS are set
         env.unset('F90')
         env.unset('F90FLAGS')

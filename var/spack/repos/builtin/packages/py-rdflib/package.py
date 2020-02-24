@@ -7,8 +7,8 @@ from spack import *
 
 
 class PyRdflib(PythonPackage):
-    """RDFLib is a Python library for working with RDF, a simple yet powerful language for
-    representing information as graphs."""
+    """RDFLib is a Python library for working with RDF, a simple yet
+    powerful language for representing information as graphs."""
 
     homepage = "https://rdflib.readthedocs.io/en/stable"
     url      = "https://pypi.io/packages/source/r/rdflib/rdflib-4.2.2.tar.gz"

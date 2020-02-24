@@ -7,9 +7,8 @@ from spack import *
 
 
 class PySparqlwrapper(PythonPackage):
-    """SPARQLWrapper is a simple Python wrapper around a SPARQL service to remotelly execute your
-    queries. It helps in creating the query invokation and, possibly, convert the result into a
-    more manageable format."""
+    """SPARQLWrapper is a simple Python wrapper around a SPARQL service to
+    remotelly execute your queries."""
 
     homepage = "https://rdflib.github.io/sparqlwrapper/"
     url      = "https://pypi.io/packages/source/s/sparqlwrapper/SPARQLWrapper-1.8.4.tar.gz"

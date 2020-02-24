@@ -7,7 +7,8 @@ from spack import *
 
 
 class PyNeurotools(PythonPackage):
-    """NeuroTools is a collection of tools for representing and anlyzing neuroscientific data."""
+    """A collection of tools for representing and anlyzing neuroscientific
+    data."""
 
     homepage = "http://neuralensemble.org/NeuroTools"
     url      = "https://pypi.io/packages/source/n/neurotools/NeuroTools-0.3.1.tar.gz"
@@ -21,6 +22,7 @@ class PyNeurotools(PythonPackage):
     depends_on('py-mpi4py', type='run')
     depends_on('py-pytables', type='run')
     depends_on('py-pyaml', type='run')
-    # depends_on('py-interval', type='run') py-interval is py2 only and most probably not used
+    # py-interval is py2 only and most probably not used
+    # depends_on('py-interval', type='run')
 
     patch('neurotools-0.3.1.patch', when='@0.3.1')

@@ -6,7 +6,6 @@
 import stat
 
 from six import string_types
-from six import iteritems
 
 from llnl.util.lang import classproperty
 
