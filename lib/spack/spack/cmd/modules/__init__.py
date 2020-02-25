@@ -78,11 +78,6 @@ def setup_parser(subparser):
         'loads',
         help='prompt the list of modules associated with a constraint'
     )
-    loads_parser.add_argument(
-        '--latest',
-        help='use the last installed package when multiple ones match',
-        action='store_true'
-    )
     add_loads_arguments(loads_parser)
     arguments.add_common_arguments(loads_parser, ['constraint'])
 
@@ -101,6 +96,11 @@ def add_loads_arguments(subparser):
     subparser.add_argument(
         '-x', '--exclude', dest='exclude', action='append', default=[],
         help="exclude package from output; may be specified multiple times"
+    )
+    subparser.add_argument(
+        '--latest',
+        help='use the last installed package when multiple ones match',
+        action='store_true'
     )
     arguments.add_common_arguments(
         subparser, ['recurse_dependencies']
@@ -203,31 +203,13 @@ def loads(module_type, specs, args, out=sys.stdout):
 
 
 def find(module_type, specs, args):
-    """Returns the module file "use" name if there's a single match. Raises
-    error messages otherwise.
-    """
-    if args.latest:
-        def install_date(s):
-            _, record = spack.store.db.query_by_spec_hash(s.dag_hash())
-            return record.installation_time
-        specs = sorted(specs, key=install_date, reverse=True)[:1]
+    """Retrieve paths or use names of module files"""
 
-    spec = one_spec_or_raise(specs)
-
-    if spec.package.installed_upstream:
-        module = spack.modules.common.upstream_module(spec, module_type)
-        if module:
-            print(module.path)
-        return
-
-    # Check if the module file is present
-    def module_exists(spec):
-        writer = spack.modules.module_types[module_type](spec)
-        return os.path.isfile(writer.layout.filename)
+    single_spec = one_spec_or_raise(specs)
 
     if args.recurse_dependencies:
         dependency_specs_to_retrieve = list(
-            spec.traverse(root=False, order='post', cover='nodes',
+            single_spec.traverse(root=False, order='post', cover='nodes',
                                  deptype=('link', 'run')))
     else:
         dependency_specs_to_retrieve = []
@@ -240,7 +222,7 @@ def find(module_type, specs, args):
 
         modules.append(
             spack.modules.common.get_module(
-                module_type, spec, args.full_path, required=True))
+                module_type, single_spec, args.full_path, required=True))
     except spack.modules.common.ModuleNotFoundError as e:
         tty.die(e.message)
 
