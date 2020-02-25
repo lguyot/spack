@@ -54,6 +54,9 @@ class Touchdetector(CMakePackage):
 
     patch("no-wall.patch", when='@5:')
 
+    tcl_template = 'modules/extension.tcl'
+    tcl_context = {'load_explanation': 'You have to load this to make something workable'}
+
     def cmake_args(self):
         args = [
             '-DUSE_OPENMP:BOOL={}'.format('+openmp' in self.spec),
