@@ -45,7 +45,9 @@ packages:
         buildable: False
         version: [3.14.5]
     boost:
-        version: [1.68.0]
+        paths:
+            boost@1.70: /apps/dom/UES/jenkins/7.0.UP01/mc/easybuild/software/Boost/1.70.0-CrayGNU-19.10
+        version: [1.70.0]
     ncurses:
         paths:
             ncurses@6.1: /apps/dom/UES/jenkins/7.0.UP01/mc/easybuild/software/ncurses/6.1
@@ -67,7 +69,8 @@ packages:
     python:
         paths:
             python@2.7.15.7: /opt/python/2.7.15.7
-        version: [2.7.15.7]
+            python@3.6.5.7: /opt/python/3.6.5.7
+        version: [2.7.15.7, 3.6.5.7]
     py-h5py:
         paths:
             py-h5py~mpi@2.8.0: /apps/dom/UES/jenkins/7.0.UP01/mc/easybuild/software/h5py/2.8.0-CrayGNU-19.10-python2-serial
