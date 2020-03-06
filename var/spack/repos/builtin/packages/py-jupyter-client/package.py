@@ -5,6 +5,7 @@
 
 from spack import *
 
+
 class PyJupyterClient(PythonPackage):
     """Jupyter protocol client APIs"""
 
