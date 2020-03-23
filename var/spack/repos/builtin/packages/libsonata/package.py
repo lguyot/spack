@@ -3,8 +3,6 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-import os
-
 from spack import *
 
 
@@ -18,13 +16,12 @@ class Libsonata(CMakePackage):
     homepage = "https://github.com/BlueBrain/libsonata"
     git = "https://github.com/BlueBrain/libsonata.git"
 
-    version('develop', branch='master', submodules=False, clean=False)
-    version('0.1.2', tag='v0.1.2', submodules=False, clean=False)
-    version('0.1.0', tag='v0.1.0', submodules=False, clean=False)
+    version('develop', branch='master', submodules=False, get_full_repo=True)
+    version('0.1.2', tag='v0.1.2', submodules=False, get_full_repo=True)
+    version('0.1.0', tag='v0.1.0', submodules=False, get_full_repo=True)
     version('0.0.3', tag='v0.0.3', submodules=False)
 
     variant('mpi', default=True, description="Enable MPI backend")
-
 
     depends_on('cmake@3.3:', type='build')
     depends_on('py-setuptools-scm', type='build', when='@0.1:')
@@ -32,6 +29,8 @@ class Libsonata(CMakePackage):
     depends_on('highfive+mpi', when='+mpi')
     depends_on('highfive~mpi', when='~mpi')
     depends_on('mpi', when='+mpi')
+    depends_on('catch~single_header', when='@0.1.3:')
+    depends_on('spdlog', when='@0.1.3:')
 
     def cmake_args(self):
         result = [
@@ -39,7 +38,11 @@ class Libsonata(CMakePackage):
         ]
         if self.spec.satisfies('+mpi'):
             result.extend([
-                '-DCMAKE_C_COMPILER:STRING={}'.format(self.spec['mpi'].mpicc),
-                '-DCMAKE_CXX_COMPILER:STRING={}'.format(self.spec['mpi'].mpicxx),
+                '-DCMAKE_C_COMPILER:STRING={0}'.format(
+                    self.spec['mpi'].mpicc
+                ),
+                '-DCMAKE_CXX_COMPILER:STRING={0}'.format(
+                    self.spec['mpi'].mpicxx
+                ),
             ])
         return result

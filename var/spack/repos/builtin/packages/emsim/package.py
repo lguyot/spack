@@ -9,6 +9,7 @@ from spack import *
 class Emsim(CMakePackage):
     """ EMSim is a tool for computing VSD and LFP """
 
+    homepage = "https://bbpcode.epfl.ch/code/#/admin/projects/viz/EMSim"
     git = "ssh://bbpcode.epfl.ch/viz/EMSim"
 
     generator = 'Ninja'
@@ -20,3 +21,5 @@ class Emsim(CMakePackage):
     depends_on('brion +python')
     # Eyescale cmake requires Python (!)
     depends_on('python@3.6:', type='build')
+
+    patch('cmake.patch')

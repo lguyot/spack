@@ -1,27 +1,8 @@
 ##############################################################################
-# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
-# Produced at the Lawrence Livermore National Laboratory.
+# Copyright 2013-2020 Lawrence Livermore National Security, LLC and other
+# Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
-# This file is part of Spack.
-# Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
-# LLNL-CODE-647188
-#
-# For details, see https://github.com/spack/spack
-# Please also see the NOTICE and LICENSE files for our notice and the LGPL.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License (as
-# published by the Free Software Foundation) version 2.1, February 1999.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms and
-# conditions of the GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-##############################################################################
+# SPDX-License-Identifier: (Apache-2.0 OR MIT)
 from spack import *
 import os
 
@@ -35,7 +16,7 @@ class IntelMpiExternal(Package):
     homepage = "https://software.intel.com/en-us/intel-mpi-library"
     url = "https://software.intel.com/en-us/intel-mpi-library"
 
-    version('develop', '0123456789abcdef0123456789abcdef')
+    version('develop', sha256='0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
 
     provides('mpi')
 
@@ -51,12 +32,12 @@ class IntelMpiExternal(Package):
     def install(self, spec, prefix):
         raise RuntimeError('IntelMpiExternal package is not installable')
 
-    def setup_dependent_environment(self, spack_env, run_env, dependent_spec):
-        spack_env.set('I_MPI_CC', spack_cc)
-        spack_env.set('I_MPI_CXX', spack_cxx)
-        spack_env.set('I_MPI_F77', spack_fc)
-        spack_env.set('I_MPI_F90', spack_f77)
-        spack_env.set('I_MPI_FC', spack_fc)
+    def setup_dependent_build_environment(self, env, dependent_spec):
+        env.set('I_MPI_CC', spack_cc)
+        env.set('I_MPI_CXX', spack_cxx)
+        env.set('I_MPI_F77', spack_fc)
+        env.set('I_MPI_F90', spack_f77)
+        env.set('I_MPI_FC', spack_fc)
 
     def setup_dependent_package(self, module, dep_spec):
         # Intel comes with 2 different flavors of MPI wrappers:

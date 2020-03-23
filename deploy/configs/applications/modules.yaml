@@ -50,6 +50,7 @@ modules:
       - psp-validation
       - py-basalt
       - py-bbp-analysis-framework
+      - py-bbp-morphology-workflow
       - py-bglibpy
       - py-bluepy
       - py-bluepymm
@@ -61,6 +62,7 @@ modules:
       - 'py-mvdtool%gcc'
       - py-neurodamus
       - py-simwriter
+      - py-sonata-network-reduction
       - py-pytouchreader
       - reportinglib
       - spatial-index
@@ -78,11 +80,7 @@ modules:
     all:
       autoload: 'all'
       suffixes:
-        '^coreneuron+knl': '/knl'
-        '^python@:2.99': '/python2'
-        '^python@3:': '/python3'
-        '+mpi': '/parallel'
-        '~mpi': '/serial'
+        '^coreneuron+knl': 'knl'
         '+common': 'commonmods'  # neurodamus-core
       environment:
         set:

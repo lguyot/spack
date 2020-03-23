@@ -1,7 +1,9 @@
-# Copyright 2013-2018 Lawrence Livermore National Security, LLC and other
+##############################################################################
+# Copyright 2013-2020 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
+#
+# SPDX-License-Identifier: (Apache-2.0 OR MIT)
 from spack import *
-from llnl.util import tty
 
 from contextlib import contextmanager
 import os
@@ -24,10 +26,12 @@ class SimModel(Package):
         version('develop', branch='master')
     ```
 
-    Nevertheless, for them to become full neurodamus packages, they may inherit from
-    NeurodamusModel instead. See neurodamus-xxx packages for examples.
+    Nevertheless, for them to become full neurodamus packages, they may inherit
+    from NeurodamusModel instead. See neurodamus-xxx packages for examples.
 
     """
+    homepage = ""
+
     variant('coreneuron',  default=False, description="Enable CoreNEURON Support")
     variant('profile',     default=False, description="Enable profiling using Tau")
 
@@ -38,6 +42,7 @@ class SimModel(Package):
     depends_on('neuron+profile', when='+profile', type=('build', 'run'))
     depends_on('coreneuron+profile', when='+coreneuron+profile', type=('build', 'run'))
     depends_on('tau', when='+profile')
+    depends_on('gettext', when='^neuron+binary')
 
     conflicts('^neuron~python', when='+coreneuron')
 
@@ -54,16 +59,21 @@ class SimModel(Package):
     def lib_suffix(self):
         return ('_' + self.mech_name) if self.mech_name else ''
 
-    def _build_mods(self, mods_location, link_flag='', include_flag='', corenrn_mods=None):
+    def _build_mods(self, mods_location, link_flag='', include_flag='',
+                    corenrn_mods=None, dependencies=None):
         """Build shared lib & special from mods in a given path
         """
         # pass include and link flags for all dependency libraries
         # Compiler wrappers are not used to have a more reproducible building
-        for dep in set(self.spec.dependencies_dict('link').keys()):
-            link_flag += " {0.ld_flags} {0.rpath_flags}".format(self.spec[dep].libs)
+        if dependencies is None:
+            dependencies = self.spec.dependencies_dict('link').keys()
+        for dep in set(dependencies):
+            link_flag += " {0.ld_flags} {0.rpath_flags}".format(
+                self.spec[dep].libs)
             include_flag += " -I " + str(self.spec[dep].prefix.include)
 
-        include_flag += ' -DENABLE_TAU_PROFILER' if '+profile' in self.spec else ''
+        if '+profile' in self.spec:
+            include_flag += ' -DENABLE_TAU_PROFILER'
         output_dir = os.path.basename(self.nrnivmodl_outdir)
 
         if self.spec.satisfies('+coreneuron'):
@@ -71,21 +81,24 @@ class SimModel(Package):
                 corenrn_mods or mods_location, link_flag, include_flag
             )
             # Relevant flags to build neuron's nrnmech lib
-            include_flag += ' -DENABLE_CORENEURON'  # only now, otherwise mods assume neuron
+            # 'ENABLE_CORENEURON' only now, otherwise mods assume neuron
+            include_flag += ' -DENABLE_CORENEURON'
             include_flag += ' -I%s' % self.spec['coreneuron'].prefix.include
             link_flag += ' ' + libnrncoremech.ld_flags
 
         # Neuron mechlib and special
         with profiling_wrapper_on():
             link_flag += ' -L{0} -Wl,-rpath,{0}'.format(str(self.prefix.lib))
-            which('nrnivmodl')('-incflags', include_flag, '-loadflags', link_flag, mods_location)
+            which('nrnivmodl')('-incflags', include_flag, '-loadflags',
+                               link_flag, mods_location)
 
         assert os.path.isfile(os.path.join(output_dir, 'special'))
         return include_flag, link_flag
 
     def __build_mods_coreneuron(self, mods_location, link_flag, include_flag):
         mods_location = os.path.abspath(mods_location)
-        assert os.path.isdir(mods_location) and find(mods_location, '*.mod', recursive=False),\
+        assert os.path.isdir(mods_location) and find(mods_location, '*.mod',
+                                                     recursive=False),\
             'Invalid mods dir: ' + mods_location
         nrnivmodl_params = ['-n', self.mech_name,
                             '-i', include_flag,
@@ -96,8 +109,10 @@ class SimModel(Package):
             force_symlink(mods_location, 'mod')
             which('nrnivmodl-core')(*nrnivmodl_params)
             output_dir = os.path.basename(self.nrnivmodl_outdir)
-            mechlib = find_libraries('libcorenrnmech' + self.lib_suffix + '*', output_dir)
-            assert len(mechlib.names) == 1, 'Error creating corenrnmech. Found: ' + str(mechlib.names)
+            mechlib = find_libraries('libcorenrnmech' + self.lib_suffix + '*',
+                                     output_dir)
+            assert len(mechlib.names) == 1,\
+                'Error creating corenrnmech. Found: ' + str(mechlib.names)
         return mechlib
 
     def install(self, spec, prefix, install_src=True):
@@ -125,11 +140,13 @@ class SimModel(Package):
         if self.spec.satisfies('+coreneuron'):
             with working_dir('build_' + mech_name):
                 if self.spec.satisfies('^coreneuron@0.0:0.14'):
-                    raise Exception('Coreneuron versions before 0.14 are not supported by Neurodamus model')
+                    raise Exception('Coreneuron versions before 0.14 are'
+                                    'not supported by Neurodamus model')
                 elif self.spec.satisfies('^coreneuron@0.14:0.16.99'):
                     which('nrnivmech_install.sh', path=".")(prefix)
                 else:
-                    which('nrnivmodl-core')("-d", prefix, 'mod')  # Set dest to install
+                    # Set dest to install
+                    which('nrnivmodl-core')("-d", prefix, 'mod')
 
         # Install special
         shutil.copy(join_path(arch, 'special'), prefix.bin)
@@ -143,7 +160,8 @@ class SimModel(Package):
             for f in find(libnrnmech_path, 'libnrnmech*.so*', recursive=False):
                 if not os.path.islink(f):
                     bname = os.path.basename(f)
-                    lib_dst = prefix.lib.join(bname[:bname.find('.')] + self.lib_suffix + '.so')
+                    lib_dst = prefix.lib.join(
+                        bname[:bname.find('.')] + self.lib_suffix + '.so')
                     shutil.move(f, lib_dst)  # Move so its not copied twice
                     break
             else:
@@ -168,22 +186,31 @@ class SimModel(Package):
         for cmod in find(arch, '*.c', recursive=False):
             shutil.move(cmod, prefix.share.modc)
 
-    def _setup_environment_common(self, spack_env, run_env):
-        spack_env.unset('LC_ALL')
-        # Dont export /lib as an ldpath. We dont want to find these libs automatically
-        to_rm = ('LD_LIBRARY_PATH', 'DYLD_LIBRARY_PATH', 'DYLD_FALLBACK_LIBRARY_PATH')
-        run_env.env_modifications = [envmod for envmod in run_env.env_modifications
-                                     if envmod.name not in to_rm]
-        if os.path.isdir(self.prefix.lib.hoc):
-            run_env.prepend_path('HOC_LIBRARY_PATH', self.prefix.lib.hoc)
-        if os.path.isdir(self.prefix.lib.python):
-            run_env.prepend_path('PYTHONPATH', self.prefix.lib.python)
+    def _setup_build_environment_common(self, env):
+        env.unset('LC_ALL')
 
-    def setup_environment(self, spack_env, run_env):
-        self._setup_environment_common(spack_env, run_env)
+    def _setup_run_environment_common(self, env):
+        # Dont export /lib as an ldpath.
+        # We dont want to find these libs automatically
+        to_rm = ('LD_LIBRARY_PATH', 'DYLD_LIBRARY_PATH',
+                 'DYLD_FALLBACK_LIBRARY_PATH')
+        env.env_modifications = [envmod
+                                 for envmod in env.env_modifications
+                                 if envmod.name not in to_rm]
+        if os.path.isdir(self.prefix.lib.hoc):
+            env.prepend_path('HOC_LIBRARY_PATH', self.prefix.lib.hoc)
+        if os.path.isdir(self.prefix.lib.python):
+            env.prepend_path('PYTHONPATH', self.prefix.lib.python)
+
+    def setup_build_environment(self, env):
+        self._setup_build_environment_common(env)
+
+    def setup_run_environment(self, env):
+        self._setup_run_environment_common(env)
         # We will find 0 or 1 lib
-        for libnrnmech_name in find(self.prefix.lib, 'libnrnmech*.so', recursive=False):
-            run_env.prepend_path('BGLIBPY_MOD_LIBRARY_PATH', libnrnmech_name)
+        for libnrnmech_name in find(self.prefix.lib, 'libnrnmech*.so',
+                                    recursive=False):
+            env.prepend_path('BGLIBPY_MOD_LIBRARY_PATH', libnrnmech_name)
 
 
 @contextmanager
