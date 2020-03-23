@@ -370,7 +370,8 @@ class Neuron(CMakePackage):
                 neuron_arch = ""
         return neuron_arch
 
-    def get_neuron_basedir(self):
+    @property
+    def basedir(self):
         """Determine the neuron base directory.
 
         Neuron base directory is based on the build system. For
@@ -399,10 +400,9 @@ class Neuron(CMakePackage):
             cc_compiler = self.spec["mpi"].mpicc
             cxx_compiler = self.spec["mpi"].mpicxx
 
-        basedir = self.get_neuron_basedir()
-        libtool_makefile = join_path(self.prefix, basedir, "../share/nrn/libtool")
-        nrniv_makefile = join_path(self.prefix, basedir, "./bin/nrniv_makefile")
-        nrnmech_makefile = join_path(self.prefix, basedir, "./bin/nrnmech_makefile")
+        libtool_makefile = join_path(self.prefix, self.basedir, "../share/nrn/libtool")
+        nrniv_makefile = join_path(self.prefix, self.basedir, "./bin/nrniv_makefile")
+        nrnmech_makefile = join_path(self.prefix, self.basedir, "./bin/nrnmech_makefile")
 
         kwargs = {"backup": False, "string": True}
 
@@ -420,15 +420,17 @@ class Neuron(CMakePackage):
                 filter_file(env["CXX"], "CC", libtool_makefile, **kwargs)
 
         # nrnmech_makefile exists in both cmake and autotools builds
-        filter_file(env["CC"], cc_compiler, nrnmech_makefile, **kwargs)
-        filter_file(env["CXX"], cxx_compiler, nrnmech_makefile, **kwargs)
+        filter_file("CC = "+env["CC"], "CC = "+cc_compiler, nrnmech_makefile, **kwargs)
+        filter_file("CXX = "+env["CXX"], "CXX = "+cxx_compiler, nrnmech_makefile, **kwargs)
+
+        print('env["CXX"]: ' + env["CXX"] + ', cxx_compiler: ' + cxx_compiler)
 
         if self.spec.satisfies("~cmake"):
             filter_file(env["CC"], cc_compiler, nrniv_makefile, **kwargs)
             filter_file(env["CXX"], cxx_compiler, nrniv_makefile, **kwargs)
 
     @when("+python")
-    def set_python_path(self, run_env):
+    def set_python_path(self, env):
         for pydir in (
                 self.spec.prefix.lib64.python,
                 self.spec.prefix.lib.python,
@@ -437,32 +439,34 @@ class Neuron(CMakePackage):
                 env.prepend_path("PYTHONPATH", pydir)
                 break
 
+    def setup_build_environment(self, env):
+        if "darwin" in self.spec.architecture:
+            env.unset("PYTHONHOME")
+
     def setup_run_environment(self, env):
-        neuron_basedir = self.get_neuron_basedir()
-        run_env.prepend_path("PATH", join_path(neuron_basedir, "bin"))
-        run_env.prepend_path("LD_LIBRARY_PATH", join_path(neuron_basedir, "lib"))
+        env.prepend_path("PATH", join_path(self.basedir, "bin"))
+        env.prepend_path("LD_LIBRARY_PATH", join_path(self.basedir, "lib"))
         if self.spec.satisfies("+python"):
-            self.set_python_path(run_env)
+            self.set_python_path(env)
             # Unset PYTHONHOME to avoid "import site" issue in the build
             if "darwin" in self.spec.architecture:
-                spack_env.unset("PYTHONHOME")
+                env.unset("PYTHONHOME")
         if self.spec.satisfies("+mpi"):
-            run_env.set("MPICC_CC", self.compiler.cc)
-            run_env.set("MPICXX_CXX", self.compiler.cxx)
+            env.set("MPICC_CC", self.compiler.cc)
+            env.set("MPICXX_CXX", self.compiler.cxx)
 
 
     def setup_dependent_build_environment(self, env, dependent_spec):
-        neuron_basedir = self.get_neuron_basedir()
-        env.prepend_path("PATH", join_path(neuron_basedir, "bin"))
-        env.prepend_path("LD_LIBRARY_PATH", join_path(neuron_basedir, "lib"))
+        env.prepend_path("PATH", join_path(self.basedir, "bin"))
+        env.prepend_path("LD_LIBRARY_PATH", join_path(self.basedir, "lib"))
 
 
     def setup_dependent_run_environment(self, env, dependent_spec):
         self.set_python_path(env)
 
     def setup_dependent_package(self, module, dependent_spec):
-        dependent_spec.package.neuron_basedir = self.get_neuron_basedir()
-        dependent_spec.package.nrnivmodl_outdir = self.get_neuron_arch()
+        dependent_spec.package.neuron_basedir = self.basedir
+        dependent_spec.package.nrnivmodl_outdir = self.archdir
 
 
 @contextmanager

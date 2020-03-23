@@ -157,11 +157,12 @@ class SimModel(Package):
                 libnrnmech_path = self.nrnivmodl_outdir
             else:
                 libnrnmech_path = self.nrnivmodl_outdir + "/.libs"
-            for f in find(libnrnmech_path, 'libnrnmech*.so*', recursive=False):
+            print("libnrnmech_path: "+libnrnmech_path)
+            for f in find(libnrnmech_path, 'libnrnmech*.dylib*', recursive=False):
                 if not os.path.islink(f):
                     bname = os.path.basename(f)
                     lib_dst = prefix.lib.join(
-                        bname[:bname.find('.')] + self.lib_suffix + '.so')
+                        bname[:bname.find('.')] + self.lib_suffix + '.dylib')
                     shutil.move(f, lib_dst)  # Move so its not copied twice
                     break
             else:
