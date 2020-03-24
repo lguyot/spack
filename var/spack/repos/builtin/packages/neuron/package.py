@@ -55,7 +55,8 @@ class Neuron(CMakePackage):
 
     variant("cmake",      default=True, description="Build NEURON using cmake")
     variant("binary",     default=False, description="Create special as a binary instead of shell script")
-    variant("coreneuron", default=True, description="Patch hh.mod for CoreNEURON compatibility")
+    variant("coreneuron", default=False, description="Install CoreNEURON as submodule")
+    variant("mod-compatibility",  default=True, description="Enable CoreNEURON compatibility for MOD files")
     variant("cross-compile",  default=False, description="Build for cross-compile environment")
     variant("debug",          default=False, description="Build with flags -g -O0")
     variant("interviews", default=False, description="Enable GUI with INTERVIEWS")
@@ -135,17 +136,11 @@ class Neuron(CMakePackage):
             args.append("-DCMAKE_C_FLAGS=-g -O0")
             args.append("-DCMAKE_CXX_FLAGS=-g -O0")
             args.append("-DCMAKE_BUILD_TYPE=Custom")
+        if "+mod-compatibility" in self.spec:
+            args.append("-DNRN_ENABLE_MOD_COMPATIBILITY:BOOL=ON")
 
         return args
 
-    # Remove CoreNeuron executables installed with Neuron
-    # to avoid using them in neurondamus-xxx+coreneuron installations
-    @run_after("install")
-    def remove_coreneuron_binaries(self):
-        if self.spec.satisfies("+cmake+coreneuron"):
-            for binary in os.listdir(self.prefix.bin):
-                if "core" in binary:
-                    os.remove(os.path.join(self.prefix.bin, binary))
 
     # ==============================================
     # == Autotools build system related functions ==
