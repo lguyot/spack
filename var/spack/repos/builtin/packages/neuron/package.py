@@ -30,8 +30,8 @@ class Neuron(CMakePackage):
     patch("apply_79a4d2af_load_balance_fix.patch", when="@7.8.0b")
 
     version("develop", branch="master")
-    version("7.8.2",   commit="79a4d2a", clean=False, preferred=True)
-    version("7.8.0b",  commit="92a208b", clean=False)
+    version("8.0.0",   commit="1c5b5a7", preferred=True)
+    version("7.8.0b",  commit="92a208b")
     version("7.6.8",   tag="7.6.8")
     version("7.6.6",   tag="7.6.6")
     version("2018-10", commit="b3097b7")
@@ -88,7 +88,7 @@ class Neuron(CMakePackage):
     depends_on("flex",      type="build")
     depends_on("libtool",   type="build", when="~cmake")
     depends_on("pkgconfig", type="build")
-    
+
     # Readline became incompatible with Mac so we use neuron internal readline.
     # HOWEVER, with the internal version there is a bug which makes Vector.as_numpy() not work!
     depends_on("readline", when=sys.platform != "darwin")
@@ -454,6 +454,8 @@ class Neuron(CMakePackage):
     def setup_dependent_build_environment(self, env, dependent_spec):
         env.prepend_path("PATH", join_path(self.basedir, "bin"))
         env.prepend_path("LD_LIBRARY_PATH", join_path(self.basedir, "lib"))
+        if "darwin" in self.spec.architecture:
+            env.unset("PYTHONHOME")
 
 
     def setup_dependent_run_environment(self, env, dependent_spec):
