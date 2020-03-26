@@ -90,7 +90,8 @@ class Neuron(CMakePackage):
     depends_on("pkgconfig", type="build")
 
     # Readline became incompatible with Mac so we use neuron internal readline.
-    # HOWEVER, with the internal version there is a bug which makes Vector.as_numpy() not work!
+    # HOWEVER, with the internal version there is a bug which makes
+    # Vector.as_numpy() not work!
     depends_on("readline", when=sys.platform != "darwin")
 
     # Transient dependency
@@ -131,7 +132,8 @@ class Neuron(CMakePackage):
                                                              "+tests"]]
 
         if "+python" in self.spec:
-            args.append("-DPYTHON_EXECUTABLE:FILEPATH=" + self.spec["python"].command.path)
+            args.append("-DPYTHON_EXECUTABLE:FILEPATH="
+                        + self.spec["python"].command.path)
         if "+debug" in self.spec:
             args.append("-DCMAKE_C_FLAGS=-g -O0")
             args.append("-DCMAKE_CXX_FLAGS=-g -O0")
@@ -140,7 +142,6 @@ class Neuron(CMakePackage):
             args.append("-DNRN_ENABLE_MOD_COMPATIBILITY:BOOL=ON")
 
         return args
-
 
     # ==============================================
     # == Autotools build system related functions ==
@@ -246,7 +247,8 @@ class Neuron(CMakePackage):
             )
         return options
 
-    # Overload CMakePackage cmake function to build Neuron with the legacy Autotools workflow
+    # Overload CMakePackage cmake function to build
+    # Neuron with the legacy Autotools workflow
     @when("~cmake")
     def cmake(self, spec, prefix):
         return
@@ -360,7 +362,10 @@ class Neuron(CMakePackage):
             file_list = find(self.prefix, "*/bin/nrniv_makefile")
             # check needed as when initially evaluated the prefix is empty
             if file_list:
-                neuron_arch = os.path.basename(os.path.dirname(os.path.dirname(file_list[0])))
+                neuron_arch = \
+                    os.path.basename(
+                        os.path.dirname(os.path.dirname(file_list[0]))
+                    )
             else:
                 neuron_arch = ""
         return neuron_arch
@@ -395,18 +400,31 @@ class Neuron(CMakePackage):
             cc_compiler = self.spec["mpi"].mpicc
             cxx_compiler = self.spec["mpi"].mpicxx
 
-        libtool_makefile = join_path(self.prefix, self.basedir, "../share/nrn/libtool")
-        nrniv_makefile = join_path(self.prefix, self.basedir, "./bin/nrniv_makefile")
-        nrnmech_makefile = join_path(self.prefix, self.basedir, "./bin/nrnmech_makefile")
+        libtool_makefile = join_path(self.prefix,
+                                     self.basedir,
+                                     "../share/nrn/libtool")
+        nrniv_makefile = join_path(self.prefix,
+                                   self.basedir,
+                                   "./bin/nrniv_makefile")
+        nrnmech_makefile = join_path(self.prefix,
+                                     self.basedir,
+                                     "./bin/nrnmech_makefile")
 
         kwargs = {"backup": False, "string": True}
 
         if self.spec.satisfies("~cmake"):
-            # hpe-mpi requires linking to libmpi++ and hence needs to use cxx wrapper
+            # hpe-mpi requires linking to libmpi++
+            # and hence needs to use cxx wrapper
             if self.spec.satisfies("+mpi"):
-                filter_file(env["CC"], cxx_compiler, libtool_makefile, **kwargs)
+                filter_file(env["CC"],
+                            cxx_compiler,
+                            libtool_makefile,
+                            **kwargs)
             else:
-                filter_file(env["CC"], cc_compiler, libtool_makefile, **kwargs)
+                filter_file(env["CC"],
+                            cc_compiler,
+                            libtool_makefile,
+                            **kwargs)
             filter_file(env["CXX"], cxx_compiler, libtool_makefile, **kwargs)
             # In Cray systems we overwrite the spack compiler with CC or CXX
             # accordingly
@@ -415,10 +433,14 @@ class Neuron(CMakePackage):
                 filter_file(env["CXX"], "CC", libtool_makefile, **kwargs)
 
         # nrnmech_makefile exists in both cmake and autotools builds
-        filter_file("CC = "+env["CC"], "CC = "+cc_compiler, nrnmech_makefile, **kwargs)
-        filter_file("CXX = "+env["CXX"], "CXX = "+cxx_compiler, nrnmech_makefile, **kwargs)
-
-        print('env["CXX"]: ' + env["CXX"] + ', cxx_compiler: ' + cxx_compiler)
+        filter_file("CC = " + env["CC"],
+                    "CC = " + cc_compiler,
+                    nrnmech_makefile,
+                    **kwargs)
+        filter_file("CXX = " + env["CXX"],
+                    "CXX = " + cxx_compiler,
+                    nrnmech_makefile,
+                    **kwargs)
 
         if self.spec.satisfies("~cmake"):
             filter_file(env["CC"], cc_compiler, nrniv_makefile, **kwargs)
@@ -450,13 +472,11 @@ class Neuron(CMakePackage):
             env.set("MPICC_CC", self.compiler.cc)
             env.set("MPICXX_CXX", self.compiler.cxx)
 
-
     def setup_dependent_build_environment(self, env, dependent_spec):
         env.prepend_path("PATH", join_path(self.basedir, "bin"))
         env.prepend_path("LD_LIBRARY_PATH", join_path(self.basedir, "lib"))
         if "darwin" in self.spec.architecture:
             env.unset("PYTHONHOME")
-
 
     def setup_dependent_run_environment(self, env, dependent_spec):
         self.set_python_path(env)

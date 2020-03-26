@@ -160,7 +160,9 @@ class SimModel(Package):
                     lib_suffix = ".dylib"
             else:
                 libnrnmech_path = self.nrnivmodl_outdir + "/.libs"
-            for f in find(libnrnmech_path, 'libnrnmech*' + lib_suffix + '*', recursive=False):
+            for f in find(libnrnmech_path,
+                          'libnrnmech*' + lib_suffix + '*',
+                          recursive=False):
                 if not os.path.islink(f):
                     bname = os.path.basename(f)
                     lib_dst = prefix.lib.join(
