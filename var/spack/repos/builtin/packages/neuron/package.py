@@ -110,6 +110,8 @@ class Neuron(CMakePackage):
     conflicts("~shared",  when="+python")
     conflicts("+pysetup", when="~python")
     conflicts("+rx3d",    when="~python")
+    # Binary special not working yet with cmake build system
+    conflicts("+binary",  when="+cmake")
 
     # ==============================================
     # ==== CMake build system related functions ====
@@ -433,12 +435,12 @@ class Neuron(CMakePackage):
                 filter_file(env["CXX"], "CC", libtool_makefile, **kwargs)
 
         # nrnmech_makefile exists in both cmake and autotools builds
-        filter_file("CC = " + env["CC"],
-                    "CC = " + cc_compiler,
+        filter_file('CC = {}'.format(env["CC"]),
+                    'CC = {}'.format(cc_compiler),
                     nrnmech_makefile,
                     **kwargs)
-        filter_file("CXX = " + env["CXX"],
-                    "CXX = " + cxx_compiler,
+        filter_file('CXX = {}'.format(env["CXX"]),
+                    'CXX = {}'.format(cxx_compiler),
                     nrnmech_makefile,
                     **kwargs)
 
