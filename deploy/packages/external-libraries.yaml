@@ -55,7 +55,7 @@ packages:
       - vrpn
       - zlib@1.2.11
 
-  intel-stable-parallel:
+  intel-stable-serial:
     target_matrix:
       - intel-stable
     requires:
