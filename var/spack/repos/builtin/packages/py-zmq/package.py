@@ -24,5 +24,5 @@ class PyZmq(PythonPackage):
     phases = ['configure', 'build', 'install']
 
     def configure(self, spec, prefix):
-        """ Provide zeromq directory explicitly especially when zeromq is external"""
+        """ Provide zeromq directory explicitly especially when external"""
         self.setup_py('configure',  '--zmq=%s' % spec["zeromq"].prefix)
