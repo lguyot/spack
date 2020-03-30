@@ -152,7 +152,6 @@ class SimModel(Package):
         shutil.copy(join_path(arch, 'special'), prefix.bin)
 
         if self.spec.satisfies('^neuron~binary'):
-            lib_suffix = ".so"
             # Install libnrnmech - might have several links
             if self.spec.satisfies('^neuron+cmake'):
                 libnrnmech_path = self.nrnivmodl_outdir

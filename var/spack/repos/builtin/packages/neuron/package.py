@@ -30,7 +30,7 @@ class Neuron(CMakePackage):
     patch("apply_79a4d2af_load_balance_fix.patch", when="@7.8.0b")
 
     version("develop", branch="master")
-    version("8.0.0",   commit="1c5b5a7", preferred=True)
+    version("7.8.0c",  commit="fd87eaf", preferred=True)
     version("7.8.0b",  commit="92a208b")
     version("7.6.8",   tag="7.6.8")
     version("7.6.6",   tag="7.6.6")
@@ -435,12 +435,12 @@ class Neuron(CMakePackage):
                 filter_file(env["CXX"], "CC", libtool_makefile, **kwargs)
 
         # nrnmech_makefile exists in both cmake and autotools builds
-        filter_file('CC = {}'.format(env["CC"]),
-                    'CC = {}'.format(cc_compiler),
+        filter_file('CC = %s' % env["CC"],
+                    'CC = %s' % cc_compiler,
                     nrnmech_makefile,
                     **kwargs)
-        filter_file('CXX = {}'.format(env["CXX"]),
-                    'CXX = {}'.format(cxx_compiler),
+        filter_file('CXX = %s' % env["CXX"],
+                    'CXX = %s' % cxx_compiler,
                     nrnmech_makefile,
                     **kwargs)
 
