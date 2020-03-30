@@ -435,12 +435,12 @@ class Neuron(CMakePackage):
                 filter_file(env["CXX"], "CC", libtool_makefile, **kwargs)
 
         # nrnmech_makefile exists in both cmake and autotools builds
-        filter_file('CC = %s' % env["CC"],
-                    'CC = %s' % cc_compiler,
+        filter_file("CC = {0}".format(env["CC"]),
+                    "CC = {0}".format(cc_compiler),
                     nrnmech_makefile,
                     **kwargs)
-        filter_file('CXX = %s' % env["CXX"],
-                    'CXX = %s' % cxx_compiler,
+        filter_file("CXX = {0}".format(env["CXX"]),
+                    "CXX = {0}".format(cxx_compiler),
                     nrnmech_makefile,
                     **kwargs)
 
