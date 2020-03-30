@@ -53,5 +53,5 @@ packages:
       - timemory+mpi+cuda+cupti+caliper~gperftools~python@3.0.0a
       - virtualgl
       - vrpn
-      - zeromq@4.2.5
+      - zeromq+libsodium@4.3.2%intel
       - zlib@1.2.11
