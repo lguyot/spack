@@ -25,7 +25,7 @@ class Neuron(CMakePackage):
 
     # Patch which reverts 81a7a39 for numerical compat
     patch("revert_Import3d_numerical_format.master.patch", when="@develop")
-    patch("revert_Import3d_numerical_format.patch", when="@7.8.0:7.8.0b")
+    patch("revert_Import3d_numerical_format.patch", when="@7.8.0:7.8.0c")
     # Patch which reverts d9605cb for not hanging on ExperimentalMechComplex
     patch("apply_79a4d2af_load_balance_fix.patch", when="@7.8.0b")
 
