@@ -19,8 +19,17 @@ class PyMorphio(PythonPackage):
     version('2.1.2', tag='v2.1.2', submodules=True, get_full_repo=True)
     version('2.0.8', tag='v2.0.8', submodules=True, get_full_repo=True)
 
-    depends_on('py-setuptools', type='build')
+    variant('mpi', default=True)
 
+    depends_on('py-setuptools', type='build')
     depends_on('cmake@3.2:', type='build')
     depends_on('py-numpy', type='run')
-    depends_on('hdf5~mpi', type=('build', 'run'))
+    depends_on('mpi', when='+mpi', type='build')
+    depends_on('hdf5', type=('build', 'run'))
+
+    @run_before('build')
+    def configure(self):
+        # we cant use @when('+mpi'), raises NoSuchMethodError
+        if self.spec.satisfies('+mpi'):
+            env['CC'] = self.spec['mpi'].mpicc
+            env['CXX'] = self.spec['mpi'].mpicxx
