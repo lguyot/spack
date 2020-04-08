@@ -127,12 +127,12 @@ class Neuron(CMakePackage):
                                                              "+legacy-fr",
                                                              "+mech-dll-style",
                                                              "+python",
-                                                             "+mpi",
                                                              "+memacs",
                                                              "+rx3d",
                                                              "+coreneuron",
                                                              "+tests"]]
-
+        if "+mpi" in self.spec:
+            args.append("-DNRN_ENABLE_MPI_DYNAMIC=ON")
         if "+python" in self.spec:
             args.append("-DPYTHON_EXECUTABLE:FILEPATH="
                         + self.spec["python"].command.path)
