@@ -3,8 +3,6 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-import os
-
 from spack import *
 
 
@@ -27,7 +25,6 @@ class Libsonata(CMakePackage):
 
     variant('mpi', default=True, description="Enable MPI backend")
 
-
     depends_on('cmake@3.3:', type='build')
     depends_on('py-setuptools-scm', type='build', when='@0.1:')
     depends_on('fmt@4.0:')
@@ -43,8 +40,12 @@ class Libsonata(CMakePackage):
         ]
         if self.spec.satisfies('+mpi'):
             result.extend([
-                '-DCMAKE_C_COMPILER:STRING={}'.format(self.spec['mpi'].mpicc),
-                '-DCMAKE_CXX_COMPILER:STRING={}'.format(self.spec['mpi'].mpicxx),
+                '-DCMAKE_C_COMPILER:STRING={0}'.format(
+                    self.spec['mpi'].mpicc
+                ),
+                '-DCMAKE_CXX_COMPILER:STRING={0}'.format(
+                    self.spec['mpi'].mpicxx
+                ),
             ])
         return result
 
