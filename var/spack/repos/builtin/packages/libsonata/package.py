@@ -15,7 +15,7 @@ class Libsonata(CMakePackage):
     """
     homepage = "https://github.com/BlueBrain/libsonata"
     # Using my fork for testing
-    git = "https://github.com/jorblancoa/libsonata.git"
+    git = "https://github.com/BlueBrain/libsonata.git"
 
     version('reports', branch='reports', preferred=True, submodules=True, get_full_repo=True)
     version('develop', branch='master', submodules=False, get_full_repo=True)
@@ -46,6 +46,7 @@ class Libsonata(CMakePackage):
                 '-DCMAKE_CXX_COMPILER:STRING={0}'.format(
                     self.spec['mpi'].mpicxx
                 ),
+                '-DREPORTS_ENABLE_MPI=ON',
             ])
         return result
 

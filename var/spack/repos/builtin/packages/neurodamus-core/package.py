@@ -53,6 +53,7 @@ class NeurodamusCore(SimModel):
     depends_on("hdf5+mpi", when='+hdf5+mpi')
     depends_on("hdf5~mpi", when='+hdf5~mpi')
     depends_on('reportinglib',         when='+reportinglib')
+    depends_on('libsonata',            when='+reportinglib')
     depends_on('reportinglib+profile', when='+reportinglib+profile')
     depends_on('synapsetool',          when='+synapsetool')
     depends_on('py-mvdtool',           when='+mvdtool', type='run')
