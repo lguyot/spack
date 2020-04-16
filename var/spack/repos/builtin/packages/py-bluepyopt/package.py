@@ -1,27 +1,8 @@
 ##############################################################################
-# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
-# Produced at the Lawrence Livermore National Laboratory.
+# Copyright 2013-2020 Lawrence Livermore National Security, LLC and other
+# Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
-# This file is part of Spack.
-# Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
-# LLNL-CODE-647188
-#
-# For details, see https://github.com/spack/spack
-# Please also see the NOTICE and LICENSE files for our notice and the LGPL.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License (as
-# published by the Free Software Foundation) version 2.1, February 1999.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms and
-# conditions of the GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-##############################################################################
+# SPDX-License-Identifier: (Apache-2.0 OR MIT)
 from spack import *
 
 
@@ -29,9 +10,17 @@ class PyBluepyopt(PythonPackage):
     """Bluebrain Python Optimisation Library"""
 
     homepage = "https://github.com/BlueBrain/BluePyOpt"
-    url = "https://pypi.io/packages/source/b/bluepyopt/bluepyopt-1.6.56.tar.gz"
+    url = "https://pypi.io/packages/source/b/bluepyopt/bluepyopt-1.9.27.tar.gz"
 
+    # NOTE : while adding new release check pmi_rank.patch compatibility
+    version('1.9.27', sha256='4cce15b92b32311c808cae5e005b664deb6e8dc5df4ca13ea7b59252ae346522')
+    version('1.8.68', sha256='b9d432840aab89d4863c935d3dc604816441eba02d731422b92056cee751ca9c')
     version('1.6.56', sha256='1c57c91465ca4b947fe157692e7004a3e6df02e4151e3dc77a8831382a8f1ab9')
+    version('1.8.68', sha256='b9d432840aab89d4863c935d3dc604816441eba02d731422b92056cee751ca9c')
+    version('1.9.12', sha256='7b623ab9168f460a85d952719ca5249248fc95e6f7a02658b0673b2baa0a8fc6')
+
+    # patch required to avoid hpe-mpi linked mechanism library
+    patch("pmi_rank.patch", when="@1.9.27:")
 
     variant('neuron', default=True, description="Use BluePyOpt together with NEURON")
 
@@ -40,13 +29,15 @@ class PyBluepyopt(PythonPackage):
     depends_on('py-numpy', type='run')
     depends_on('py-efel', type='run')
     depends_on('py-deap', type='run')
+    depends_on('py-scoop@0.7:', type='run')
     depends_on('py-ipyparallel', type='run')
     depends_on('py-pickleshare', type='run')
     depends_on('py-future', type='run')
     depends_on('py-jinja2', type='run')
+    depends_on('py-pebble@4.3.10:', type='run')
     depends_on('neuron', type='run', when='+neuron')
 
-    def setup_environment(self, spack_env, run_env):
-        run_env.unset('PMI_RANK')
-        run_env.set('NEURON_INIT_MPI', "0")
-        run_env.prepend_path('PATH', self.spec['py-ipyparallel'].prefix.bin)
+    def setup_run_environment(self, env):
+        env.unset('PMI_RANK')
+        env.set('NEURON_INIT_MPI', "0")
+        env.prepend_path('PATH', self.spec['py-ipyparallel'].prefix.bin)

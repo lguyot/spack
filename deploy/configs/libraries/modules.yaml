@@ -31,9 +31,10 @@ modules:
       - gmsh
       - hdf5+mpi
       - highfive+mpi
-      - neuron+mpi%intel
+      - neuron+mpi~debug%intel
       - omega-h
       - petsc
+      - py-flake8
       - py-mpi4py
       - python-dev
       - py-h5py%gcc
