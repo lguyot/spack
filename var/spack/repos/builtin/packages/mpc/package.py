@@ -5,6 +5,7 @@
 
 from spack import *
 
+import string
 
 class Mpc(AutotoolsPackage):
     """Gnu Mpc is a C library for the arithmetic of complex numbers
@@ -26,6 +27,9 @@ class Mpc(AutotoolsPackage):
     depends_on('mpfr@3.0.0:', when='@1.1.0:')
 
     def url_for_version(self, version):
+        if version[-1] in string.ascii_letters:
+            version = version[0:-1].strip()
+
         if version < Version("1.0.1"):
             url = "http://www.multiprecision.org/mpc/download/mpc-{0}.tar.gz"
         else:
