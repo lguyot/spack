@@ -27,15 +27,16 @@ class Mpc(AutotoolsPackage):
     depends_on('mpfr@3.0.0:', when='@1.1.0:')
 
     def url_for_version(self, version):
-        if version[-1] in string.ascii_letters:
-            version = version[0:-1].strip()
+        version_str = str(version)
+        if version_str[-1] in string.ascii_letters:
+            version_str = version_str[0:-1].strip()
 
         if version < Version("1.0.1"):
             url = "http://www.multiprecision.org/mpc/download/mpc-{0}.tar.gz"
         else:
             url = "https://ftpmirror.gnu.org/mpc/mpc-{0}.tar.gz"
 
-        return url.format(version)
+        return url.format(version_str)
 
     def configure_args(self):
         spec = self.spec
