@@ -16,7 +16,7 @@ class Mpc(AutotoolsPackage):
     url      = "https://ftpmirror.gnu.org/mpc/mpc-1.1.0.tar.gz"
     list_url = "http://www.multiprecision.org/mpc/download.html"
 
-    version('1.1.0a', sha256='6985c538143c1208dcb1ac42cedad6ff52e267b47e5f970183a3e75125b43c2e')
+    version('1.1.0', sha256='6985c538143c1208dcb1ac42cedad6ff52e267b47e5f970183a3e75125b43c2e')
     version('1.0.3', sha256='617decc6ea09889fb08ede330917a00b16809b8db88c29c31bfbb49cbf88ecc3')
     version('1.0.2', sha256='b561f54d8a479cee3bc891ee52735f18ff86712ba30f036f8b8537bae380c488')
 
@@ -27,16 +27,12 @@ class Mpc(AutotoolsPackage):
     depends_on('mpfr@3.0.0:', when='@1.1.0:')
 
     def url_for_version(self, version):
-        version_str = str(version)
-        if version_str[-1] in string.ascii_letters:
-            version_str = version_str[0:-1].strip()
-
         if version < Version("1.0.1"):
             url = "http://www.multiprecision.org/mpc/download/mpc-{0}.tar.gz"
         else:
             url = "https://ftpmirror.gnu.org/mpc/mpc-{0}.tar.gz"
 
-        return url.format(version_str)
+        return url.format(version)
 
     def configure_args(self):
         spec = self.spec
