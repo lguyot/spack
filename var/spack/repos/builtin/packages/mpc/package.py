@@ -5,8 +5,6 @@
 
 from spack import *
 
-import string
-
 class Mpc(AutotoolsPackage):
     """Gnu Mpc is a C library for the arithmetic of complex numbers
        with arbitrarily high precision and correct rounding of the
