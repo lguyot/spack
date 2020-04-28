@@ -48,7 +48,7 @@ packages:
       - node-js@6.12.2
       - npm@3.10.9
       - pkg-config@0.29.2
-      - stat@develop
+      - stat@4.0.2
       - swig@3.0.12
       - tcl@8.6.8
       - texinfo@6.5
