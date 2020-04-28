@@ -26,6 +26,13 @@ class Mpfr(AutotoolsPackage):
     depends_on('gmp@4.1:')  # 4.2.3 or higher is recommended
     depends_on('gmp@5.0:', when='@4.0.0:')  # https://www.mpfr.org/mpfr-4.0.0/
 
+    depends_on('autoconf', type='build')
+    depends_on('automake', type='build')
+    depends_on('libtool', type='build')
+    depends_on('m4', type='build')
+    depends_on('autoconf-archive', when='@4.0.2:', type='build')
+    force_autoreconf = True
+
     # Check the Bugs section of old release pages for patches.
     # https://www.mpfr.org/mpfr-X.Y.Z/#bugs
     patches = {
