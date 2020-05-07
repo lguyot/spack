@@ -24,7 +24,7 @@ class Neuron(CMakePackage):
     git = "https://github.com/neuronsimulator/nrn"
 
     # Patch which reverts 81a7a39 for numerical compat
-    patch("revert_Import3d_numerical_format.master.patch", when="@7.8.0c:develop")
+    patch("revert_Import3d_numerical_format.master.patch", when="@7.8.0c:")
     patch("revert_Import3d_numerical_format.patch", when="@7.8.0:7.8.0b")
     # Patch which reverts d9605cb for not hanging on ExperimentalMechComplex
     patch("apply_79a4d2af_load_balance_fix.patch", when="@7.8.0b")
@@ -112,7 +112,7 @@ class Neuron(CMakePackage):
     conflicts("+pysetup", when="~python")
     conflicts("+rx3d",    when="~python")
     # Binary special not working yet with cmake build system
-    conflicts("+binary",  when="+cmake")
+    # conflicts("+binary",  when="+cmake")
 
     # ==============================================
     # ==== CMake build system related functions ====
