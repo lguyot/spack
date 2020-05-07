@@ -15,6 +15,7 @@ class Coreneuron(CMakePackage):
     and optimal performance."""
 
     homepage = "https://github.com/BlueBrain/CoreNeuron"
+    url      = "https://github.com/BlueBrain/CoreNeuron"
     git      = "https://github.com/BlueBrain/CoreNeuron"
 
     version('develop', branch='master', submodules=True)
