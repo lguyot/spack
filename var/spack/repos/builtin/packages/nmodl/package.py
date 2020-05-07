@@ -10,9 +10,11 @@ class Nmodl(CMakePackage):
     """Code Generation Framework For NEURON MODeling Language """
 
     homepage = "https://github.com/BlueBrain/nmodl.git"
-    url      = "https://github.com/BlueBrain/nmodl.git"
+    git      = "https://github.com/BlueBrain/nmodl.git"
 
-    version('develop', branch='master', git=url, submodules=True, get_full_repo=True)
+    version('develop', branch='master', submodules=True, get_full_repo=True)
+    version('0.3', commit="86fc52d2", submodules=True, get_full_repo=True)
+    version('0.2', tag='0.2', submodules=True, get_full_repo=True)
 
     depends_on('bison@3.0:', type='build')
     depends_on('cmake@3.3.0:', type='build')
