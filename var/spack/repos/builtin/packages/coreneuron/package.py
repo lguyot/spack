@@ -24,6 +24,8 @@ class Coreneuron(CMakePackage):
     version('0.15', tag='0.15', submodules=True)
     version('0.14', tag='0.14', submodules=True)
 
+    patch('0001-Fix-issues-while-NMODL-is-built-with-sympy-and-analy.patch', when='@0.17+nmodl')
+
     variant('debug', default=False, description='Build debug with O0')
     variant('gpu', default=False, description="Enable GPU build")
     variant('knl', default=False, description="Enable KNL specific flags")
@@ -71,6 +73,7 @@ class Coreneuron(CMakePackage):
     # sympy and ispc options are only usable with nmodl
     conflicts('+sympyopt', when='~sympy')
     conflicts('+sympy', when='~nmodl')
+    conflicts('+sympy', when='coreneuron@0.17')  # issue with include directories
     conflicts('+ispc', when='~nmodl')
 
     @run_before('build')
