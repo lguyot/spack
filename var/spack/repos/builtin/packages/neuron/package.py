@@ -30,7 +30,8 @@ class Neuron(CMakePackage):
     patch("apply_79a4d2af_load_balance_fix.patch", when="@7.8.0b")
 
     version("develop", branch="master")
-    version("7.8.0c",  commit="81f9e60", preferred=True)
+    version("7.8.0d",  branch="bin_special", preferred=True)
+    version("7.8.0c",  commit="81f9e60")
     version("7.8.0b",  commit="92a208b")
     version("7.6.8",   tag="7.6.8")
     version("7.6.6",   tag="7.6.6")
@@ -122,8 +123,7 @@ class Neuron(CMakePackage):
             value = "TRUE" if spec_requiremement in self.spec else "FALSE"
             cmake_name = spec_requiremement[1:].upper().replace("-", "_")
             return "-DNRN_ENABLE_" + cmake_name + ":BOOL=" + value
-        args = [cmake_enable_option(variant) for variant in ["+shared",
-                                                             "+interviews",
+        args = [cmake_enable_option(variant) for variant in ["+interviews",
                                                              "+legacy-fr",
                                                              "+mech-dll-style",
                                                              "+python",
@@ -142,6 +142,8 @@ class Neuron(CMakePackage):
             args.append("-DCMAKE_BUILD_TYPE=Custom")
         if "+mod-compatibility" in self.spec:
             args.append("-DNRN_ENABLE_MOD_COMPATIBILITY:BOOL=ON")
+        if "+shared" in self.spec:
+            args.append("-DNRN_ENABLE_MECH_DLL_STYLE=OFF")
 
         return args
 
