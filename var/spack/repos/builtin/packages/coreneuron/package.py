@@ -193,7 +193,7 @@ class Coreneuron(CMakePackage):
             flags += ' -I%s -I%s' % (spec['nmodl'].prefix.include,
                                      spec['eigen'].prefix.include.eigen3)
 
-        nmodl_options = 'codegen --force'
+        nmodl_options = 'codegen --force passes --inline --verbatim-rename'
 
         if spec.satisfies('+ispc'):
             options.append('-DENABLE_ISPC_TARGET=ON')
