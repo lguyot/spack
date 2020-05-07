@@ -23,6 +23,9 @@ class Nmodl(CMakePackage):
     depends_on('py-sympy@1.2:')
     depends_on('py-pyyaml@3.13:')
 
-    def setup_environment(self, spack_env, run_env):
-        run_env.prepend_path('PYTHONPATH', self.prefix.lib.python)
+    def setup_build_environment(self, env):
+        env.prepend_path('PYTHONPATH', self.prefix.lib.python)
+
+    def setup_run_environment(self, env):
+        env.prepend_path('PYTHONPATH', self.prefix.lib.python)
 
