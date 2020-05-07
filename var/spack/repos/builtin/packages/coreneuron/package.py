@@ -188,8 +188,8 @@ class Coreneuron(CMakePackage):
             env['CXX'] = 'tau_cxx'
 
         if spec.satisfies('+nmodl'):
-            options.append('-DCORENRN_ENABLE_NMODL=ON')
-            options.append('-DCORENRN_NMODL_DIR=%s' % spec['nmodl'].prefix)
+            options.append('-DENABLE_NMODL=ON')
+            options.append('-DNMODL_ROOT=%s' % spec['nmodl'].prefix)
             flags += ' -I%s -I%s' % (spec['nmodl'].prefix.include,
                                      spec['eigen'].prefix.include.eigen3)
 
