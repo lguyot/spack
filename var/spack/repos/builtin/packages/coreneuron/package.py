@@ -24,7 +24,7 @@ class Coreneuron(CMakePackage):
     version('0.15', tag='0.15', submodules=True)
     version('0.14', tag='0.14', submodules=True)
 
-    patch('0001-Fix-issues-while-NMODL-is-built-with-sympy-and-analy.patch', when='@0.17+nmodl')
+    patch('0001-Fixes-for-NMODL-MOD2C-binary.patch', when='@0.17+nmodl')
 
     variant('debug', default=False, description='Build debug with O0')
     variant('gpu', default=False, description="Enable GPU build")
