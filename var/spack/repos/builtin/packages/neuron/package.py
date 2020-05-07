@@ -55,7 +55,7 @@ class Neuron(CMakePackage):
     )
 
     variant("cmake",      default=True, description="Build NEURON using cmake")
-    variant("binary",     default=False, description="Create special as a binary instead of shell script")
+    variant("binary",     default=True, description="Create special as a binary instead of shell script")
     variant("coreneuron", default=False, description="Install CoreNEURON as submodule")
     variant("mod-compatibility",  default=True, description="Enable CoreNEURON compatibility for MOD files")
     variant("cross-compile",  default=False, description="Build for cross-compile environment")
@@ -142,7 +142,7 @@ class Neuron(CMakePackage):
             args.append("-DCMAKE_BUILD_TYPE=Custom")
         if "+mod-compatibility" in self.spec:
             args.append("-DNRN_ENABLE_MOD_COMPATIBILITY:BOOL=ON")
-        if "+shared" in self.spec:
+        if "+binary" in self.spec:
             args.append("-DNRN_ENABLE_MECH_DLL_STYLE=OFF")
 
         return args
