@@ -1,0 +1,44 @@
+From 198f4a4185b4a67071f776df5d08c1c90750764f Mon Sep 17 00:00:00 2001
+From: Ioannis Magkanaris <iomagkanaris@gmail.com>
+Date: Fri, 6 Mar 2020 16:10:35 +0100
+Subject: [PATCH] Fixes for NMODL/MOD2C binary   - fix issue when NMODL is set
+ with CORENRN_NMODL_DIR   - fix issue with finding _kinderiv.h when installed
+ as submodule of Neuron
+
+---
+ coreneuron/CMakeLists.txt        | 1 +
+ extra/nrnivmodl_core_makefile.in | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/coreneuron/CMakeLists.txt b/coreneuron/CMakeLists.txt
+index 181e9db..bbd1f47 100644
+--- a/coreneuron/CMakeLists.txt
++++ b/coreneuron/CMakeLists.txt
+@@ -7,6 +7,7 @@
+ # commonly included directories
+ include_directories(utils/randoms
+                     ${MPI_INCLUDE_PATH}
++                    ${PROJECT_BINARY_DIR}/coreneuron
+                     ${CMAKE_BINARY_DIR}/coreneuron
+                     ${CMAKE_BINARY_DIR}/include)
+ 
+diff --git a/extra/nrnivmodl_core_makefile.in b/extra/nrnivmodl_core_makefile.in
+index bb1becb..4d8a73f 100644
+--- a/extra/nrnivmodl_core_makefile.in
++++ b/extra/nrnivmodl_core_makefile.in
+@@ -18,7 +18,11 @@ datadir:= $(ROOT)/share/coreneuron
+ datadir_mod2c := $(ROOT)/share/mod2c
+ 
+ # Binary of MOD2C/NMODL depending on what was activated
+-nmodl_binary_path = $(if $(NMODL_BINARY),$(NMODL_BINARY), $(bindir)/@nmodl_binary_name@)
++ifeq (@nmodl_FOUND@, TRUE)
++    nmodl_binary_path = $(if $(NMODL_BINARY),$(NMODL_BINARY), @CORENRN_NMODL_BINARY@)
++else
++    nmodl_binary_path = $(if $(NMODL_BINARY),$(NMODL_BINARY), $(bindir)/@nmodl_binary_name@)
++endif
+ 
+ # Additional variables set in CMAKE usable here
+ # - @CORENRN_COMPILE_DEFS
+-- 
+2.21.0 (Apple Git-122)
+
