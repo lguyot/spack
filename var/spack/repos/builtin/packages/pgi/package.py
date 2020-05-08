@@ -88,17 +88,17 @@ class Pgi(Package):
         # Run install script
         os.system("./install")
 
-    def setup_environment(self, spack_env, run_env):
+    def setup_run_environment(self, env):
         llvm_backend = join_path(self.prefix, 'linux86-64-llvm', self.version)
         prefix = Prefix(llvm_backend)
 
-        run_env.set('CC',  join_path(prefix.bin, 'pgcc'))
-        run_env.set('CXX', join_path(prefix.bin, 'pgc++'))
-        run_env.set('F77', join_path(prefix.bin, 'pgfortran'))
-        run_env.set('FC',  join_path(prefix.bin, 'pgfortran'))
+        env.set('CC',  join_path(prefix.bin, 'pgcc'))
+        env.set('CXX', join_path(prefix.bin, 'pgc++'))
+        env.set('F77', join_path(prefix.bin, 'pgfortran'))
+        env.set('FC',  join_path(prefix.bin, 'pgfortran'))
 
-        run_env.prepend_path('PATH',            prefix.bin)
-        run_env.prepend_path('CPATH',           prefix.include)
-        run_env.prepend_path('LIBRARY_PATH',    prefix.lib)
-        run_env.prepend_path('LD_LIBRARY_PATH', prefix.lib)
-        run_env.prepend_path('MANPATH',         prefix.man)
+        env.prepend_path('PATH',            prefix.bin)
+        env.prepend_path('CPATH',           prefix.include)
+        env.prepend_path('LIBRARY_PATH',    prefix.lib)
+        env.prepend_path('LD_LIBRARY_PATH', prefix.lib)
+        env.prepend_path('MANPATH',         prefix.man)
