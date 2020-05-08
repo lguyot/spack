@@ -31,4 +31,3 @@ class Nmodl(CMakePackage):
 
     def setup_run_environment(self, env):
         env.prepend_path('PYTHONPATH', self.prefix.lib.python)
-
