@@ -62,7 +62,6 @@ class Neuron(CMakePackage):
     variant("debug",          default=False, description="Build with flags -g -O0")
     variant("interviews", default=False, description="Enable GUI with INTERVIEWS")
     variant("legacy-fr",  default=True,  description="Use original faraday, R, etc. instead of 2019 nist constants")
-    variant("mech-dll-style", default=True,  description="Dynamically load nrnmech shared library")
     variant("memacs",     default=True,  description="Enable use of memacs")
     variant("mpi",        default=True,  description="Enable MPI parallelism")
     variant("multisend",  default=True,  description="Enable multi-send spike exchange")
@@ -125,7 +124,6 @@ class Neuron(CMakePackage):
             return "-DNRN_ENABLE_" + cmake_name + ":BOOL=" + value
         args = [cmake_enable_option(variant) for variant in ["+interviews",
                                                              "+legacy-fr",
-                                                             "+mech-dll-style",
                                                              "+python",
                                                              "+memacs",
                                                              "+rx3d",
@@ -143,7 +141,7 @@ class Neuron(CMakePackage):
         if "+mod-compatibility" in self.spec:
             args.append("-DNRN_ENABLE_MOD_COMPATIBILITY:BOOL=ON")
         if "+binary" in self.spec:
-            args.append("-DNRN_ENABLE_MECH_DLL_STYLE=OFF")
+            args.append("-DNRN_ENABLE_BINARY_SPECIAL=ON")
 
         return args
 
