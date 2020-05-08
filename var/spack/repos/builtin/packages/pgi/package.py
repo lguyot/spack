@@ -89,7 +89,8 @@ class Pgi(Package):
         os.system("./install")
 
     def setup_environment(self, spack_env, run_env):
-        prefix = Prefix(join_path(self.prefix, 'linux86-64-llvm', self.version))
+        llvm_backend = join_path(self.prefix, 'linux86-64-llvm', self.version)
+        prefix = Prefix(llvm_backend)
 
         run_env.set('CC',  join_path(prefix.bin, 'pgcc'))
         run_env.set('CXX', join_path(prefix.bin, 'pgc++'))
